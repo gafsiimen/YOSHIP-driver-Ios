@@ -19,7 +19,7 @@ class LoginViewModel {
         }
     }
    
-    var isLoading: Bool = false {
+    var isLoading: Bool = true {
         didSet { self.updateLoadingStatus?() }
     }
     var EmptyErrorMessage: String? {
@@ -52,17 +52,17 @@ class LoginViewModel {
 //    
     func Login(phone:String) {
         
-        if (phone == "") {
-                 self.EmptyErrorMessage = "Ce champ est obligatoire!"
-                 self.isLoading = false
-                 return
-                }
-        else if (!CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: phone)))
-        {
-            self.InvalidMessage = "Veuillez introduire un numéro valide!"
-            self.isLoading = false
-            return
-        } else {
+//        if (phone == "") {
+//                 self.EmptyErrorMessage = "Ce champ est obligatoire!"
+//                 self.isLoading = false
+//                 return
+//                }
+//        else if (!CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: phone)))
+//        {
+//            self.InvalidMessage = "Veuillez introduire un numéro valide!"
+//            self.isLoading = false
+//            return
+//        } else {
             self.LoginRepository?.doLogin(phone: phone,completion: { (json, error) in
                 if  let error = error {
                     self.error = error
@@ -76,15 +76,19 @@ class LoginViewModel {
                         self.isLoading = false
                         return
                     } else {
-                        self.isLoading = true
+                        
                         self.chauffeurParsing(json)
                         SessionManager.currentSession.signIn(message: message, authToken: json[0]["authToken"]["value"].stringValue, code: json[0]["code"].stringValue, coursesInPipeStats: coursesInPipeStats(INPROGRESS: json[0]["coursesInPipeStats"]["INPROGRESS"].intValue, ASSIGNED: json[0]["coursesInPipeStats"]["ASSIGNED"].intValue), chauffeur: self.Chauffeur!)
                         print(SessionManager.currentSession.chauffeur!.firstname)
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                           self.isLoading = false
+                        }
                     }
                 }
                 
             })
-        }
+//        }
        
     }
     

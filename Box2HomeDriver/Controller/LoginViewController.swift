@@ -68,9 +68,29 @@ class LoginViewController: UIViewController {
     
    
     private func attemptLogin(){
-        
-        
-        viewModel.Login(phone: self.TelephoneTF.text! as String)
+       SetupLoading(isLoading: true)
+        guard let phone =  self.TelephoneTF.text,
+                  phone != "",
+                  CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: phone))
+        else {
+            SetupLoading(isLoading: false)
+            if self.TelephoneTF.text == "" {
+                let alert = UIAlertController(title: "Attention", message: "Ce champ est obligatoire !", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated:  true , completion: nil)
+            }
+            else {
+                let alert = UIAlertController(title: "Attention", message: "Veuillez introduire un numéro valide!", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated:  true , completion: nil)
+               
+            }
+            return
+        }
+
+        viewModel.Login(phone: phone )
         
         viewModel.updateLoadingStatus = {
              let state = self.viewModel.isLoading
