@@ -12,10 +12,14 @@ class SetupLoginView: NSObject {
     
      static let sharedInstance : SetupLoginView = SetupLoginView()
     
-    func SetupActivityIndicator(loading: NVActivityIndicatorView) {
+    func SetupActivityIndicator(loading: NVActivityIndicatorView,isLoading:Bool) {
             loading.type = NVActivityIndicatorType.ballPulse
-            loading.startAnimating()
             loading.color = .white
+        if(isLoading){
+            loading.startAnimating()
+        }else{
+            loading.stopAnimating()
+        }
         
     }
     

@@ -25,7 +25,7 @@ class SplashScreenViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         SystemVersioning()
-        InternetObserver()
+       
         InternetChecking()
     }
     //--------------------------------------------------------------------------------------------
@@ -42,18 +42,8 @@ class SplashScreenViewController: UIViewController {
         SetupSplashScreenView.sharedInstance.SetupActivityIndicator(loading: loadingView)
     }
     //------------------------------------------
-    fileprivate func InternetObserver() {
-        NotificationCenter.default
-            .addObserver(self,
-                         selector: #selector(statusManager),
-                         name: .flagsChanged,
-                         object: nil)
-    }
      fileprivate func InternetChecking() {
         viewModel.CheckInternet()
-    }
-    @objc func statusManager(_ notification: Notification) {
-       InternetChecking()
     }
     //------------------------------------------
 

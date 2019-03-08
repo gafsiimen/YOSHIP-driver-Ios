@@ -19,9 +19,9 @@ class LoginViewModel {
         }
     }
    
-//    var isLoading: Bool = false {
-//        didSet { self.updateLoadingStatus?() }
-//    }
+    var isLoading: Bool = false {
+        didSet { self.updateLoadingStatus?() }
+    }
     var EmptyErrorMessage: String? {
         didSet { self.showEmptyErrorClosure?() }
     }
@@ -35,7 +35,7 @@ class LoginViewModel {
         didSet {  self.Go2Box2Home?() }
     }
     var showErrorClosure: (() -> ())?
-//    var updateLoadingStatus: (() -> ())?
+    var updateLoadingStatus: (() -> ())?
     var Go2Box2Home: (() -> ())?
     var didFinishFetch: (() -> ())?
     var showEmptyErrorClosure: (() -> ())?
@@ -54,24 +54,29 @@ class LoginViewModel {
         
         if (phone == "") {
                  self.EmptyErrorMessage = "Ce champ est obligatoire!"
+                 self.isLoading = false
                  return
                 }
         else if (!CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: phone)))
         {
             self.InvalidMessage = "Veuillez introduire un numéro valide!"
+            self.isLoading = false
             return
         } else {
             self.LoginRepository?.doLogin(phone: phone,completion: { (json, error) in
                 if  let error = error {
                     self.error = error
+                    self.isLoading = false
                     return
                 } else if let json = json {
                     let json = JSON(json)
                     let message = json[0]["message"].stringValue
                     if (message != "Success") {
                         self.Go2Box2HomeMessage = message
+                        self.isLoading = false
                         return
                     } else {
+                        self.isLoading = true
                         self.chauffeurParsing(json)
                         SessionManager.currentSession.signIn(message: message, authToken: json[0]["authToken"]["value"].stringValue, code: json[0]["code"].stringValue, coursesInPipeStats: coursesInPipeStats(INPROGRESS: json[0]["coursesInPipeStats"]["INPROGRESS"].intValue, ASSIGNED: json[0]["coursesInPipeStats"]["ASSIGNED"].intValue), chauffeur: self.Chauffeur!)
                         print(SessionManager.currentSession.chauffeur!.firstname)

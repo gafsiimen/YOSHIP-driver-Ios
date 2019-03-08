@@ -17,21 +17,15 @@ struct SplashScreenRepository {
     
     
     func DoCheckInternet() {
-        switch Network.reachability.status {
-        case .unreachable:
-            print("\nunreachable Status")
-        case .wwan:
-            print("wwan")
-        case .wifi:
-            print("wifi")
+//        NetworkManager.isReachable { networkManagerInstance in
+//            print("Network is available")
+//        }
+        NetworkManager.sharedInstance.reachability.whenReachable = { reachability in
+            print("reachable")
         }
-        print("\n********************")
-        print("Reachability Summary")
-        print("Status:", Network.reachability.status)
-        print("HostName:", Network.reachability.hostname ?? "nil")
-        print("Reachable:", Network.reachability.isReachable)
-        print("Wifi:", Network.reachability.isReachableViaWiFi)
-        print("********************\n")
+//        NetworkManager.isUnreachable { networkManagerInstance in
+//            print("Network is Unavailable")
+//        }
     }
     
     func doCheckVersion( completion:    @escaping WebServiceResponse)  {

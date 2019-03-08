@@ -62,17 +62,24 @@ class LoginViewController: UIViewController {
     @IBAction func OkButton(_ sender: Any) {
         attemptLogin()
     }
-    fileprivate func SetupLoading() {
-        SetupLoginView.sharedInstance.SetupActivityIndicator(loading: Loading)
+    fileprivate func SetupLoading(isLoading: Bool) {
+        SetupLoginView.sharedInstance.SetupActivityIndicator(loading: Loading, isLoading: isLoading)
     }
+    
    
     private func attemptLogin(){
         
-        SetupLoading()
+        
         viewModel.Login(phone: self.TelephoneTF.text! as String)
         
+        viewModel.updateLoadingStatus = {
+             let state = self.viewModel.isLoading
+            self.SetupLoading(isLoading: state)
+            
+        }
       
         viewModel.didFinishFetch = {
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 print("VALID USER !!")
                 UIView.setAnimationsEnabled(false)

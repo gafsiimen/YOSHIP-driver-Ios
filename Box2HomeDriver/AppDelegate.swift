@@ -22,23 +22,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSServices.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         GMSPlacesClient.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         
-        do {
-            try Network.reachability = Reachability(hostname: "8.8.8.8")
-        }
-        catch {
-            switch error as? Network.Error {
-            case let .failedToCreateWith(hostname)?:
-                print("Network error:\nFailed to create reachability object With host named:", hostname)
-            case let .failedToInitializeWith(address)?:
-                print("Network error:\nFailed to initialize reachability object With address:", address)
-            case .failedToSetCallout?:
-                print("Network error:\nFailed to set callout")
-            case .failedToSetDispatchQueue?:
-                print("Network error:\nFailed to set DispatchQueue")
-            case .none:
-                print(error)
-            }
-        }
+//        do {
+//            try Network.reachability = Reachability(hostname: "8.8.8.8")
+//        }
+//        catch {
+//            switch error as? Network.Error {
+//            case let .failedToCreateWith(hostname)?:
+//                print("Network error:\nFailed to create reachability object With host named:", hostname)
+//            case let .failedToInitializeWith(address)?:
+//                print("Network error:\nFailed to initialize reachability object With address:", address)
+//            case .failedToSetCallout?:
+//                print("Network error:\nFailed to set callout")
+//            case .failedToSetDispatchQueue?:
+//                print("Network error:\nFailed to set DispatchQueue")
+//            case .none:
+//                print(error)
+//            }
+//        }
         return true
     }
 
