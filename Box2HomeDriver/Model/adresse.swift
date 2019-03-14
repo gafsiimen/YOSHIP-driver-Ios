@@ -11,7 +11,7 @@ struct adresse {
     let id : Int
     let label : String
     let address : String
-    let latitude : Float
-    let longitude : Float
+    let latitude : Double
+    let longitude : Double
     let postalCode : Int
 }

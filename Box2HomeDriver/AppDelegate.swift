@@ -21,24 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         GMSPlacesClient.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
-        
-//        do {
-//            try Network.reachability = Reachability(hostname: "8.8.8.8")
-//        }
-//        catch {
-//            switch error as? Network.Error {
-//            case let .failedToCreateWith(hostname)?:
-//                print("Network error:\nFailed to create reachability object With host named:", hostname)
-//            case let .failedToInitializeWith(address)?:
-//                print("Network error:\nFailed to initialize reachability object With address:", address)
-//            case .failedToSetCallout?:
-//                print("Network error:\nFailed to set callout")
-//            case .failedToSetDispatchQueue?:
-//                print("Network error:\nFailed to set DispatchQueue")
-//            case .none:
-//                print(error)
-//            }
-//        }
         return true
     }
 
@@ -50,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
+//          SocketIOManager.sharedInstance.closeConnection()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -58,6 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

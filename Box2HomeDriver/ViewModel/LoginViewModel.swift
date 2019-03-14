@@ -76,11 +76,15 @@ class LoginViewModel {
                         self.isLoading = false
                         return
                     } else {
-                        
+                       
+                     
                         self.chauffeurParsing(json)
+                        //----
                         SessionManager.currentSession.signIn(message: message, authToken: json[0]["authToken"]["value"].stringValue, code: json[0]["code"].stringValue, coursesInPipeStats: coursesInPipeStats(INPROGRESS: json[0]["coursesInPipeStats"]["INPROGRESS"].intValue, ASSIGNED: json[0]["coursesInPipeStats"]["ASSIGNED"].intValue), chauffeur: self.Chauffeur!)
-                        print(SessionManager.currentSession.chauffeur!.firstname)
-                        
+                        //----
+//                        print(SessionManager.currentSession.authToken!)
+//                        print("json:\n",json,"\n\n\n")
+//                        print(SessionManager.currentSession.acceptedCourses)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                            self.isLoading = false
                         }
@@ -105,7 +109,8 @@ class LoginViewModel {
                             id: car["vehicule_category"]["id"].intValue),
                          haillon: car["haillon"].boolValue,
                          denomination: car["denomination"].stringValue,
-                         immatriculation: car["immatriculation"].stringValue))
+                         immatriculation: car["immatriculation"].stringValue 
+                         ))
         }
         self.Chauffeur = chauffeur(
             id: json[0]["authToken"]["chauffeur"]["id"].intValue,
@@ -121,7 +126,7 @@ class LoginViewModel {
             avatarURL: json[0]["authToken"]["chauffeur"]["avatarURL"].stringValue,
             code: json[0]["authToken"]["chauffeur"]["code"].stringValue,
             companyName: json[0]["authToken"]["chauffeur"]["companyName"].stringValue,
-            moyenneEtoiles: json[0]["authToken"]["chauffeur"]["moyenneEtoiles"].floatValue,
+            moyenneEtoiles: json[0]["authToken"]["chauffeur"]["moyenneEtoiles"].doubleValue,
             avis: json[0]["authToken"]["chauffeur"]["avis"].stringValue,
             immatriculation: json[0]["authToken"]["chauffeur"]["immatriculation"].stringValue,
             onDuty: json[0]["authToken"]["chauffeur"]["onDuty"].boolValue,

@@ -15,7 +15,9 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
      var sideMenu:ENSideMenu!
      var Bar = UIView()
      let barHeight = CGFloat(3)
-    //Dependecies
+     var courses : [Course] = []
+    //Dependecies`
+    let viewModel = HomeViewModel(HomeRepository: HomeRepository())
     //IBOutlets
     @IBOutlet weak var SeguementedControl: UISegmentedControl!
     @IBOutlet weak var StatusImage: UIImageView!
@@ -25,10 +27,10 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     @IBOutlet weak var loading: NVActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
     //--------------------------------------------------------------------------------------------
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         SetupView()
-//        tableView.separatorStyle = .none
         
      
        
@@ -37,7 +39,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     
     fileprivate func SetupView() {
         self.sideMenuController()?.sideMenu?.delegate = self
-      
+        SetupTableViewDataSource()
         SetupStatusImage()
         SetupBarView()
         SetupBar()
@@ -91,13 +93,27 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         switch sender.selectedSegmentIndex{
         case 0:
             animateBar(barX: Bar.frame.minX)
+            viewModel.fetchCourses(tag: "accepted")
         case 1:
             animateBar(barX: Bar.frame.minX)
+            viewModel.fetchCourses(tag: "assigned")
         default:
             break
         }
     }
+    
     //--------------------------------------------------------------------------------------------
+    fileprivate func SetupTableViewDataSource() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+            self.viewModel.fetchCourses(tag: "accepted")
+        }
+        viewModel.CoursesFetchedClosure = {
+            self.courses = self.viewModel.CoursesFetched!
+            self.tableView.reloadData()
+            print(self.viewModel.CoursesFetched!)
+        }
+    }
+ //--------------------------------------------------------------------------------------------
 }
 extension UISegmentedControl {
     func removeBorders() {
@@ -149,14 +165,14 @@ extension UISegmentedControl {
 extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) // as? CustomCell
-        cell.textLabel?.text = "\(indexPath.row)"
+        cell.textLabel?.text = "\(courses[indexPath.row].id)     \(courses[indexPath.row].adresseDepart.address)"
         return cell
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 9
+        return courses.count
     }
     
 }

@@ -14,6 +14,7 @@ struct vehicule  {
     let haillon : Bool
     let denomination : String
     let immatriculation : String
+   
     
     init(id : Int, status : Int, vehicule_category : Vehicule_category, haillon : Bool, denomination : String, immatriculation : String) {
         self.id = id
@@ -22,6 +23,7 @@ struct vehicule  {
         self.haillon = haillon
         self.denomination = denomination
         self.immatriculation = immatriculation
+        
     }
 
 }

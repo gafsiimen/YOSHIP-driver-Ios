@@ -8,34 +8,34 @@
 
 import Foundation
 struct chauffeur  {
-    let id : Int
-    let label : String
-    let latitude : Double
-    let longitude : Double
-    let vehicules : [vehicule]
-    let heading : Int
+    var id : Int?
+    var label : String?
+    var latitude : Double?
+    var longitude : Double?
+    var vehicules : [vehicule]?
+    var heading : Int?
     let lastname : String
     let firstname : String
-    let manutention : Bool
-    let phone : String
-    let avatarURL : String
+    var manutention : Bool?
+    var phone : String?
+    var avatarURL : String?
     let code : String
-    let companyName : String
-    let moyenneEtoiles : Float
-    let avis : String
-    let immatriculation : String
-    let onDuty : Bool
-    let coursesInPipe : [String]
-    let status : Int
-    let vehiculeId : Int
-    let deviceInfo : String
-    let lastLogoutAt : String
-    let lastLoginAt : String
-    let etat : Int
-    let vehiculeType : String
+    var companyName : String?
+    var moyenneEtoiles : Double?
+    var avis : String?
+    var immatriculation : String?
+    var onDuty : Bool?
+    var coursesInPipe : [String]?
+    var status : Int?
+    var vehiculeId : Int?
+    var deviceInfo : String?
+    var lastLogoutAt : String?
+    var lastLoginAt : String?
+    var etat : Int?
+    var vehiculeType : String?
     
 
-    init(id:Int,label : String, latitude : Double, longitude : Double, vehicules : [vehicule], heading : Int, lastname : String, firstname : String, manutention : Bool, phone : String, avatarURL : String, code : String, companyName : String, moyenneEtoiles : Float, avis : String, immatriculation : String, onDuty : Bool, coursesInPipe : [String], status : Int, vehiculeId : Int, deviceInfo : String, lastLogoutAt : String, lastLoginAt : String, etat : Int, vehiculeType : String) {
+    init(id:Int,label : String, latitude : Double, longitude : Double, vehicules : [vehicule], heading : Int, lastname : String, firstname : String, manutention : Bool, phone : String, avatarURL : String, code : String, companyName : String, moyenneEtoiles : Double, avis : String, immatriculation : String, onDuty : Bool, coursesInPipe : [String], status : Int, vehiculeId : Int, deviceInfo : String, lastLogoutAt : String, lastLoginAt : String, etat : Int, vehiculeType : String) {
 
         self.id = id
         self.label = label
@@ -64,5 +64,9 @@ struct chauffeur  {
         self.vehiculeType = vehiculeType
     }
 
-    
+    init(lastname : String, firstname : String, code : String) {
+        self.lastname = lastname
+        self.firstname = firstname
+        self.code = code
+    }
 }
