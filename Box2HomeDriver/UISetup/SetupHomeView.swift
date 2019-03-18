@@ -34,8 +34,12 @@ class SetupHomeView: NSObject {
         SeguementedControl.layer.shadowRadius = 1.0;
         SeguementedControl.clipsToBounds = false;
         SeguementedControl.tintColor = UIColor.clear
-        SeguementedControl.setTitle("EN COURS", forSegmentAt: 0)
-        SeguementedControl.setTitle("ATTRIBUÉES", forSegmentAt: 1)
+        if (SessionManager.currentSession.acceptedCourses.count != 0){
+        SeguementedControl.setTitle("EN COURS(\(SessionManager.currentSession.acceptedCourses.count))", forSegmentAt: 0)
+        } else {SeguementedControl.setTitle("EN COURS", forSegmentAt: 0)}
+        if (SessionManager.currentSession.assignedCourses.count != 0){
+       SeguementedControl.setTitle("ATTRIBUÉES(\(SessionManager.currentSession.assignedCourses.count))", forSegmentAt: 1)
+        }else {SeguementedControl.setTitle("ATTRIBUÉES", forSegmentAt: 1)}
     }
     func SetupBarView(BarView: UIView) {
         BarView.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)

@@ -25,12 +25,7 @@ var LeftSafeDrag = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-//        let loading = NVActivityIndicatorView(frame: CGRect(x: 150, y: 150, width: CGFloat(50), height: CGFloat(50)),type: NVActivityIndicatorType.ballRotateChase)
-//        view.addSubview(loading)
-//        view.bringSubviewToFront(loading)
-//        loading.startAnimating()
-
+   
         // ---------------------------------------------------
          StatusImage.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
          StatusImage.frame  = (self.navigationController?.navigationBar.frame)!

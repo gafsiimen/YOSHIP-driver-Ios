@@ -21,11 +21,7 @@ class SetupSplashScreenView: NSObject {
         loading.startAnimating()
     }
     
-    func SetupProgressBar(progressBar: UIProgressView, vc:UIViewController) {
-        progressBar.setProgress(0, animated: false)
-        progressBar.tintColor = .white
-        progressBar.trackTintColor = vc.view.backgroundColor 
-    }
+ 
 
     func SetupLogo(logo:UIImageView) {
         logo.contentMode = .scaleAspectFit

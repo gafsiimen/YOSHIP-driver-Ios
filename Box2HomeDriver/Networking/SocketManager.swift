@@ -12,7 +12,8 @@ import SwiftyJSON
 class SocketIOManager: NSObject {
 //     var InitialAcceptedCourses : [Course] = []
      static let sharedInstance = SocketIOManager()
-     static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token":"GAKPF/mqFJ2JCvo93DXdgE5+chieFbKnuoQAh3Nn4foStYFZK+l+kEwgaeMI/jxabZQ="])])
+     static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token":SessionManager.currentSession.authToken!])])
+//    RwsGzmdmMbGef2BW+IjvFR7MZlWLzedrOsQUxmfMvcAMj9lu7fQgiKO+OUZu/wnwsUw=
     static let socket = manager.defaultSocket
    
     override init() {
@@ -323,7 +324,6 @@ class SocketIOManager: NSObject {
 //    }
     //--------------------------------------------------------
     func establishConnection() {
-       
         SocketIOManager.socket.connect()
     }
     

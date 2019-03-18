@@ -33,7 +33,6 @@ class SplashScreenViewController: UIViewController {
         SetupSplashScreenView.sharedInstance.SetupBackgroundColor(vc: self)
         SetupLogo()
         SetupLoading()
-//        SocketIOManager.sharedInstance.establishConnection()
 
     }
     fileprivate func SetupLogo() {

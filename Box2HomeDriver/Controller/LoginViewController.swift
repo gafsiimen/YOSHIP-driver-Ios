@@ -99,7 +99,9 @@ class LoginViewController: UIViewController {
         }
       
         viewModel.didFinishFetch = {
-            
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+//                SocketIOManager.sharedInstance.establishConnection()
+//            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 print("VALID USER !!")
                 UIView.setAnimationsEnabled(false)

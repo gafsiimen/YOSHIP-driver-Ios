@@ -37,6 +37,13 @@
 		B7CA7877221AEA5D00281623 /* SetupSplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA7876221AEA5D00281623 /* SetupSplashScreenView.swift */; };
 		B7CA7879221BF95D00281623 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA7878221BF95D00281623 /* NavigationController.swift */; };
 		B7CA7880221C03FD00281623 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CA787F221C03FD00281623 /* SideMenuViewController.swift */; };
+		B7D50DF5223BA15200172ADF /* PagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DF4223BA15200172ADF /* PagerViewController.swift */; };
+		B7D50DF8223BA25300172ADF /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DF7223BA25300172ADF /* Slide.swift */; };
+		B7D50DFA223BA40E00172ADF /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7D50DF9223BA40E00172ADF /* Slide.xib */; };
+		B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */; };
+		B7D50DFE223BAA3C00172ADF /* PagerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */; };
+		B7D50E01223BD20500172ADF /* CourseCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */; };
+		B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50E03223BEE4200172ADF /* CourseCell.swift */; };
 		B7DE1B7222254D2A007192EE /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7122254D2A007192EE /* Course.swift */; };
 		B7DE1B7422258947007192EE /* adresse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7322258947007192EE /* adresse.swift */; };
 		B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7522258991007192EE /* moyenPaiement.swift */; };
@@ -120,6 +127,13 @@
 		B7CA7876221AEA5D00281623 /* SetupSplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSplashScreenView.swift; sourceTree = "<group>"; };
 		B7CA7878221BF95D00281623 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		B7CA787F221C03FD00281623 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		B7D50DF4223BA15200172ADF /* PagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewController.swift; sourceTree = "<group>"; };
+		B7D50DF7223BA25300172ADF /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		B7D50DF9223BA40E00172ADF /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
+		B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewModel.swift; sourceTree = "<group>"; };
+		B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerRepository.swift; sourceTree = "<group>"; };
+		B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCellViewModel.swift; sourceTree = "<group>"; };
+		B7D50E03223BEE4200172ADF /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
 		B7DE1B7122254D2A007192EE /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		B7DE1B7322258947007192EE /* adresse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adresse.swift; sourceTree = "<group>"; };
 		B7DE1B7522258991007192EE /* moyenPaiement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moyenPaiement.swift; sourceTree = "<group>"; };
@@ -220,6 +234,7 @@
 		B708062E2216A28E00F2C562 /* Box2HomeDriver */ = {
 			isa = PBXGroup;
 			children = (
+				B7D50DF6223BA21400172ADF /* Paging */,
 				B78AB8072230060B00AB224D /* Session */,
 				B7AB2C1C2229306200867745 /* Repository */,
 				B778C6C02216C1FD0094FF92 /* UISetup */,
@@ -287,6 +302,7 @@
 				B7AB2C1A2229269000867745 /* LoginViewModel.swift */,
 				B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */,
 				B78957AD223A6DEE000649D7 /* HomeViewModel.swift */,
+				B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -300,6 +316,7 @@
 				B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */,
 				B778C6C82216C9160094FF92 /* HomeViewController.swift */,
 				B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */,
+				B7D50E03223BEE4200172ADF /* CourseCell.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -358,6 +375,18 @@
 				B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */,
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		B7D50DF6223BA21400172ADF /* Paging */ = {
+			isa = PBXGroup;
+			children = (
+				B7D50DF4223BA15200172ADF /* PagerViewController.swift */,
+				B7D50DF7223BA25300172ADF /* Slide.swift */,
+				B7D50DF9223BA40E00172ADF /* Slide.xib */,
+				B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */,
+				B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */,
+			);
+			path = Paging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -473,6 +502,7 @@
 				B708063A2216A29100F2C562 /* LaunchScreen.storyboard in Resources */,
 				B70806372216A29100F2C562 /* Assets.xcassets in Resources */,
 				B778C6CB2216D18E0094FF92 /* Main.storyboard in Resources */,
+				B7D50DFA223BA40E00172ADF /* Slide.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +583,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Box2HomeDriver/Pods-Box2HomeDriver-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/EasyPeasy/EasyPeasy.framework",
+				"${BUILT_PRODUCTS_DIR}/FoldingCell/FoldingCell.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
@@ -567,6 +599,8 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EasyPeasy.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FoldingCell.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
@@ -659,11 +693,13 @@
 				B778C6C92216C9160094FF92 /* HomeViewController.swift in Sources */,
 				B7DE1B8222258ABC007192EE /* commande.swift in Sources */,
 				B7CA7879221BF95D00281623 /* NavigationController.swift in Sources */,
+				B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */,
 				B793300622314BE200924DF5 /* NetworkManager.swift in Sources */,
 				B719C0B2221D391C00B96512 /* ENSideMenu.swift in Sources */,
 				B78957B0223A8A38000649D7 /* HomeRepository.swift in Sources */,
 				B7DE1B8C22258C12007192EE /* configs.swift in Sources */,
 				B74F2BF9222FC3B80036DF52 /* SplashScreenViewModel.swift in Sources */,
+				B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */,
 				B7DE1B9422258C6B007192EE /* client.swift in Sources */,
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
 				B7DE1B8622258B0A007192EE /* article.swift in Sources */,
@@ -673,6 +709,7 @@
 				B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */,
 				B7DE1B8822258BD6007192EE /* vehicule_category.swift in Sources */,
 				B7DE1B78222589D5007192EE /* chauffeur.swift in Sources */,
+				B7D50DFE223BAA3C00172ADF /* PagerRepository.swift in Sources */,
 				B7DE1B8022258A92007192EE /* status.swift in Sources */,
 				B7DEFCB02223EA0F00E51A19 /* MapViewController.swift in Sources */,
 				B7AB2C1E2229312700867745 /* LoginRepository.swift in Sources */,
@@ -680,12 +717,14 @@
 				B7CA7880221C03FD00281623 /* SideMenuViewController.swift in Sources */,
 				B7DE1B8A22258BF0007192EE /* canalVente.swift in Sources */,
 				B7DE1B9222258C58007192EE /* societe.swift in Sources */,
+				B7D50DF8223BA25300172ADF /* Slide.swift in Sources */,
 				B70806302216A28E00F2C562 /* AppDelegate.swift in Sources */,
 				B7AB2C202229335800867745 /* coursesInPipeStats.swift in Sources */,
 				B70717132238045E00D687E4 /* dayOfWeek.swift in Sources */,
 				B774098C223278F20033F94A /* SocketManager.swift in Sources */,
 				B7DE1B8E22258C2D007192EE /* articleFamily.swift in Sources */,
 				B7AB2C1B2229269000867745 /* LoginViewModel.swift in Sources */,
+				B7D50E01223BD20500172ADF /* CourseCellViewModel.swift in Sources */,
 				B7CA7877221AEA5D00281623 /* SetupSplashScreenView.swift in Sources */,
 				B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */,
 				B7DE1B9022258C44007192EE /* collaborateur.swift in Sources */,
@@ -698,6 +737,7 @@
 				B7DE1B7422258947007192EE /* adresse.swift in Sources */,
 				B70717112238039D00D687E4 /* operationalHours.swift in Sources */,
 				B793300822314E7500924DF5 /* Reachability.swift in Sources */,
+				B7D50DF5223BA15200172ADF /* PagerViewController.swift in Sources */,
 				B78AB8092230064600AB224D /* SessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

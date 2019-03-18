@@ -5,10 +5,11 @@
 //  Created by MacHD on 2/15/19.
 //  Copyright © 2019 MacHD. All rights reserved.
 //
-
+import Foundation
 import UIKit
 import NVActivityIndicatorView
-
+import FoldingCell
+import EasyPeasy
 
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
@@ -16,6 +17,18 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
      var Bar = UIView()
      let barHeight = CGFloat(3)
      var courses : [Course] = []
+    //---
+   
+    fileprivate struct C {
+        struct CellHeight {
+            static let close: CGFloat = 75 // equal or greater foregroundView height
+            static let open: CGFloat = 150 // equal or greater containerView height
+        }
+    }
+    //---
+   
+    
+    var cellHeights : [CGFloat] = []
     //Dependecies`
     let viewModel = HomeViewModel(HomeRepository: HomeRepository())
     //IBOutlets
@@ -32,13 +45,14 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         super.viewDidLoad()
         SetupView()
         
-     
        
     }
   
     
     fileprivate func SetupView() {
         self.sideMenuController()?.sideMenu?.delegate = self
+        tableView.separatorStyle = .none
+
         SetupTableViewDataSource()
         SetupStatusImage()
         SetupBarView()
@@ -104,11 +118,20 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     
     //--------------------------------------------------------------------------------------------
     fileprivate func SetupTableViewDataSource() {
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
             self.viewModel.fetchCourses(tag: "accepted")
+//            self.tableView.tableFooterView = UIView()
         }
         viewModel.CoursesFetchedClosure = {
+            if (SessionManager.currentSession.assignedCourses.count != 0){
+            self.SeguementedControl.setTitle("ATTRIBUÉES(\(SessionManager.currentSession.assignedCourses.count))", forSegmentAt: 1)
+            }
+            if (SessionManager.currentSession.acceptedCourses.count != 0){
+            self.SeguementedControl.setTitle("EN COURS(\(SessionManager.currentSession.acceptedCourses.count))", forSegmentAt: 0)
+            }
             self.courses = self.viewModel.CoursesFetched!
+            self.cellHeights = (0..<self.courses.count).map { _ in C.CellHeight.close }
             self.tableView.reloadData()
             print(self.viewModel.CoursesFetched!)
         }
@@ -163,16 +186,59 @@ extension UISegmentedControl {
 }
 
 extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
+   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) // as? CustomCell
-        cell.textLabel?.text = "\(courses[indexPath.row].id)     \(courses[indexPath.row].adresseDepart.address)"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) 
+      cell.textLabel?.text = courses[indexPath.row].lettreDeVoiture.code
+        
+//        cell?.adressLabel.text = courses[indexPath.row].adresseDepart.address
+//        cell?.deliveryDate.text = courses[indexPath.row].dateLivraison
+//        cell?.codeLV.text = courses[indexPath.row].lettreDeVoiture.code
+//        cell?.iconIndicator.image = UIImage(named: "M")
+        
+//        cell.adressLabel?.text = "\(courses[indexPath.row].adresseDepart.address)"
+//        cell.deliveryDate?.text = "\(courses[indexPath.row].dateLivraison)"
+//        cell.codeLV?.text = "\(courses[indexPath.row].lettreDeVoiture.code)"
+//        cell.iconIndicator?.image = UIImage(named: "M")
         return cell
     }
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+  
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return courses.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return cellHeights[indexPath.row]
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard case let cell as FoldingCell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        
+        var duration = 0.0
+        if cellHeights[indexPath.row] == C.CellHeight.close {
+            cellHeights[indexPath.row] = C.CellHeight.open
+            cell.unfold(true, animated: true, completion: nil)
+            duration = 0.5
+        } else {
+            cellHeights[indexPath.row] = C.CellHeight.close
+            cell.unfold(false, animated: true, completion: nil)
+            duration = 0.8
+        }
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }, completion: nil)
+        
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if case let cell as FoldingCell = cell {
+            if cellHeights[indexPath.row] == C.CellHeight.close {
+               cell.unfold(false, animated: false, completion: nil)
+            } else {
+               cell.unfold(true, animated: false, completion: nil)
+            }
+        }
     }
     
 }

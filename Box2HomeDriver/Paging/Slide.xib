@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.59" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.45"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Slide" customModule="Box2HomeDriver" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aZv-ja-28g">
+                    <rect key="frame" x="73" y="226" width="268" height="283"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ye3-P8-cPi">
+                    <rect key="frame" x="175" y="566" width="64" height="52"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                    <color key="textColor" red="0.225789252" green="0.66612885610000006" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rqm-sJ-oNd">
+                    <rect key="frame" x="175" y="637" width="64" height="52"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                    <color key="textColor" red="0.225789252" green="0.66612885610000006" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="rqm-sJ-oNd" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3NS-0s-0Pp"/>
+                <constraint firstItem="Ye3-P8-cPi" firstAttribute="top" secondItem="aZv-ja-28g" secondAttribute="bottom" constant="40" id="GPa-pG-G1h"/>
+                <constraint firstItem="aZv-ja-28g" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="LRo-RS-LFA"/>
+                <constraint firstItem="Ye3-P8-cPi" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="V99-GS-ikH"/>
+                <constraint firstItem="rqm-sJ-oNd" firstAttribute="top" secondItem="Ye3-P8-cPi" secondAttribute="bottom" constant="40" id="bcV-Xq-v5i"/>
+                <constraint firstItem="aZv-ja-28g" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="mYf-BZ-mQ7"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="imageView" destination="aZv-ja-28g" id="B7q-1I-k2G"/>
+                <outlet property="matricule" destination="rqm-sJ-oNd" id="17r-Y0-vrr"/>
+                <outlet property="nom" destination="Ye3-P8-cPi" id="3NY-YG-np7"/>
+            </connections>
+            <point key="canvasLocation" x="34.782608695652179" y="34.821428571428569"/>
+        </view>
+    </objects>
+</document>

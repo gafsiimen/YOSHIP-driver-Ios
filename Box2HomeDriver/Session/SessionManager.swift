@@ -14,18 +14,18 @@ class SessionManager {
     var assignedCourses : [Course] = []
     
     var message:String?
-    var authToken:String?
+    var authToken:String? 
     var code:String?
     var coursesInPipeStats:coursesInPipeStats?
     var chauffeur: chauffeur?
-    
-    func signIn(message:String,authToken:String,code:String,coursesInPipeStats:coursesInPipeStats,chauffeur:chauffeur){
-        SocketIOManager.sharedInstance.establishConnection()
+
+    func signIn(message:String,authToken:String,code:String,coursesInPipeStats:coursesInPipeStats,chauffeur:chauffeur,completion: () -> ()) {
+        self.authToken = authToken
         self.message = message
         self.code = code
-        self.authToken = authToken
         self.coursesInPipeStats = coursesInPipeStats
         self.chauffeur = chauffeur
+        completion()
     }
     func signOut() {
         SocketIOManager.sharedInstance.closeConnection()
@@ -35,16 +35,5 @@ class SessionManager {
         self.coursesInPipeStats = nil
         self.chauffeur = nil
     }
-    func GetImageIntType(s:String) -> Int {
-        switch s {
-        case "S":
-            return 0
-        case "M":
-            return 1
-        case "L":
-            return 2
-        default:
-            return 3
-        }
-    }
+   
 }
