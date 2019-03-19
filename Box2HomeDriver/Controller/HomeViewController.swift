@@ -44,7 +44,6 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         SetupView()
-        
        
     }
   
@@ -183,14 +182,36 @@ extension UISegmentedControl {
         UIGraphicsEndImageContext();
         return image!
     }
+    
 }
 
 extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) 
-      cell.textLabel?.text = courses[indexPath.row].lettreDeVoiture.code
+    fileprivate func SetupCourseCell(_ cell: CourseCell, _ indexPath: IndexPath) {
+        //--------------------------------------
+        //frame Setup
+
+          cell.adresseDepart.frame = CGRect(x: CGFloat(50), y: CGFloat(15), width: cell.foregroundView.frame.width - 30, height: CGFloat(25))
+          cell.adresseArrivee.frame = CGRect(x: CGFloat(50), y: CGFloat(45), width: cell.foregroundView.frame.width - 30, height: CGFloat(25))
+        //--------------------------------------
+        //text Setup
+         cell.adresseDepart.text = courses[indexPath.row].adresseDepart.address
+         cell.adresseArrivee.text = courses[indexPath.row].adresseArrivee.address
+       //--------------------------------------
+       //Style Setup
+         cell.adresseDepart.font = UIFont(name: "SavoyeLetPlain", size: CGFloat(20))
+         cell.adresseArrivee.font = UIFont(name: "SavoyeLetPlain", size: CGFloat(20))
         
+      
+
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) as! CourseCell
+        SetupCourseCell(cell, indexPath)
+        
+//      cell.textLabel?.text = courses[indexPath.row].lettreDeVoiture.code
+//        cell.adress = courses[indexPath.row].adresseDepart.address
 //        cell?.adressLabel.text = courses[indexPath.row].adresseDepart.address
 //        cell?.deliveryDate.text = courses[indexPath.row].dateLivraison
 //        cell?.codeLV.text = courses[indexPath.row].lettreDeVoiture.code
@@ -240,5 +261,6 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
+   
     
 }
