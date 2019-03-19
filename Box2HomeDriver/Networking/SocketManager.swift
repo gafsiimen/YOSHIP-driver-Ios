@@ -153,7 +153,7 @@ class SocketIOManager: NSObject {
                                         isStatusChangedManually: dict["isStatusChangedManually"].boolValue,
                                         dateDemarrageMeta: dict["dateDemarrageMeta"].stringValue,
                                         codeCorner: dict["codeCorner"].stringValue)
-                
+                print(dict["status"]["code"].stringValue)
                 SessionManager.currentSession.acceptedCourses.append(thisCourse)
             }
 

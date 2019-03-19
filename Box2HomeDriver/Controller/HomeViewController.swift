@@ -21,8 +21,8 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
    
     fileprivate struct C {
         struct CellHeight {
-            static let close: CGFloat = 75 // equal or greater foregroundView height
-            static let open: CGFloat = 150 // equal or greater containerView height
+            static let close: CGFloat = 150 // equal or greater foregroundView height
+            static let open: CGFloat = 300 // equal or greater containerView height
         }
     }
     //---
