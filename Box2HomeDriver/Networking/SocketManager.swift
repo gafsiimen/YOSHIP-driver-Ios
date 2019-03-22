@@ -9,6 +9,7 @@
 import Foundation
 import SocketIO
 import SwiftyJSON
+import SwiftEventBus
 class SocketIOManager: NSObject {
 //     var InitialAcceptedCourses : [Course] = []
      static let sharedInstance = SocketIOManager()
@@ -16,19 +17,20 @@ class SocketIOManager: NSObject {
 //    RwsGzmdmMbGef2BW+IjvFR7MZlWLzedrOsQUxmfMvcAMj9lu7fQgiKO+OUZu/wnwsUw=
     static let socket = manager.defaultSocket
    
+  
+    
     override init() {
        super.init()
         
         let myDictOfDict:[String:Any] = [
-            "code" : "CHF-0003",
-            "latitude" : "35.825059600000003",
-            "longitude" : "10.6327476",
-            "heading" : "127.0",
-            "manutention" : 0,
-            "deviceInfo" : "xxxxxcxxx",
+            "code" : SessionManager.currentSession.chauffeur!.code,
+            "latitude" : SessionManager.currentSession.chauffeur!.latitude,
+            "longitude" : SessionManager.currentSession.chauffeur!.longitude,
+            "heading" : SessionManager.currentSession.chauffeur!.heading,
+            "manutention" : SessionManager.currentSession.chauffeur!.manutention,
+            "deviceInfo" : SessionManager.currentSession.chauffeur!.deviceInfo,
             "vehicule" : ["denomination":"Trafic",
                           "haillon": false,
-//                          "image" : nil,
                           "immatriculation" : "122 TN 444",
                           "id" : 4,
                           "status" : 1,
@@ -53,6 +55,16 @@ class SocketIOManager: NSObject {
                 print(JSON(data))
             })
           
+        }
+        SocketIOManager.socket.on(clientEvent: .disconnect) { (data, ack) in
+        
+        }
+        SocketIOManager.socket.on(clientEvent: .error) { (data, ack) in
+            
+        }
+        
+         SocketIOManager.socket.on("newCourse") { (data, ack) in
+            print("NewCourse INC")
         }
         SocketIOManager.socket.on("accepted") { (data, ack) in
             let str = data[0] as! String
@@ -154,7 +166,9 @@ class SocketIOManager: NSObject {
                                         dateDemarrageMeta: dict["dateDemarrageMeta"].stringValue,
                                         codeCorner: dict["codeCorner"].stringValue)
                 print(dict["status"]["code"].stringValue)
-                SessionManager.currentSession.acceptedCourses.append(thisCourse)
+                self.CourseAppend(tag: "accepted", thisCourse, completion: {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                })
             }
 
         }
@@ -260,7 +274,10 @@ class SocketIOManager: NSObject {
                                         dateDemarrageMeta: dict["dateDemarrageMeta"].stringValue,
                                         codeCorner: dict["codeCorner"].stringValue)
                 
-                SessionManager.currentSession.assignedCourses.append(thisCourse)
+                self.CourseAppend(tag: "assigned", thisCourse, completion: {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+
+                })
             }
         }
         
@@ -268,6 +285,19 @@ class SocketIOManager: NSObject {
         
         
         
+    }
+    
+    fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: () -> ()) {
+        switch tag{
+        case "accepted":
+            SessionManager.currentSession.acceptedCourses.append(thisCourse)
+            completion()
+        case "assigned":
+            SessionManager.currentSession.assignedCourses.append(thisCourse)
+            completion()
+        default:
+            break
+        }
     }
    
     func GetStringArray(json: JSON) -> [String] {

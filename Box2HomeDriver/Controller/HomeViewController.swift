@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import NVActivityIndicatorView
 import FoldingCell
-import EasyPeasy
+import SwiftEventBus
 
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
@@ -17,6 +17,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
      var Bar = UIView()
      let barHeight = CGFloat(3)
      var courses : [Course] = []
+    let dateFormatter = DateFormatter()
     //---
    
     fileprivate struct C {
@@ -44,14 +45,13 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         SetupView()
-       
     }
   
     
     fileprivate func SetupView() {
         self.sideMenuController()?.sideMenu?.delegate = self
         tableView.separatorStyle = .none
-
+//      tableView.tableFooterView = UIView()
         SetupTableViewDataSource()
         SetupStatusImage()
         SetupBarView()
@@ -76,7 +76,10 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         SetupHomeView.sharedInstance.SetupBarView(BarView: BarView)
     }
     fileprivate func SetupBar() {
-        SetupHomeView.sharedInstance.SetupBar(Bar: Bar, view: view, BarView: BarView, x: 0, y: self.StatusImage.frame.height+self.BarView.frame.height+self.SeguementedControl.frame.height-self.barHeight, width: self.view.frame.width/2, height: self.barHeight)
+        SetupHomeView.sharedInstance.SetupBar(Bar: Bar, view: view, BarView: BarView, x: 0,y:UIScreen.main.bounds.height/5.5, width: self.view.frame.width/2, height: self.barHeight)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+            self.Bar.bottomAnchor.constraint(equalTo: self.SeguementedControl.bottomAnchor).isActive = true
+        }
     }
     fileprivate func animateBar(barX: CGFloat) {
         if barX == 0 {
@@ -116,12 +119,18 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     }
     
     //--------------------------------------------------------------------------------------------
+  
     fileprivate func SetupTableViewDataSource() {
         
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "reload"), object: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
             self.viewModel.fetchCourses(tag: "accepted")
-//            self.tableView.tableFooterView = UIView()
         }
+        
+        dateFormatter.timeZone = TimeZone(abbreviation: "GMT+1:00")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+//        NotificationCenter.default.addObserver(self, selector: #selector(refreshAssigned), name: NSNotification.Name(rawValue: "reloadAssigned"), object: nil)
+        
         viewModel.CoursesFetchedClosure = {
             if (SessionManager.currentSession.assignedCourses.count != 0){
             self.SeguementedControl.setTitle("ATTRIBUÉES(\(SessionManager.currentSession.assignedCourses.count))", forSegmentAt: 1)
@@ -135,7 +144,12 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
             print(self.viewModel.CoursesFetched!)
         }
     }
- //--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
+    @objc func refresh(_ notification: Notification) {
+        tableView.reloadData()
+    }
+ 
+    
 }
 extension UISegmentedControl {
     func removeBorders() {
@@ -189,21 +203,39 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
    
     fileprivate func SetupCourseCell(_ cell: CourseCell, _ indexPath: IndexPath) {
         //--------------------------------------
+        //color Setup
+          cell.adresseDepart.backgroundColor = .clear
+          cell.adresseArrivee.backgroundColor = .clear
+          cell.StatusAndDate.textColor = .orange
+        //--------------------------------------
         //frame Setup
-
-          cell.adresseDepart.frame = CGRect(x: CGFloat(50), y: CGFloat(15), width: cell.foregroundView.frame.width - 30, height: CGFloat(25))
-          cell.adresseArrivee.frame = CGRect(x: CGFloat(50), y: CGFloat(45), width: cell.foregroundView.frame.width - 30, height: CGFloat(25))
+        
+          cell.adresseDepart.frame = CGRect(x: 50, y: 15, width: cell.foregroundView.frame.width - 70, height: 35)
+          cell.adresseArrivee.frame = CGRect(x: 50, y: 50, width: cell.foregroundView.frame.width - 70, height: 35)
+          cell.StatusAndDate.frame = CGRect(x: 50, y: 80, width: cell.foregroundView.frame.width - 70, height: 35)
+          cell.departIcon.frame = CGRect(x: 20, y: 20, width: 20, height: 20)
+          cell.arriveeIcon.frame = CGRect(x: 20, y: 55, width: 20, height: 20)
         //--------------------------------------
         //text Setup
-         cell.adresseDepart.text = courses[indexPath.row].adresseDepart.address
-         cell.adresseArrivee.text = courses[indexPath.row].adresseArrivee.address
-       //--------------------------------------
-       //Style Setup
-         cell.adresseDepart.font = UIFont(name: "SavoyeLetPlain", size: CGFloat(20))
-         cell.adresseArrivee.font = UIFont(name: "SavoyeLetPlain", size: CGFloat(20))
+          cell.adresseDepart.text = courses[indexPath.row].adresseDepart.address
+          cell.adresseArrivee.text = courses[indexPath.row].adresseArrivee.address
+        cell.StatusAndDate.text = "HOUR:  \(Calendar.current.component(.hour, from: dateFormatter.date(from: courses[indexPath.row].dateDemarrage)!))"
+        //--------------------------------------
+        //Style Setup : https://github.com/lionhylra/iOS-UIFont-Names
+          cell.adresseDepart.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))
+          cell.adresseArrivee.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))
+          cell.StatusAndDate.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))
+        //--------------------------------------
+        //behaviour Setup
+           cell.adresseDepart.numberOfLines = 0
+           cell.adresseArrivee.numberOfLines = 0
+           cell.StatusAndDate.numberOfLines = 0
+           cell.departIcon.contentMode = .scaleAspectFit
+           cell.arriveeIcon.contentMode = .scaleAspectFit
+      //--------------------------------------
+    
+//        let date = dateFormatter.date(from: courses[indexPath.row].dateDemarrage)
         
-      
-
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -236,20 +268,28 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             return
         }
         
-        var duration = 0.0
+       
+//        var duration = 0.0
         if cellHeights[indexPath.row] == C.CellHeight.close {
             cellHeights[indexPath.row] = C.CellHeight.open
-            cell.unfold(true, animated: true, completion: nil)
-            duration = 0.5
+            
+            cell.unfold(true, animated: true){
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            }
+//            duration = 0.5
         } else {
             cellHeights[indexPath.row] = C.CellHeight.close
-            cell.unfold(false, animated: true, completion: nil)
-            duration = 0.8
+            cell.unfold(false, animated: true){ tableView.scrollToRow(at: indexPath, at: .middle, animated: true)}
+//            duration = 0.8
         }
-        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+//        UIView.animate(withDuration: duration) {
             tableView.beginUpdates()
             tableView.endUpdates()
-        }, completion: nil)
+//        }
+//        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseIn, animations: {
+//            tableView.beginUpdates()
+//            tableView.endUpdates()
+//        }, completion: nil)
         
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

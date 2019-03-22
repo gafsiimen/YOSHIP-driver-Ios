@@ -13,6 +13,8 @@ class SessionManager {
     var acceptedCourses : [Course] = []
     var assignedCourses : [Course] = []
     
+    
+    
     var message:String?
     var authToken:String? 
     var code:String?

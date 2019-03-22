@@ -8,18 +8,23 @@
 
 class HomeViewModel {
     private var HomeRepository: HomeRepository?
+  
     
     init(HomeRepository : HomeRepository
         ) { self.HomeRepository = HomeRepository
     }
     
+        
     var CoursesFetched: [Course]? = [] {
         didSet { self.CoursesFetchedClosure?() }
     }
-    
+    var ArrayDidChange: Int = SessionManager.currentSession.assignedCourses.count {
+        didSet { self.ArrayDidChangeClosure?() }
+    }
   
    
     var CoursesFetchedClosure: (() -> ())?
+    var ArrayDidChangeClosure: (() -> ())?
     
   
     
