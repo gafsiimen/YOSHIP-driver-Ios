@@ -39,7 +39,7 @@ struct Course {
     let createdAt : String
     let montantHT : String
     var token : String?
-    let signaturesImages : [String]
+    let signaturesImages : [signatureImage]
     let colisImages : [String]
     var nomSociete : String?
     var adresseFacturation : adresse?
@@ -49,12 +49,10 @@ struct Course {
     var noteInterne : String?
     var nonEnvoiMail : Bool?
     let isStatusChangedManually : Bool
-    let dateDemarrageMeta : String
+    let dateDemarrageMeta : dateDemarrageMeta
     let codeCorner : String
     
-    init(id : Int ,code : String,courseSource : String, adresseDepart : adresse, pointEnlevement : String, vehiculeType : String ,moyenPaiement : moyenPaiement,observation : String, observationArrivee : String,factures : String, adresseArrivee : adresse , chauffeur : chauffeur, vehicule : vehicule, lettreDeVoiture : lettreDeVoiture, contactArrivee : contact, contactDepart : contact ,nombreColis : Int, manutention : Bool, manutentionDouble : Bool, estimatedKM : Double, status : status, commande : commande ,dateDemarrage : String, dateAcceptation : String, dateEnlevement : String, dateLivraison : String, dateAffirmationFin : String ,createdAt : String, montantHT : String, signaturesImages : [String], colisImages : [String] , scannedDocs : [String],
-         articles :[String],articleFamilies : [articleFamily]
-   , isStatusChangedManually : Bool, dateDemarrageMeta : String,codeCorner : String) {
+    init(id : Int ,code : String,courseSource : String, adresseDepart : adresse, pointEnlevement : String, vehiculeType : String ,moyenPaiement : moyenPaiement,observation : String, observationArrivee : String,factures : String, adresseArrivee : adresse , chauffeur : chauffeur, vehicule : vehicule, lettreDeVoiture : lettreDeVoiture, contactArrivee : contact, contactDepart : contact ,nombreColis : Int, manutention : Bool, manutentionDouble : Bool, estimatedKM : Double, status : status, commande : commande ,dateDemarrage : String, dateAcceptation : String, dateEnlevement : String, dateLivraison : String, dateAffirmationFin : String ,createdAt : String, montantHT : String, signaturesImages : [signatureImage], colisImages : [String] , scannedDocs : [String],articles :[String],articleFamilies : [articleFamily], isStatusChangedManually : Bool, dateDemarrageMeta : dateDemarrageMeta,codeCorner : String) {
         self.id = id
         self.code = code
         self.courseSource = courseSource

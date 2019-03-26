@@ -75,7 +75,7 @@ class SocketIOManager: NSObject {
                 } catch {
                     print("Error JSON: \(error)")
                 }
-//                print(dict.description)
+                print("\n\n",dict.description,"\n\n")
                 var courses : [Course] = []
                 let thisCourse = Course(id: dict["id"].intValue,
                                         code: dict["code"].stringValue,
@@ -85,7 +85,8 @@ class SocketIOManager: NSObject {
                                                                address: dict["adresseDepart"]["address"].stringValue,
                                                                latitude: dict["adresseDepart"]["latitude"].doubleValue,
                                                                longitude:dict["adresseDepart"]["longitude"].doubleValue,
-                                                               postalCode: dict["adresseDepart"]["postalCode"].intValue),
+                                                               postalCode: dict["adresseDepart"]["postalCode"].intValue,
+                                                               operationalHours: self.GetOperationalHours(json: dict["adresseDepart"]["operationalHours"])),
                                         pointEnlevement: dict["pointEnlevement"].stringValue,
                                         vehiculeType: dict["vehiculeType"].stringValue,
                                         moyenPaiement: moyenPaiement(code: dict["moyenPaiement"]["code"].stringValue,
@@ -98,7 +99,8 @@ class SocketIOManager: NSObject {
                                                                 address: dict["adresseArrivee"]["address"].stringValue,
                                                                 latitude: dict["adresseArrivee"]["latitude"].doubleValue,
                                                                 longitude:dict["adresseArrivee"]["longitude"].doubleValue,
-                                                                postalCode: dict["adresseArrivee"]["postalCode"].intValue),
+                                                                postalCode: dict["adresseArrivee"]["postalCode"].intValue,
+                                                                operationalHours: self.GetOperationalHours(json: dict["adresseArrivee"]["operationalHours"])),
                                         chauffeur: chauffeur(lastname: dict["chauffeur"]["lastname"].stringValue,
                                                              firstname: dict["chauffeur"]["firstname"].stringValue,
                                                              code: dict["chauffeur"]["code"].stringValue),
@@ -157,17 +159,19 @@ class SocketIOManager: NSObject {
                                         dateAffirmationFin: dict["dateAffirmationFin"].stringValue,
                                         createdAt: dict["createdAt"].stringValue,
                                         montantHT: dict["montantHT"].stringValue,
-                                        signaturesImages: self.GetStringArray(json: dict["signaturesImages"]),
+                                        signaturesImages: self.GetSignatureImages(json: dict["signaturesImages"]),
                                         colisImages: self.GetStringArray(json: dict["colisImages"]),
                                         scannedDocs: self.GetStringArray(json: dict["scannedDocs"]),
                                         articles: self.GetStringArray(json: dict["scannedDocs"]),
                                         articleFamilies: self.GetArticleFamilies(json: dict["articleFamilies"]),
                                         isStatusChangedManually: dict["isStatusChangedManually"].boolValue,
-                                        dateDemarrageMeta: dict["dateDemarrageMeta"].stringValue,
+                                        dateDemarrageMeta: dateDemarrageMeta(closeTime: dict["dateDemarrageMeta"]["closeTime"].stringValue,
+                                                                             deliveryWindow: dict["dateDemarrageMeta"]["deliveryWindow"].intValue,
+                                                                             openTime: dict["dateDemarrageMeta"]["openTime"].stringValue),
                                         codeCorner: dict["codeCorner"].stringValue)
-                print(dict["status"]["code"].stringValue)
+                print("\n\n" ,dict["status"]["code"].stringValue ,"\n\n")
                 self.CourseAppend(tag: "accepted", thisCourse, completion: {
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: "accepted")
                 })
             }
 
@@ -193,7 +197,8 @@ class SocketIOManager: NSObject {
                                                                address: dict["adresseDepart"]["address"].stringValue,
                                                                latitude: dict["adresseDepart"]["latitude"].doubleValue,
                                                                longitude:dict["adresseDepart"]["longitude"].doubleValue,
-                                                               postalCode: dict["adresseDepart"]["postalCode"].intValue),
+                                                               postalCode: dict["adresseDepart"]["postalCode"].intValue,
+                                                               operationalHours: self.GetOperationalHours(json: dict["adresseDepart"]["operationalHours"])),
                                         pointEnlevement: dict["pointEnlevement"].stringValue,
                                         vehiculeType: dict["vehiculeType"].stringValue,
                                         moyenPaiement: moyenPaiement(code: dict["moyenPaiement"]["code"].stringValue,
@@ -206,7 +211,8 @@ class SocketIOManager: NSObject {
                                                                 address: dict["adresseArrivee"]["address"].stringValue,
                                                                 latitude: dict["adresseArrivee"]["latitude"].doubleValue,
                                                                 longitude:dict["adresseArrivee"]["longitude"].doubleValue,
-                                                                postalCode: dict["adresseArrivee"]["postalCode"].intValue),
+                                                                postalCode: dict["adresseArrivee"]["postalCode"].intValue,
+                                                                operationalHours: self.GetOperationalHours(json: dict["adresseArrivee"]["operationalHours"])),
                                         chauffeur: chauffeur(lastname: dict["chauffeur"]["lastname"].stringValue,
                                                              firstname: dict["chauffeur"]["firstname"].stringValue,
                                                              code: dict["chauffeur"]["code"].stringValue),
@@ -265,17 +271,19 @@ class SocketIOManager: NSObject {
                                         dateAffirmationFin: dict["dateAffirmationFin"].stringValue,
                                         createdAt: dict["createdAt"].stringValue,
                                         montantHT: dict["montantHT"].stringValue,
-                                        signaturesImages: self.GetStringArray(json: dict["signaturesImages"]),
+                                        signaturesImages: self.GetSignatureImages(json: dict["signaturesImages"]),
                                         colisImages: self.GetStringArray(json: dict["colisImages"]),
                                         scannedDocs: self.GetStringArray(json: dict["scannedDocs"]),
                                         articles: self.GetStringArray(json: dict["scannedDocs"]),
                                         articleFamilies: self.GetArticleFamilies(json: dict["articleFamilies"]),
                                         isStatusChangedManually: dict["isStatusChangedManually"].boolValue,
-                                        dateDemarrageMeta: dict["dateDemarrageMeta"].stringValue,
+                                        dateDemarrageMeta: dateDemarrageMeta(closeTime: dict["dateDemarrageMeta"]["closeTime"].stringValue,
+                                                                             deliveryWindow: dict["dateDemarrageMeta"]["deliveryWindow"].intValue,
+                                                                             openTime: dict["dateDemarrageMeta"]["openTime"].stringValue),
                                         codeCorner: dict["codeCorner"].stringValue)
                 
                 self.CourseAppend(tag: "assigned", thisCourse, completion: {
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: "assigned")
 
                 })
             }
@@ -323,6 +331,17 @@ class SocketIOManager: NSObject {
             )
         }
         return OperationalHours
+    }
+    func GetSignatureImages(json: JSON) -> [signatureImage] {
+        var SignatureImages : [signatureImage] = []
+        let si = json.arrayValue
+        for element in si {
+            SignatureImages.append(
+              signatureImage(type: element["type"].stringValue,
+                             url: element["url"].stringValue)
+            )
+        }
+        return SignatureImages
     }
     func GetArticleFamilies(json: JSON) -> [articleFamily] {
         var ArticleFamilies : [articleFamily] = []

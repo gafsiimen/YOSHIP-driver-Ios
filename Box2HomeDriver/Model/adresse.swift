@@ -14,4 +14,5 @@ struct adresse {
     let latitude : Double
     let longitude : Double
     let postalCode : Int
+    let operationalHours : [operationalHours]
 }
