@@ -20,6 +20,7 @@ struct HomeRepository {
         default:
             break
         }
+       
         return fetchedCourses
         }
 }

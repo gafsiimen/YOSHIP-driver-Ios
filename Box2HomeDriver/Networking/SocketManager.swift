@@ -170,9 +170,7 @@ class SocketIOManager: NSObject {
                                                                              openTime: dict["dateDemarrageMeta"]["openTime"].stringValue),
                                         codeCorner: dict["codeCorner"].stringValue)
                 print("\n\n" ,dict["status"]["code"].stringValue ,"\n\n")
-                self.CourseAppend(tag: "accepted", thisCourse, completion: {
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: "accepted")
-                })
+                self.CourseAppend(tag: "accepted", thisCourse, completion: nil)
             }
 
         }
@@ -295,14 +293,14 @@ class SocketIOManager: NSObject {
         
     }
     
-    fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: () -> ()) {
+    fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: (() -> ())?) {
         switch tag{
         case "accepted":
             SessionManager.currentSession.acceptedCourses.append(thisCourse)
-            completion()
+            completion?()
         case "assigned":
             SessionManager.currentSession.assignedCourses.append(thisCourse)
-            completion()
+            completion?()
         default:
             break
         }
