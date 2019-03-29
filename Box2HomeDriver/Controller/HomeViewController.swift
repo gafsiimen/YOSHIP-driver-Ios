@@ -320,7 +320,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
 //        cell.clientContainer.widthAnchor.constraint(equalToConstant: 165).isActive = true
         //**************ClientIcon**************
         cell.clientIcon.translatesAutoresizingMaskIntoConstraints = false
-        cell.clientIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 10).isActive = true
+        cell.clientIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 0).isActive = true
         cell.clientIcon.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 25).isActive = true
         cell.clientIcon.heightAnchor.constraint(equalToConstant: 150).isActive = true
         cell.clientIcon.widthAnchor.constraint(equalToConstant: 75).isActive = true
