@@ -11,6 +11,7 @@ import UIKit
 import NVActivityIndicatorView
 
 class SetupHomeView: NSObject {
+
     static let sharedInstance : SetupHomeView = SetupHomeView()
     
     func SetupMenuButton(MenuButton: UIButton) {
@@ -23,7 +24,7 @@ class SetupHomeView: NSObject {
     func SetupMapButton(MapButton: UIButton) {
        
         MapButton.setImage(UIImage(named: "map"), for:.normal)
-        MapButton.setTitleColor(.white, for: .normal)
+        MapButton.setTitleColor(.white, for: .selected)
         MapButton.imageView?.contentMode = .scaleAspectFit
         MapButton.imageView?.tintColor = .white
     }

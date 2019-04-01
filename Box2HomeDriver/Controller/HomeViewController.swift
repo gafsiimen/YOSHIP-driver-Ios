@@ -149,9 +149,11 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         }
     }
   //--------------------------------------------------------------------------------------------
+   
     fileprivate func SetupTableView() {
          tableView.estimatedRowHeight = C.CellHeight.close
          tableView.rowHeight = UITableView.automaticDimension
+      
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "reload"), object: nil)
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
@@ -252,15 +254,31 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
  //--------------------------------------------------------------------------------------
     fileprivate func ShowContainerViewSubviews(_ cell: CourseCell) {
         cell.clientIcon.alpha = 1
+        cell.colisIcon.alpha = 1
+        cell.colisQuantityLabel.alpha = 1
         cell.firstNameLabel.alpha = 1
         cell.lastNameLabel.alpha = 1
         cell.phoneLabel.alpha = 1
+        cell.NewColisQuantityTF.alpha = 1
+        cell.updateColisQuantityButton.alpha = 1
+        cell.stackView.alpha = 1
+        cell.ContainerViewLVCodeLabel.alpha = 1
+        cell.observationsLabel.alpha = 1
+        cell.observationsTextView.alpha = 1
     }
     fileprivate func HideContainerViewSubviews(_ cell: CourseCell) {
+        cell.colisQuantityLabel.alpha = 0
         cell.clientIcon.alpha = 0
+        cell.colisIcon.alpha = 0
         cell.firstNameLabel.alpha = 0
         cell.lastNameLabel.alpha = 0
         cell.phoneLabel.alpha = 0
+        cell.NewColisQuantityTF.alpha = 0
+        cell.updateColisQuantityButton.alpha = 0
+        cell.stackView.alpha = 0
+        cell.ContainerViewLVCodeLabel.alpha = 0
+        cell.observationsLabel.alpha = 0
+        cell.observationsTextView.alpha = 0
     }
  //--------------------------------------------------------------------------------------
     fileprivate func ExpandCell(_ indexPath: IndexPath, _ cell: CourseCell, _ tableView: UITableView,animated: Bool) {
@@ -278,16 +296,6 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.unfold(false, animated: animated,completion: completion)
         
     }
-   
-//--------------------------------------------------------------------------------------
-    fileprivate func CloseOtherCells(_ tableView: UITableView, _ indexPath: IndexPath) {
-        for row in 0..<tableView.numberOfRows(inSection: 0) {
-            if (row != indexPath.row && cellHeights[row] == C.CellHeight.open){ guard case let otherCell as CourseCell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) else {return}
-                CloseCell(IndexPath(row: row, section: 0), otherCell, tableView,animated: true, completion: nil)
-               
-            }
-        }
-    }
     //--------------------------------------------------------------------------------------------
     fileprivate func CloseAllCells(animated: Bool,completionAfterCellCloses: (()->())?,completionAfterAllCellsClose: (()->())?) {
         for row in 0..<tableView.numberOfRows(inSection: 0) {
@@ -298,67 +306,171 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
 //       self.RefetchCurrentSegment(completion: nil)
         completionAfterAllCellsClose?()
     }
-    
     //---------------------------------------------------------------------------------------------
     fileprivate func expandedCellSetup(_ cell: CourseCell, _ indexPath: IndexPath) {
         //--------------------------------------------------------------------------------------
         //color Setup
 //        cell.clientContainer.backgroundColor = .white
+       
+        //--------------------------------------------------------------------------------------
+        //Find font name here : https://github.com/lionhylra/iOS-UIFont-Names
+        //**************ClientIcon**************
+        cell.clientIcon.contentMode = .scaleAspectFit
         cell.clientIcon.image = cell.clientIcon.image!.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
         cell.clientIcon.tintColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.firstNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.lastNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.phoneLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        //--------------------------------------------------------------------------------------
         //Layout Setup
-        //**************clientContainer**************
-//        cell.clientContainer.translatesAutoresizingMaskIntoConstraints = false
-//        cell.clientContainer.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 10).isActive = true
-//        cell.clientContainer.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 10).isActive = true
-//        cell.clientContainer.trailingAnchor.constraint(equalTo: cell.phoneLabel.trailingAnchor, constant: 10).isActive = true
-//        cell.clientContainer.heightAnchor.constraint(equalToConstant: 160).isActive = true
-//        cell.clientContainer.widthAnchor.constraint(equalToConstant: 165).isActive = true
-        //**************ClientIcon**************
         cell.clientIcon.translatesAutoresizingMaskIntoConstraints = false
         cell.clientIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 0).isActive = true
         cell.clientIcon.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 25).isActive = true
         cell.clientIcon.heightAnchor.constraint(equalToConstant: 150).isActive = true
         cell.clientIcon.widthAnchor.constraint(equalToConstant: 75).isActive = true
         //**************firstName**************
+        cell.firstNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.firstNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
+        cell.firstName = courses[indexPath.row].commande.client.firstname
+        cell.firstNameLabel.numberOfLines = 0
+        //Layout Setup
         cell.firstNameLabel.translatesAutoresizingMaskIntoConstraints = false
         cell.firstNameLabel.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 30).isActive = true
         cell.firstNameLabel.leadingAnchor.constraint(equalTo: cell.clientIcon.trailingAnchor, constant: 10).isActive = true
         cell.firstNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cell.firstNameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
         //**************lastName**************
+        cell.lastNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.lastName = courses[indexPath.row].commande.client.lastname
+        cell.lastNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
+        cell.lastNameLabel.numberOfLines = 0
+        //Layout Setup
         cell.lastNameLabel.translatesAutoresizingMaskIntoConstraints = false
         cell.lastNameLabel.topAnchor.constraint(equalTo: cell.firstNameLabel.bottomAnchor, constant: 5).isActive = true
         cell.lastNameLabel.leadingAnchor.constraint(equalTo: cell.clientIcon.trailingAnchor, constant: 10).isActive = true
         cell.lastNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cell.lastNameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
         //**************phone**************
+        cell.phoneLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.phone = courses[indexPath.row].commande.client.phone
+        cell.phoneLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
+        cell.phoneLabel.numberOfLines = 0
+        //Layout Setup
         cell.phoneLabel.translatesAutoresizingMaskIntoConstraints = false
         cell.phoneLabel.topAnchor.constraint(equalTo: cell.lastNameLabel.bottomAnchor, constant: 5).isActive = true
         cell.phoneLabel.leadingAnchor.constraint(equalTo: cell.clientIcon.trailingAnchor, constant: 10).isActive = true
         cell.phoneLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cell.phoneLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        //--------------------------------------------------------------------------------------
-        //text Setup
-        cell.firstName = courses[indexPath.row].commande.client.firstname
-        cell.lastName = courses[indexPath.row].commande.client.lastname
-        cell.phone = courses[indexPath.row].commande.client.phone
-        //--------------------------------------------------------------------------------------
-        //Style Setup : https://github.com/lionhylra/iOS-UIFont-Names
-        cell.firstNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
-        cell.lastNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
-        cell.phoneLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
-        //--------------------------------------------------------------------------------------
-        //behaviour Setup
-        cell.firstNameLabel.numberOfLines = 0
-        cell.lastNameLabel.numberOfLines = 0
-        cell.phoneLabel.numberOfLines = 0
-        cell.clientIcon.contentMode = .scaleAspectFit
-//        cell.clientContainer.layer.cornerRadius = 10
+        //**************colisIcon**************
+        cell.colisIcon.image = cell.colisIcon.image!.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        cell.colisIcon.tintColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.colisIcon.contentMode = .scaleAspectFit
+        //Layout Setup
+        cell.colisIcon.translatesAutoresizingMaskIntoConstraints = false
+        cell.colisIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 20).isActive = true
+        cell.colisIcon.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -75).isActive = true
+        cell.colisIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        cell.colisIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        //**************colisQuantity**************
+        cell.colisQuantityLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.colisQuantity = courses[indexPath.row].nombreColis
+        cell.colisQuantityLabel.font = UIFont(name: "Copperplate", size: CGFloat(19))
+        //Layout Setup
+        cell.colisQuantityLabel.translatesAutoresizingMaskIntoConstraints = false
+        cell.colisQuantityLabel.centerYAnchor.constraint(equalTo: cell.colisIcon.centerYAnchor).isActive = true
+        cell.colisQuantityLabel.leadingAnchor.constraint(equalTo: cell.colisIcon.trailingAnchor, constant: 10).isActive = true
+        cell.colisQuantityLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        cell.colisQuantityLabel.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        //**************NewColisQuantityTF**************
+        let placeholderPaddingLeft = 7
+        cell.NewColisQuantityTF.layer.borderColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1).cgColor
+        cell.NewColisQuantityTF.layer.borderWidth = 1
+        cell.NewColisQuantityTF.layer.cornerRadius = 6.5
+        cell.NewColisQuantityTF.backgroundColor = UIColor.clear
+        cell.NewColisQuantityTF.tintColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.NewColisQuantityTF.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.NewColisQuantityTF.attributedPlaceholder = NSAttributedString(string: "New Value", attributes:[NSAttributedString.Key.font : UIFont(name: "Copperplate-Light", size: CGFloat(12))!,NSAttributedString.Key.foregroundColor : UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 0.6)])
+        let paddingView : UIView = UIView(frame: CGRect(x: 0, y: 0, width: placeholderPaddingLeft, height: 20))
+        cell.NewColisQuantityTF.leftView = paddingView
+        cell.NewColisQuantityTF.leftViewMode = .always
+//        cell.NewColisQuantityTF.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
+        //Layout Setup
+        cell.NewColisQuantityTF.translatesAutoresizingMaskIntoConstraints = false
+        cell.NewColisQuantityTF.topAnchor.constraint(equalTo: cell.colisIcon.bottomAnchor, constant: 2).isActive = true
+        cell.NewColisQuantityTF.leadingAnchor.constraint(equalTo: cell.colisIcon.leadingAnchor,constant: -5).isActive = true
+        cell.NewColisQuantityTF.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        cell.NewColisQuantityTF.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        //**************updateColisQuantityButton**************
+        cell.updateColisQuantityButton.setTitle("Update", for: .normal)
+        cell.updateColisQuantityButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.updateColisQuantityButton.tintColor = .white
+        cell.updateColisQuantityButton.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        cell.updateColisQuantityButton.layer.cornerRadius = 6.5
+        //Layout Setup
+        cell.updateColisQuantityButton.translatesAutoresizingMaskIntoConstraints = false
+        cell.updateColisQuantityButton.centerXAnchor.constraint(equalTo: cell.NewColisQuantityTF.centerXAnchor).isActive = true
+        cell.updateColisQuantityButton.topAnchor.constraint(equalTo: cell.NewColisQuantityTF.bottomAnchor, constant: 5).isActive = true
+        cell.updateColisQuantityButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        cell.updateColisQuantityButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        //**************ContainerViewLVCodeLabel**************
+        cell.ContainerViewLVCodeLabel.textColor = .darkGray
+        cell.ContainerViewLVCode = courses[indexPath.row].lettreDeVoiture.code
+        cell.ContainerViewLVCodeLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(12))
+        //Layout Setup
+        cell.ContainerViewLVCodeLabel.translatesAutoresizingMaskIntoConstraints = false
+        cell.ContainerViewLVCodeLabel.bottomAnchor.constraint(equalTo: cell.containerView.bottomAnchor, constant: -10).isActive = true
+        cell.ContainerViewLVCodeLabel.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -10).isActive = true
+        //**************observationsLabel**************
+        cell.observationsLabel.textColor = .darkGray
+        cell.observationsLabel.text = "Observations:"
+        cell.observationsLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))
+        //Layout Setup
+        cell.observationsLabel.translatesAutoresizingMaskIntoConstraints = false
+        cell.observationsLabel.topAnchor.constraint(equalTo: cell.clientIcon.bottomAnchor, constant: -20).isActive = true
+        cell.observationsLabel.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 10).isActive = true
+        cell.observationsLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        //**************observationsTextView**************
+        cell.observationsTextView.contentInset = .zero
+        cell.observationsTextView.isEditable = false
+        cell.observationsTextView.textColor = .darkGray
+        cell.observationsTextView.text = "\(courses[indexPath.row].observation)"
+        cell.observationsTextView.font = UIFont(name: "Copperplate-Light", size: CGFloat(12))
+        cell.observationsTextView.backgroundColor = UIColor(white: 100, alpha: 0.5)
+        //Layout Setup
+        cell.observationsTextView.translatesAutoresizingMaskIntoConstraints = false
+        cell.observationsTextView.topAnchor.constraint(equalTo: cell.observationsLabel.bottomAnchor, constant: 0).isActive = true
+        cell.observationsTextView.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 10).isActive = true
+        cell.observationsTextView.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -10).isActive = true
+        cell.observationsTextView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        //**************stackView**************
+        cell.ClientCallButton.contentMode = .scaleAspectFit
+        cell.SAVCallButton.contentMode = .scaleAspectFit
+        cell.LVDownloadButton.contentMode = .scaleAspectFit
+        let tap1 = MyTapGesture(target: self, action: #selector(ClientCall(sender:)))
+        let tap2 = MyTapGesture(target: self, action: #selector(SAVCall(sender:)))
+        let tap3 = MyTapGesture(target: self, action: #selector(LVDownload(sender:)))
+        // Fill param here
+        tap1.param = courses[indexPath.row].commande.client.phone
+        tap2.param = "2"
+        tap3.param = "3"
+        //-------
+        cell.ClientCallButton.isUserInteractionEnabled = true
+        cell.SAVCallButton.isUserInteractionEnabled = true
+        cell.LVDownloadButton.isUserInteractionEnabled = true
+        cell.ClientCallButton.addGestureRecognizer(tap1)
+        cell.SAVCallButton.addGestureRecognizer(tap2)
+        cell.LVDownloadButton.addGestureRecognizer(tap3)
+        //Layout Setup
+        cell.stackView.translatesAutoresizingMaskIntoConstraints = false
+        cell.stackView.bottomAnchor.constraint(equalTo: cell.containerView.bottomAnchor, constant: -15).isActive = true
+        cell.stackView.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor).isActive = true
+        cell.stackView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        cell.stackView.widthAnchor.constraint(equalToConstant: 130).isActive = true
+    }
+    @objc func ClientCall(sender: MyTapGesture){
+        print("Calling : \(sender.param)")
+    }
+    @objc func SAVCall(sender: MyTapGesture){
+        print("Calling : \(sender.param)")
+    }
+    @objc func LVDownload(sender: MyTapGesture){
+        print("Calling : \(sender.param)")
     }
  //--------------------------------------------------------------------------------------
     fileprivate func collapsedCellSetup(_ cell: CourseCell, _ indexPath: IndexPath) {
@@ -495,4 +607,7 @@ extension UISegmentedControl {
         return image!
     }
     
+}
+class MyTapGesture: UITapGestureRecognizer {
+    var param = String()
 }
