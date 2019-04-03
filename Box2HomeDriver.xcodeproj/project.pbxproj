@@ -44,7 +44,6 @@
 		B7D50DFA223BA40E00172ADF /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7D50DF9223BA40E00172ADF /* Slide.xib */; };
 		B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */; };
 		B7D50DFE223BAA3C00172ADF /* PagerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */; };
-		B7D50E01223BD20500172ADF /* CourseCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */; };
 		B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50E03223BEE4200172ADF /* CourseCell.swift */; };
 		B7DE1B7222254D2A007192EE /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7122254D2A007192EE /* Course.swift */; };
 		B7DE1B7422258947007192EE /* adresse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7322258947007192EE /* adresse.swift */; };
@@ -65,6 +64,9 @@
 		B7DE1B9222258C58007192EE /* societe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B9122258C58007192EE /* societe.swift */; };
 		B7DE1B9422258C6B007192EE /* client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B9322258C6B007192EE /* client.swift */; };
 		B7DEFCB02223EA0F00E51A19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */; };
+		B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FA50DD2253677700B2398E /* CourseDetailsController.swift */; };
+		B7FF03082254CC700088F9A4 /* CourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */; };
+		B7FF030A2254CC990088F9A4 /* CourseDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */; };
 		DBABCD0D3D1BD10DD148F71E /* Pods_Box2HomeDriverTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C924FE391CB7617A46ECFE83 /* Pods_Box2HomeDriverTests.framework */; };
 		E69F5DBBF53D94BF55E1D7B6 /* Pods_Box2HomeDriver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F60BA12E72F978FF4082F8F /* Pods_Box2HomeDriver.framework */; };
 /* End PBXBuildFile section */
@@ -136,7 +138,6 @@
 		B7D50DF9223BA40E00172ADF /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewModel.swift; sourceTree = "<group>"; };
 		B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerRepository.swift; sourceTree = "<group>"; };
-		B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCellViewModel.swift; sourceTree = "<group>"; };
 		B7D50E03223BEE4200172ADF /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
 		B7DE1B7122254D2A007192EE /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		B7DE1B7322258947007192EE /* adresse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adresse.swift; sourceTree = "<group>"; };
@@ -157,6 +158,9 @@
 		B7DE1B9122258C58007192EE /* societe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = societe.swift; sourceTree = "<group>"; };
 		B7DE1B9322258C6B007192EE /* client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = client.swift; sourceTree = "<group>"; };
 		B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B7FA50DD2253677700B2398E /* CourseDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailsController.swift; sourceTree = "<group>"; };
+		B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailViewModel.swift; sourceTree = "<group>"; };
+		B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailRepository.swift; sourceTree = "<group>"; };
 		C924FE391CB7617A46ECFE83 /* Pods_Box2HomeDriverTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Box2HomeDriverTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F64CC843D96FB5661EC6398C /* Pods_Box2HomeDriverUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Box2HomeDriverUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -308,7 +312,7 @@
 				B7AB2C1A2229269000867745 /* LoginViewModel.swift */,
 				B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */,
 				B78957AD223A6DEE000649D7 /* HomeViewModel.swift */,
-				B7D50DFF223BD20500172ADF /* CourseCellViewModel.swift */,
+				B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -323,6 +327,7 @@
 				B778C6C82216C9160094FF92 /* HomeViewController.swift */,
 				B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */,
 				B7D50E03223BEE4200172ADF /* CourseCell.swift */,
+				B7FA50DD2253677700B2398E /* CourseDetailsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -370,6 +375,7 @@
 				B7AB2C1D2229312700867745 /* LoginRepository.swift */,
 				B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */,
 				B78957AF223A8A38000649D7 /* HomeRepository.swift */,
+				B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -697,6 +703,7 @@
 				B778C6C92216C9160094FF92 /* HomeViewController.swift in Sources */,
 				B7DE1B8222258ABC007192EE /* commande.swift in Sources */,
 				B7CA7879221BF95D00281623 /* NavigationController.swift in Sources */,
+				B7FF030A2254CC990088F9A4 /* CourseDetailRepository.swift in Sources */,
 				B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */,
 				B793300622314BE200924DF5 /* NetworkManager.swift in Sources */,
 				B719C0B2221D391C00B96512 /* ENSideMenu.swift in Sources */,
@@ -709,6 +716,7 @@
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
 				B7DE1B8622258B0A007192EE /* article.swift in Sources */,
 				B7CA7875221AE5ED00281623 /* SetupLoginView.swift in Sources */,
+				B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */,
 				B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */,
 				B7DE1B7C22258A29007192EE /* lettreDeVoiture.swift in Sources */,
 				B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */,
@@ -730,7 +738,6 @@
 				B774098C223278F20033F94A /* SocketManager.swift in Sources */,
 				B7DE1B8E22258C2D007192EE /* articleFamily.swift in Sources */,
 				B7AB2C1B2229269000867745 /* LoginViewModel.swift in Sources */,
-				B7D50E01223BD20500172ADF /* CourseCellViewModel.swift in Sources */,
 				B7CA7877221AEA5D00281623 /* SetupSplashScreenView.swift in Sources */,
 				B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */,
 				B7DE1B9022258C44007192EE /* collaborateur.swift in Sources */,
@@ -742,6 +749,7 @@
 				B78957AE223A6DEE000649D7 /* HomeViewModel.swift in Sources */,
 				B7DE1B7422258947007192EE /* adresse.swift in Sources */,
 				B70717112238039D00D687E4 /* operationalHours.swift in Sources */,
+				B7FF03082254CC700088F9A4 /* CourseDetailViewModel.swift in Sources */,
 				B793300822314E7500924DF5 /* Reachability.swift in Sources */,
 				B7D50DF5223BA15200172ADF /* PagerViewController.swift in Sources */,
 				B78AB8092230064600AB224D /* SessionManager.swift in Sources */,
