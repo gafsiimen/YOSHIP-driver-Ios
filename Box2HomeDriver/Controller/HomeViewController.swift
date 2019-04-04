@@ -518,6 +518,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         var destViewController : CourseDetailsController
         destViewController = mainStoryboard.instantiateViewController(withIdentifier: "DetailsCourse") as! CourseDetailsController
+        destViewController.toggleSideMenuView()
         destViewController.adresseDepart = "\(sender.adresseDepart)"
         destViewController.adresseArrivee = "\(sender.adresseArrivee)"
         destViewController.latitudeDepart = sender.latitudeDepart
