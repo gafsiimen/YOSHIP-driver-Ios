@@ -8,10 +8,16 @@
 
 import UIKit
 import GoogleMaps
+import UberSignature
 
-class CourseDetailsController: UIViewController {
+class CourseDetailsController: UIViewController, SignatureDrawingViewControllerDelegate, ENSideMenuDelegate {
     let viewModel = CourseDetailViewModel(CourseDetailRepository: CourseDetailRepository())
-
+    private let signatureViewController = SignatureDrawingViewController()
+    //---------
+    var mapView = GMSMapView()
+    var mapViewHeightConstraint: NSLayoutConstraint!
+    var bottomViewHeightConstraint: NSLayoutConstraint!
+    //---------
     var CourseTag:String = ""
     var latitudeDepart:Double = 0
     var longitudeDepart:Double = 0
@@ -20,7 +26,8 @@ class CourseDetailsController: UIViewController {
     var adresseDepart: String = ""
     var adresseArrivee: String = ""
     var LabelText: String = ""
-    
+    var selectedType = 1
+    //---------
     let bottomView: UIView = {
         let bv = UIView()
         bv.layer.shadowColor = UIColor(ciColor: .black).cgColor
@@ -80,7 +87,7 @@ class CourseDetailsController: UIViewController {
     let ArrivedButton : UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Arrivé", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -126,8 +133,15 @@ class CourseDetailsController: UIViewController {
     }()
     let OuiButton_Arrived : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Oui", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+//        button.setTitle("Oui", for: .normal)
+       
+        button.setImage(UIImage(named: "oui"), for:.normal)
+        button.setTitleColor(.white, for: .normal)
+        button.imageView?.tintColor = .white
+        button.imageView?.contentMode = .scaleAspectFit
+        
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
+        button.alpha = 0.5
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -136,7 +150,12 @@ class CourseDetailsController: UIViewController {
     }()
     let NonButton_Arrived : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Non", for: .normal)
+//        button.setTitle("Non", for: .normal)
+        button.setImage(UIImage(named: "non"), for:.normal)
+        button.setTitleColor(.white, for: .normal)
+        button.imageView?.tintColor = .white
+        button.imageView?.contentMode = .scaleAspectFit
+        
         button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
@@ -248,14 +267,118 @@ class CourseDetailsController: UIViewController {
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let signatureClient : UILabel = {
+        let label = UILabel()
+        label.tintColor = .white
+        label.backgroundColor = .clear
+        label.text = "Signature client"
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        return label
+    }()
+     //---------------------------------------------------------------------
+    lazy var stackViewType: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [Habitat, Magasin, Bureau])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let Habitat : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Habitat", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(11))!
+        button.layer.cornerRadius = 5
+        button.tag = 1
+        button.addTarget(self, action: #selector(typePickButton(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let Magasin : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Magasin", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 5
+        button.tag = 2
+        button.addTarget(self, action: #selector(typePickButton(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let Bureau : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Bureau", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 5
+        button.tag = 3
+        button.addTarget(self, action: #selector(typePickButton(sender:)), for: .touchUpInside)
+        return button
+    }()
+    //---------------------------------------------------------------------
+    @objc func typePickButton(sender: UIButton){
+        self.selectedType = sender.tag
+        switch sender.tag{
+        case 1:
+          self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+          self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+          self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+        case 2:
+          self.Habitat.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+          self.Magasin.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+          self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+        case 3:
+          self.Habitat.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+          self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+          self.Bureau.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+        default:
+            break
+        }
+    }
     //---------------------------------------------------------------------
     @objc func arrivedButton(){
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
-            self.view.layoutIfNeeded()
-        })
         stackViewAccepted.alpha = 0
         stackViewOuiNonBack_Arrived.alpha = 1
+        
+        //---------------------------------------------------------------------
+        arrivedAnimate(){
+            // what to do after animation is over
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                //************stackViewType***********
+                self.view.addSubview(self.stackViewType)
+                //Layout Setup
+                self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
+                self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
+                self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //************signatureViewController.view***********
+                self.view.addSubview(self.signatureViewController.view)
+                //Layout Setup
+                self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
+                self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
+                self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //************signatureClient***********
+                self.view.addSubview(self.signatureClient)
+                //Layout Setup
+                self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
+                self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
+                self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
+                self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            }
+        
+        }
+    }
+    func arrivedAnimate(completion: (()->Void)?){
+        UIView.animate(withDuration: 0.2) {
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.view.layoutIfNeeded()
+        }
+        completion?()
     }
     @objc func cancelButton(){
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -276,13 +399,29 @@ class CourseDetailsController: UIViewController {
     }
    
     @objc func ouiButton_Arrived(){
-       print("OUI ARRIVED")
+        if (self.OuiButton_Arrived.alpha != 1){
+            print("Signature manquante")
+        } else {
+             print("Envoyer Signature")
+            print("le type est: \(selectedType)")
+        }
     }
     @objc func nonButton_Arrived(){
+       
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
             self.view.layoutIfNeeded()
+            
+            self.selectedType = 1
+            self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+            self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+            self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+            self.signatureViewController.reset()
+            self.signatureViewController.view.removeFromSuperview()
+            self.signatureClient.removeFromSuperview()
+            self.stackViewType.removeFromSuperview()
         })
+        
         stackViewAccepted.alpha = 1
         stackViewOuiNonBack_Arrived.alpha = 0
     }
@@ -316,14 +455,25 @@ class CourseDetailsController: UIViewController {
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
    //---------------------------------------------------------------------
-    var mapView = GMSMapView()
-    var mapViewHeightConstraint: NSLayoutConstraint!
-    var bottomViewHeightConstraint: NSLayoutConstraint!
-    
+    func signatureDrawingViewControllerIsEmptyDidChange(controller: SignatureDrawingViewController, isEmpty: Bool) {
+        if (isEmpty) {
+            self.OuiButton_Arrived.alpha = 0.5
+        }
+        else {
+            self.OuiButton_Arrived.alpha = 1
+        }
+    }
+     //---------------------------------------------------------------------
+  
+    override func viewWillDisappear(_ animated: Bool) {
+        self.OuiButton_Arrived.alpha = 0.5
+        self.signatureViewController.reset()
+    }
    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.sideMenuController()?.sideMenu?.delegate = self
         SetupView()
     }
     
@@ -394,6 +544,17 @@ class CourseDetailsController: UIViewController {
         stackViewOuiNonBack_Cancel.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
         stackViewOuiNonBack_Cancel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         stackViewOuiNonBack_Cancel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        //**************signatureView**************
+        signatureViewController.delegate = self
+        addChild(signatureViewController)
+        signatureViewController.didMove(toParent: self)
+        signatureViewController.view.backgroundColor = UIColor(white: 230/255, alpha: 1)
+//        signatureViewController.view.layer.shadowColor = UIColor(ciColor: .black).cgColor
+//        signatureViewController.view.layer.shadowOffset = CGSize(width: 0, height: 1);
+//        signatureViewController.view.layer.shadowOpacity = 1;
+//        signatureViewController.view.layer.shadowRadius = 1.0;
+//        signatureViewController.view.clipsToBounds = false;
+       
     }
     fileprivate func SetupMapView() {
         //**************mapView**************
