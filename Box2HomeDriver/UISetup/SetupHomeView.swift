@@ -17,7 +17,6 @@ class SetupHomeView: NSObject {
     func SetupMenuButton(MenuButton: UIButton) {
         MenuButton.setImage(UIImage(named: "menuIcon"), for:.normal)
         MenuButton.setTitleColor(.white, for: .normal)
-       
         MenuButton.imageView?.tintColor = .white
         MenuButton.imageView?.contentMode = .scaleAspectFit
     }
@@ -51,19 +50,6 @@ class SetupHomeView: NSObject {
         BarView.layer.shadowOpacity = 1;
         BarView.layer.shadowRadius = 1.0;
         BarView.clipsToBounds = false;
-    }
-    func SetupBar(Bar: UIView,view: UIView,BarView: UIView,x: CGFloat,y: CGFloat,width: CGFloat,height: CGFloat) {
-        Bar.frame = CGRect(x:0,y:y,width: width, height: height)
-        Bar.backgroundColor = .darkGray
-        view.addSubview(Bar)
-        view.bringSubviewToFront(Bar)
-      
-      
-    }
-    func animateBar(Bar: UIView,x: CGFloat,y: CGFloat,width: CGFloat,height: CGFloat) {
-        UIView.animate(withDuration: 0.5) {
-            Bar.frame = CGRect(x:x,y:y,width: width, height: height)
-        }
     }
     func SetupStatusImage(StatusImage: UIImageView,vc: UIViewController) {
         StatusImage.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)

@@ -40,7 +40,7 @@ class CourseDetailViewModel {
                 return
             } else if let data = data {
                 let json = JSON(data)
-                print(json.description)
+//                print(json.description)
                 let routes = json["routes"].arrayValue
                 for route in routes
                 {

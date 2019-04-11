@@ -14,12 +14,20 @@ import SwiftEventBus
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
      var sideMenu:ENSideMenu!
-     var Bar = UIView()
+//     var Bar = UIView()
      let barHeight = CGFloat(3)
      var courses : [Course] = []
     let dateFormatter = DateFormatter()
     let formatter = NumberFormatter()
     
+//    var leadingBarConstraint : NSLayoutConstraint!
+//    let Bar : UIView = {
+//        let v = UIView(frame: .zero)
+//        v.translatesAutoresizingMaskIntoConstraints = false
+//        v.layoutIfNeeded()
+//        v.backgroundColor = .darkGray
+//        return v
+//    }()
     //---
    
     fileprivate struct C {
@@ -42,6 +50,8 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     @IBOutlet weak var MenuButton: UIButton!
     @IBOutlet weak var loading: NVActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var leadingBarConstraint: NSLayoutConstraint!
+    @IBOutlet weak var widthBarConstraint: NSLayoutConstraint!
     //--------------------------------------------------------------------------------------------
     
     override func viewDidLoad() {
@@ -78,13 +88,14 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         SetupHomeView.sharedInstance.SetupBarView(BarView: BarView)
     }
     fileprivate func SetupBar() {
-        SetupHomeView.sharedInstance.SetupBar(Bar: Bar, view: view, BarView: BarView, x: 0,y:UIScreen.main.bounds.height/5.5, width: self.view.frame.width/2, height: self.barHeight)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-            self.Bar.bottomAnchor.constraint(equalTo: self.SeguementedControl.bottomAnchor).isActive = true
-        }
+            self.leadingBarConstraint.constant = 0
+            self.widthBarConstraint.constant = self.view.frame.width/2
     }
     fileprivate func animateBar(barX: CGFloat) {
-            SetupHomeView.sharedInstance.animateBar(Bar: Bar, x: barX, y: self.StatusImage.frame.height+self.BarView.frame.height+self.SeguementedControl.frame.height-self.barHeight, width: self.view.frame.width/2, height: self.barHeight)
+        UIView.animate(withDuration: 0.5) {
+            self.leadingBarConstraint.constant = barX
+            self.view.layoutIfNeeded()
+        }
     }
     //--------------------------------------------------------------------------------------------
     @IBAction func MapButton(_ sender: Any) {
@@ -450,7 +461,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.observationsTextView.layer.borderWidth = 1
         cell.observationsTextView.layer.cornerRadius = 10
         cell.observationsTextView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
-        cell.observationsTextView.contentInset = .zero
+        cell.observationsTextView.contentInset = UIEdgeInsets(top: -5, left: 5, bottom: -5, right: 5)
         cell.observationsTextView.isEditable = false
         cell.observationsTextView.textColor = .darkGray
         cell.observationsTextView.text = "\(courses[indexPath.row].observation)"
@@ -469,17 +480,18 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
         cell.CourseDetailsButton.tintColor = .white
         
+        cell.CourseDetailsButton.statusCode = courses[indexPath.row].status.code
         cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart.latitude
         cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart.longitude
         cell.CourseDetailsButton.adresseDepart = courses[indexPath.row].adresseDepart.address
         cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee.latitude
         cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee.longitude
         cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee.address
-        if(SeguementedControl.selectedSegmentIndex == 1){
-            cell.CourseDetailsButton.CourseTag = "assigned"
-        }else{
-            cell.CourseDetailsButton.CourseTag = "accepted"
-        }
+//        if(SeguementedControl.selectedSegmentIndex == 1){
+//            cell.CourseDetailsButton.CourseTag = "assigned"
+//        }else{
+//            cell.CourseDetailsButton.CourseTag = "accepted"
+//        }
         
         cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
         //Layout Setup
@@ -519,13 +531,14 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         var destViewController : CourseDetailsController
         destViewController = mainStoryboard.instantiateViewController(withIdentifier: "DetailsCourse") as! CourseDetailsController
         destViewController.toggleSideMenuView()
+        destViewController.statusCode = sender.statusCode
         destViewController.adresseDepart = "\(sender.adresseDepart)"
         destViewController.adresseArrivee = "\(sender.adresseArrivee)"
         destViewController.latitudeDepart = sender.latitudeDepart
         destViewController.longitudeDepart = sender.longitudeDepart
         destViewController.latitudeArrivee = sender.latitudeArrivee
         destViewController.longitudeArrivee = sender.longitudeArrivee
-        destViewController.CourseTag = sender.CourseTag
+//        destViewController.courseTag = sender.CourseTag
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
     @objc func ClientCall(sender: MyTapGesture){
@@ -677,7 +690,8 @@ class MyTapGesture: UITapGestureRecognizer {
     var param = String()
 }
 class MyButton: UIButton {
-    var CourseTag = String()
+    var statusCode = String()
+//    var CourseTag = String()
     var adresseDepart = String()
     var longitudeDepart = Double()
     var latitudeDepart = Double()

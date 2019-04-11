@@ -13,12 +13,17 @@ import UberSignature
 class CourseDetailsController: UIViewController, SignatureDrawingViewControllerDelegate, ENSideMenuDelegate {
     let viewModel = CourseDetailViewModel(CourseDetailRepository: CourseDetailRepository())
     private let signatureViewController = SignatureDrawingViewController()
+    class OuiNonButton: UIButton {
+        var yes = Bool()
+        var phase = String()
+    }
     //---------
     var mapView = GMSMapView()
     var mapViewHeightConstraint: NSLayoutConstraint!
     var bottomViewHeightConstraint: NSLayoutConstraint!
     //---------
-    var CourseTag:String = ""
+    var statusCode:String = ""
+    var courseTag:String = ""
     var latitudeDepart:Double = 0
     var longitudeDepart:Double = 0
     var latitudeArrivee:Double = 0
@@ -27,6 +32,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     var adresseArrivee: String = ""
     var LabelText: String = ""
     var selectedType = 1
+    var signatureImage: UIImage?
     //---------
     let bottomView: UIView = {
         let bv = UIView()
@@ -68,112 +74,6 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         return button
     }()
     //---------------------------------------------------------------------
-    lazy var stackViewAccepted: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [stackViewArrivedOrCancel, BackButton2])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .vertical
-        sv.spacing = 10
-        sv.distribution = .fillEqually
-        return sv
-    }()
-    lazy var stackViewArrivedOrCancel: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [ArrivedButton, CancelButton])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .horizontal
-        sv.spacing = 5
-        sv.distribution = .fillEqually
-        return sv
-    }()
-    let ArrivedButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Arrivé", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(arrivedButton), for: .touchUpInside)
-        return button
-    }()
-    let CancelButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Annuler", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(cancelButton), for: .touchUpInside)
-        return button
-    }()
-    let BackButton2 : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Retour", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
-        return button
-    }()
-    //---------------------------------------------------------------------
-    lazy var stackViewOuiNonBack_Arrived: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Arrived, BackButton3])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .vertical
-        sv.spacing = 10
-        sv.distribution = .fillEqually
-        return sv
-    }()
-    lazy var stackViewOuiNon_Arrived: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [OuiButton_Arrived, NonButton_Arrived])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .horizontal
-        sv.spacing = 5
-        sv.distribution = .fillEqually
-        return sv
-    }()
-    let OuiButton_Arrived : UIButton = {
-        let button = UIButton(type: .system)
-//        button.setTitle("Oui", for: .normal)
-       
-        button.setImage(UIImage(named: "oui"), for:.normal)
-        button.setTitleColor(.white, for: .normal)
-        button.imageView?.tintColor = .white
-        button.imageView?.contentMode = .scaleAspectFit
-        
-        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
-        button.alpha = 0.5
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(ouiButton_Arrived), for: .touchUpInside)
-        return button
-    }()
-    let NonButton_Arrived : UIButton = {
-        let button = UIButton(type: .system)
-//        button.setTitle("Non", for: .normal)
-        button.setImage(UIImage(named: "non"), for:.normal)
-        button.setTitleColor(.white, for: .normal)
-        button.imageView?.tintColor = .white
-        button.imageView?.contentMode = .scaleAspectFit
-        
-        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(nonButton_Arrived), for: .touchUpInside)
-        return button
-    }()
-    let BackButton3 : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Retour", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
-        return button
-    }()
-    //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Go: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Go, BackButton4])
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -190,24 +90,28 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         sv.distribution = .fillEqually
         return sv
     }()
-    let OuiButton_Go : UIButton = {
-        let button = UIButton(type: .system)
+    let OuiButton_Go : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = true
+        button.phase = "GO"
         button.setTitle("Oui", for: .normal)
         button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(ouiButton_Go), for: .touchUpInside)
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
         return button
     }()
-    let NonButton_Go : UIButton = {
-        let button = UIButton(type: .system)
+    let NonButton_Go : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = false
+        button.phase = "GO"
         button.setTitle("Non", for: .normal)
         button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(nonButton_Go), for: .touchUpInside)
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
         return button
     }()
     let BackButton4 : UIButton = {
@@ -220,6 +124,234 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let confirmationLabel_Go : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.text = "Confirmer votre choix?"
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    //---------------------------------------------------------------------
+    lazy var stackViewAccepted: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [stackViewArrivedOrCancel, BackButton2])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 10
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    lazy var stackViewArrivedOrCancel: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [ArrivedButton, CancelButton_Arrived])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let ArrivedButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Arrivé", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(arrivedButton), for: .touchUpInside)
+        return button
+    }()
+    let CancelButton_Arrived : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Annuler", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(cancelButton_Arrived), for: .touchUpInside)
+        return button
+    }()
+    let BackButton2 : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Retour", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
+        return button
+    }()
+    //---------------------------------------------------------------------
+    lazy var stackViewOuiNonBack_Arrived: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Arrived, BackButton7])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 10
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    lazy var stackViewOuiNon_Arrived: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [OuiButton_Arrived, NonButton_Arrived])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let OuiButton_Arrived : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = true
+        button.phase = "ARRIVED"
+        button.setTitle("Oui", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let NonButton_Arrived : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = false
+        button.phase = "ARRIVED"
+        button.setTitle("Non", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let BackButton7 : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Retour", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
+        return button
+    }()
+    let confirmationLabel_Arrived : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.text = "Êtes-vous sûr?"
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    //---------------------------------------------------------------------
+    lazy var stackViewPickup: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [stackViewConfirmOrCancel, BackButton6])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 10
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    lazy var stackViewConfirmOrCancel: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [ConfirmButton, CancelButton_Pickup])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let ConfirmButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Confirmer", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
+        button.tintColor = .white
+        button.alpha = 0.5
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(confirmButton), for: .touchUpInside)
+        return button
+    }()
+    let CancelButton_Pickup : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Annuler", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(cancelButton_Pickup), for: .touchUpInside)
+        return button
+    }()
+    let BackButton6 : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Retour", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
+        return button
+    }()
+    //---------------------------------------------------------------------
+    lazy var stackViewOuiNonBack_Pickup: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Pickup, BackButton3])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 10
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    lazy var stackViewOuiNon_Pickup: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [OuiButton_Pickup, NonButton_Pickup])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let OuiButton_Pickup : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = true
+        button.phase = "PICKUP"
+        button.setTitle("Oui", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.imageView?.tintColor = .white
+//        button.imageView?.contentMode = .scaleAspectFit
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let NonButton_Pickup : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = false
+        button.phase = "PICKUP"
+        button.setTitle("Non", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
+        return button
+    }()
+    let BackButton3 : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Retour", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
+        return button
+    }()
+    let confirmationLabel_Pickup : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.text = "Êtes-vous sûr?"
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Cancel: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Cancel, BackButton5])
@@ -237,24 +369,28 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         sv.distribution = .fillEqually
         return sv
     }()
-    let OuiButton_Cancel : UIButton = {
-        let button = UIButton(type: .system)
+    let OuiButton_Cancel : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = true
+        button.phase = "CANCEL"
         button.setTitle("Oui", for: .normal)
         button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(ouiButton_Cancel), for: .touchUpInside)
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
         return button
     }()
-    let NonButton_Cancel : UIButton = {
-        let button = UIButton(type: .system)
+    let NonButton_Cancel : OuiNonButton = {
+        let button = OuiNonButton(type: .system)
+        button.yes = false
+        button.phase = "CANCEL"
         button.setTitle("Non", for: .normal)
         button.backgroundColor = UIColor(displayP3Red: (205/255), green: 102/255, blue: 102/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(nonButton_Cancel), for: .touchUpInside)
+        button.addTarget(self, action: #selector(OuiNonHandler(sender:)), for: .touchUpInside)
         return button
     }()
     let BackButton5 : UIButton = {
@@ -339,39 +475,25 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }
     //---------------------------------------------------------------------
     @objc func arrivedButton(){
-        stackViewAccepted.alpha = 0
-        stackViewOuiNonBack_Arrived.alpha = 1
         
-        //---------------------------------------------------------------------
-        arrivedAnimate(){
-            // what to do after animation is over
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                //************stackViewType***********
-                self.view.addSubview(self.stackViewType)
-                //Layout Setup
-                self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
-                self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
-                self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
-                self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
-                self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
-                //************signatureViewController.view***********
-                self.view.addSubview(self.signatureViewController.view)
-                //Layout Setup
-                self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
-                self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
-                self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
-                self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
-                self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
-                //************signatureClient***********
-                self.view.addSubview(self.signatureClient)
-                //Layout Setup
-                self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
-                self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
-                self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
-                self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            }
-        
+        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
+            self.view.layoutIfNeeded()
+        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            self.stackViewAccepted.alpha = 0
+            self.stackViewOuiNonBack_Arrived.alpha = 1
+            
+            self.view.addSubview(self.confirmationLabel_Arrived)
+            //Layout Setup
+            self.confirmationLabel_Arrived.translatesAutoresizingMaskIntoConstraints = false
+            self.confirmationLabel_Arrived.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 25).isActive = true
+            self.confirmationLabel_Arrived.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
+            //            self.confirmationLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 20).isActive = true
         }
+        //---------------------------------------------------------------------
+
     }
     func arrivedAnimate(completion: (()->Void)?){
         UIView.animate(withDuration: 0.2) {
@@ -380,72 +502,273 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         }
         completion?()
     }
-    @objc func cancelButton(){
+    @objc func finishButton(){
+        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.view.layoutIfNeeded()
+        })
+//        stackViewAccepted.alpha = 0
+//        stackViewOuiNonBack_Cancel.alpha = 1
+    }
+    
+    @objc func confirmButton(){
+        if (self.ConfirmButton.alpha != 1){
+            print("Signature manquante")
+        } else {
+//            print("Envoyer Signature")
+//            print("le type est: \(selectedType)")
+            UIView.animate(withDuration: 0.2, animations: { () -> Void in
+                self.bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
+                self.view.layoutIfNeeded()
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.stackViewType.removeFromSuperview()
+                self.signatureViewController.view.removeFromSuperview()
+                self.signatureClient.removeFromSuperview()
+                self.stackViewPickup.alpha = 0
+                self.stackViewOuiNonBack_Pickup.alpha = 1
+                
+                self.view.addSubview(self.confirmationLabel_Pickup)
+                //Layout Setup
+                self.confirmationLabel_Pickup.translatesAutoresizingMaskIntoConstraints = false
+                self.confirmationLabel_Pickup.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 25).isActive = true
+                self.confirmationLabel_Pickup.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
+            }
+        }
+        
+       
+//        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+//            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+//            self.view.layoutIfNeeded()
+//        })
+//        //        stackViewAccepted.alpha = 0
+//        //        stackViewOuiNonBack_Cancel.alpha = 1
+    }
+    @objc func cancelButton_Arrived(){
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
             self.view.layoutIfNeeded()
         })
         stackViewAccepted.alpha = 0
         stackViewOuiNonBack_Cancel.alpha = 1
+        self.NonButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
+        self.OuiButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
+    }
+    @objc func cancelButton_Pickup(){
+        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.view.layoutIfNeeded()
+        })
+        self.stackViewType.removeFromSuperview()
+        self.signatureViewController.view.removeFromSuperview()
+        self.signatureClient.removeFromSuperview()
+        stackViewPickup.alpha = 0
+        stackViewOuiNonBack_Cancel.alpha = 1
+        self.NonButton_Cancel.phase = "CANCEL_FROM_PICKUP"
+        self.OuiButton_Cancel.phase = "CANCEL_FROM_PICKUP"
+
     }
     @objc func goButton(){
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 3 / 10
-            self.stackViewAssigned.alpha = 0
-            self.stackViewOuiNonBack_Go.alpha = 1
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
             self.view.layoutIfNeeded()
         })
-       
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+
+        self.stackViewAssigned.alpha = 0
+        self.stackViewOuiNonBack_Go.alpha = 1
+        
+        self.view.addSubview(self.confirmationLabel_Go)
+        //Layout Setup
+        self.confirmationLabel_Go.translatesAutoresizingMaskIntoConstraints = false
+        self.confirmationLabel_Go.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 25).isActive = true
+        self.confirmationLabel_Go.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
+//            self.confirmationLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 20).isActive = true
+      }
     }
-   
-    @objc func ouiButton_Arrived(){
-        if (self.OuiButton_Arrived.alpha != 1){
-            print("Signature manquante")
-        } else {
-             print("Envoyer Signature")
-            print("le type est: \(selectedType)")
+    @objc func OuiNonHandler(sender: OuiNonButton){
+        switch sender.phase{
+        case "GO":
+            if (sender.yes){
+                 print("OUI GO")
+            }else{
+                UIView.animate(withDuration: 0.2, animations: { () -> Void in
+                    self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
+                    self.confirmationLabel_Go.removeFromSuperview()
+                    self.view.layoutIfNeeded()
+                })
+                stackViewAssigned.alpha = 1
+                stackViewOuiNonBack_Go.alpha = 0
+            }
+        case "ARRIVED":
+            if (sender.yes){
+                arrivedAnimate(){
+                    // what to do after animation is over
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        self.stackViewOuiNonBack_Arrived.alpha = 0
+                        self.stackViewPickup.alpha = 1
+                        self.confirmationLabel_Arrived.removeFromSuperview()
+                        //************stackViewType***********
+                        self.view.addSubview(self.stackViewType)
+                        //Layout Setup
+                        self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
+                        self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
+                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                        self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureViewController.view***********
+                        self.view.addSubview(self.signatureViewController.view)
+                        //Layout Setup
+                        self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
+                        self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
+                        self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureClient***********
+                        self.view.addSubview(self.signatureClient)
+                        //Layout Setup
+                        self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
+                        self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
+                        self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                    }
+                    
+                }
+            }else{
+                UIView.animate(withDuration: 0.2, animations: { () -> Void in
+                    self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
+                    self.confirmationLabel_Arrived.removeFromSuperview()
+                    self.view.layoutIfNeeded()
+                })
+                
+                stackViewAccepted.alpha = 1
+                stackViewOuiNonBack_Arrived.alpha = 0
+            }
+        case "PICKUP":
+            if (sender.yes){
+                print("Envoyer Signature")
+                print("le type est: \(selectedType)")
+            }else{
+                arrivedAnimate(){
+                    // what to do after animation is over
+                    self.selectedType = 1
+                    self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
+                    self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+                    self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
+                    self.signatureViewController.reset()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        self.stackViewOuiNonBack_Pickup.alpha = 0
+                        self.stackViewPickup.alpha = 1
+                        self.confirmationLabel_Pickup.removeFromSuperview()
+                        //************stackViewType***********
+                        self.view.addSubview(self.stackViewType)
+                        //Layout Setup
+                        self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
+                        self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
+                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                        self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureViewController.view***********
+                        self.view.addSubview(self.signatureViewController.view)
+                        //Layout Setup
+                        self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
+                        self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
+                        self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureClient***********
+                        self.view.addSubview(self.signatureClient)
+                        //Layout Setup
+                        self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
+                        self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
+                        self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                    }
+                    
+                }
+            }
+        case "CANCEL_FROM_ACCEPTED":
+            if (sender.yes ){
+                 print("OUI CANCEL")
+            }else{
+               print(sender.yes)
+                    UIView.animate(withDuration: 0.2, animations: { () -> Void in
+                        self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
+                        self.view.layoutIfNeeded()
+                    })
+                    stackViewAccepted.alpha = 1
+                    stackViewOuiNonBack_Cancel.alpha = 0
+                
+               
+            }
+        case "CANCEL_FROM_PICKUP":
+            if (sender.yes){
+                print("OUI CANCEL")
+            }else{
+                arrivedAnimate(){
+                    // what to do after animation is over
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        self.stackViewPickup.alpha = 1
+                        self.stackViewOuiNonBack_Cancel.alpha = 0
+                        self.confirmationLabel_Arrived.removeFromSuperview()
+                        //************stackViewType***********
+                        self.view.addSubview(self.stackViewType)
+                        //Layout Setup
+                        self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
+                        self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
+                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                        self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureViewController.view***********
+                        self.view.addSubview(self.signatureViewController.view)
+                        //Layout Setup
+                        self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
+                        self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
+                        self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                        self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                        //************signatureClient***********
+                        self.view.addSubview(self.signatureClient)
+                        //Layout Setup
+                        self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
+                        self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
+                        self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
+                        self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                    }
+                    
+                }
+               
+                
+                
+            }
+        default:
+            break
         }
+    }
+    @objc func ouiButton_Arrived(){
     }
     @objc func nonButton_Arrived(){
        
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
-            self.view.layoutIfNeeded()
-            
-            self.selectedType = 1
-            self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
-            self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
-            self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
-            self.signatureViewController.reset()
-            self.signatureViewController.view.removeFromSuperview()
-            self.signatureClient.removeFromSuperview()
-            self.stackViewType.removeFromSuperview()
-        })
-        
-        stackViewAccepted.alpha = 1
-        stackViewOuiNonBack_Arrived.alpha = 0
     }
     @objc func ouiButton_Cancel(){
-        print("OUI CANCEL")
+       
     }
     @objc func nonButton_Cancel(){
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
-            self.view.layoutIfNeeded()
-        })
-        stackViewAccepted.alpha = 1
-        stackViewOuiNonBack_Cancel.alpha = 0
+      
     }
     @objc func ouiButton_Go(){
-       print("OUI GO")
+      
     }
+    @objc func ouiButton_Pickup(){
+       
+        }
+
+    @objc func nonButton_Pickup(){
+
+    }
+
     @objc func nonButton_Go(){
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
-            self.view.layoutIfNeeded()
-        })
-        stackViewAssigned.alpha = 1
-        stackViewOuiNonBack_Go.alpha = 0
+      
     }
     @objc func goBackButton(){
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
@@ -457,10 +780,11 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
    //---------------------------------------------------------------------
     func signatureDrawingViewControllerIsEmptyDidChange(controller: SignatureDrawingViewController, isEmpty: Bool) {
         if (isEmpty) {
-            self.OuiButton_Arrived.alpha = 0.5
+            self.ConfirmButton.alpha = 0.5
         }
         else {
-            self.OuiButton_Arrived.alpha = 1
+            self.ConfirmButton.alpha = 1
+            self.signatureImage = signatureViewController.fullSignatureImage
         }
     }
      //---------------------------------------------------------------------
@@ -493,14 +817,67 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         bottomViewHeightConstraint.isActive = true
       
       //----------Init--------------
-        if CourseTag == "assigned"{
+        if statusCode == "ASSIGNED"{
             stackViewAssigned.alpha = 1
             stackViewAccepted.alpha = 0
-        } else {
+            stackViewPickup.alpha = 0
+        } else if statusCode == "ACCEPTEE" {
             stackViewAssigned.alpha = 0
+            stackViewPickup.alpha = 0
             stackViewAccepted.alpha = 1
+        } else if statusCode == "LIVRAISON" {
+            stackViewAssigned.alpha = 0
+            stackViewAccepted.alpha = 0
+            stackViewPickup.alpha = 0
+            print("LIVRAISON")
+        } else if statusCode == "ENLEVEMENT" {
+            stackViewAssigned.alpha = 0
+            stackViewAccepted.alpha = 0
+            stackViewPickup.alpha = 1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+                self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+                self.view.addSubview(self.stackViewType)
+                //Layout Setup
+                self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
+                self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
+                self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //************signatureViewController.view***********
+                self.view.addSubview(self.signatureViewController.view)
+                //Layout Setup
+                self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_Arrived.topAnchor, constant: -15).isActive = true
+                self.signatureViewController.view.topAnchor.constraint(equalTo: self.stackViewType.bottomAnchor, constant: 20).isActive = true
+                self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
+                self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //************signatureClient***********
+                self.view.addSubview(self.signatureClient)
+                //Layout Setup
+                self.signatureClient.translatesAutoresizingMaskIntoConstraints = false
+                self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
+                self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
+                self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                
+            }
+           
+            
+
+           print("ENLEVEMENT")
+        } else  {
+            stackViewAssigned.alpha = 0
+            stackViewAccepted.alpha = 0
+            print("ELSE")
         }
     //----------------------------------
+        //**************stackViewPickup**************
+        bottomView.addSubview(stackViewPickup)
+        //Layout Setup stackViewAccepted
+        stackViewPickup.translatesAutoresizingMaskIntoConstraints = false
+        stackViewPickup.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
+        stackViewPickup.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
+        stackViewPickup.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        stackViewPickup.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         //**************stackViewAccepted**************
         bottomView.addSubview(stackViewAccepted)
         //Layout Setup stackViewAccepted
@@ -509,7 +886,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         stackViewAccepted.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
         stackViewAccepted.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         stackViewAccepted.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        //**************stackViewAccepted**************
+        //**************stackViewAssigned**************
         bottomView.addSubview(stackViewAssigned)
         //Layout Setup stackViewAssigned
         stackViewAssigned.translatesAutoresizingMaskIntoConstraints = false
@@ -544,6 +921,15 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         stackViewOuiNonBack_Cancel.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
         stackViewOuiNonBack_Cancel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         stackViewOuiNonBack_Cancel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        //**************stackViewOuiNonBack_Pickup**************
+        bottomView.addSubview(stackViewOuiNonBack_Pickup)
+        stackViewOuiNonBack_Pickup.alpha = 0
+        //Layout Setup
+        stackViewOuiNonBack_Pickup.translatesAutoresizingMaskIntoConstraints = false
+        stackViewOuiNonBack_Pickup.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
+        stackViewOuiNonBack_Pickup.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
+        stackViewOuiNonBack_Pickup.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        stackViewOuiNonBack_Pickup.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         //**************signatureView**************
         signatureViewController.delegate = self
         addChild(signatureViewController)
