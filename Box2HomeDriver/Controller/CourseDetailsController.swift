@@ -9,10 +9,13 @@
 import UIKit
 import GoogleMaps
 import UberSignature
+import LTHRadioButton
 
 class CourseDetailsController: UIViewController, SignatureDrawingViewControllerDelegate, ENSideMenuDelegate {
     let viewModel = CourseDetailViewModel(CourseDetailRepository: CourseDetailRepository())
     private let signatureViewController = SignatureDrawingViewController()
+    //----------
+    //classes
     class OuiNonButton: UIButton {
         var yes = Bool()
         var phase = String()
@@ -22,18 +25,21 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     var mapViewHeightConstraint: NSLayoutConstraint!
     var bottomViewHeightConstraint: NSLayoutConstraint!
     //---------
+    //data from HomeViewController
     var statusCode:String = ""
-    var courseTag:String = ""
     var latitudeDepart:Double = 0
     var longitudeDepart:Double = 0
     var latitudeArrivee:Double = 0
     var longitudeArrivee:Double = 0
     var adresseDepart: String = ""
     var adresseArrivee: String = ""
-    var LabelText: String = ""
+    //---------
+    //local
     var selectedType = 1
+    var CancelCause = ""
     var signatureImage: UIImage?
     //---------
+    //views
     let bottomView: UIView = {
         let bv = UIView()
         bv.layer.shadowColor = UIColor(ciColor: .black).cgColor
@@ -43,6 +49,122 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         bv.clipsToBounds = false;
         bv.backgroundColor =  UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
         return bv
+    }()
+ 
+    lazy var radioButtonsStackView1: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [radioButton11, radioButton21, radioButton3, radioButton4])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.backgroundColor = .orange
+        sv.distribution = .fillEqually
+        sv.spacing = 20
+        return sv
+    }()
+    lazy var radioButtonsStackView2: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [radioButton12, radioButton22, radioButton3, radioButton4])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.backgroundColor = .orange
+        sv.distribution = .fillEqually
+        sv.spacing = 20
+        return sv
+    }()
+//    lazy var LabelsStackView: UIStackView = {
+//        let sv = UIStackView(arrangedSubviews: [causeLabel1, causeLabel2, causeLabel3, causeLabel4])
+//        sv.translatesAutoresizingMaskIntoConstraints = false
+//        sv.axis = .vertical
+//        sv.distribution = .fillEqually
+//        sv.spacing = 20
+//        return sv
+//    }()
+    lazy var autreTextView: UITextView = {
+        let tv = UITextView()
+        tv.alpha = 0
+        tv.layer.borderWidth = 1
+        tv.layer.cornerRadius = 10
+        tv.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
+        tv.backgroundColor = UIColor(white: 0, alpha: 0.1)
+        tv.textColor = .darkGray
+        return tv
+    }()
+   
+    let causeLabel11 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "Client absent"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let causeLabel12 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "J'ai eu une panne"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let causeLabel21 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "Marchandise non adaptée"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let causeLabel22 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "J'ai eu un accident"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let causeLabel3 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "Rue inaccessible"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let causeLabel4 : UILabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.numberOfLines = 0
+        label.text = "Autre"
+        label.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
+        return label
+    }()
+    let radioButton11 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
+    }()
+    let radioButton12 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
+    }()
+    let radioButton21 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
+    }()
+    let radioButton22 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
+    }()
+    let radioButton3 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
+    }()
+    let radioButton4 : LTHRadioButton = {
+        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        return rb
     }()
     //---------------------------------------------------------------------
     lazy var stackViewAssigned: UIStackView = {
@@ -56,7 +178,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     let GoButton : UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Go", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -95,7 +217,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.yes = true
         button.phase = "GO"
         button.setTitle("Oui", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -202,7 +324,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.yes = true
         button.phase = "ARRIVED"
         button.setTitle("Oui", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -312,7 +434,6 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.setTitle("Oui", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.imageView?.tintColor = .white
-//        button.imageView?.contentMode = .scaleAspectFit
         button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
@@ -374,7 +495,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.yes = true
         button.phase = "CANCEL"
         button.setTitle("Oui", for: .normal)
-        button.backgroundColor = UIColor(displayP3Red: (0/255), green: 204/255, blue: 0/255, alpha: 1)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
         button.tintColor = .white
         button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
         button.layer.cornerRadius = 10
@@ -544,6 +665,85 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 //        //        stackViewAccepted.alpha = 0
 //        //        stackViewOuiNonBack_Cancel.alpha = 1
     }
+    fileprivate func GetCancelCause1() {
+        radioButton11.select()
+
+        //**************stackViewCancelCauses**************
+        bottomView.addSubview(radioButtonsStackView1)
+        //Layout Setup
+        radioButtonsStackView1.translatesAutoresizingMaskIntoConstraints = false
+        radioButtonsStackView1.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 15).isActive = true
+        radioButtonsStackView1.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        radioButtonsStackView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        radioButtonsStackView1.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        bottomView.addSubview(causeLabel11)
+        bottomView.addSubview(causeLabel21)
+        bottomView.addSubview(causeLabel3)
+        bottomView.addSubview(causeLabel4)
+        //Layout Setup
+        causeLabel11.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel21.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel3.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel4.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel11.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel21.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel11.centerYAnchor.constraint(equalTo: radioButton11.centerYAnchor).isActive = true
+        causeLabel21.centerYAnchor.constraint(equalTo: radioButton21.centerYAnchor).isActive = true
+        causeLabel3.centerYAnchor.constraint(equalTo: radioButton3.centerYAnchor).isActive = true
+        causeLabel4.centerYAnchor.constraint(equalTo: radioButton4.centerYAnchor).isActive = true
+        //**************stackViewCancelCauses**************
+        bottomView.addSubview(autreTextView)
+        //Layout Setup
+        autreTextView.translatesAutoresizingMaskIntoConstraints = false
+        autreTextView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+        autreTextView.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        autreTextView.leadingAnchor.constraint(equalTo: causeLabel11.trailingAnchor, constant: 10).isActive = true
+        autreTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    fileprivate func GetCancelCause2() {
+        radioButton12.select()
+
+        //**************stackViewCancelCauses**************
+        bottomView.addSubview(radioButtonsStackView2)
+        //Layout Setup
+        radioButtonsStackView2.translatesAutoresizingMaskIntoConstraints = false
+        radioButtonsStackView2.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 15).isActive = true
+        radioButtonsStackView2.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        radioButtonsStackView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        radioButtonsStackView2.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        bottomView.addSubview(causeLabel12)
+        bottomView.addSubview(causeLabel22)
+        bottomView.addSubview(causeLabel3)
+        bottomView.addSubview(causeLabel4)
+        
+        causeLabel12.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel22.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel3.translatesAutoresizingMaskIntoConstraints = false
+        causeLabel4.translatesAutoresizingMaskIntoConstraints = false
+        
+        causeLabel12.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel22.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        
+        causeLabel12.centerYAnchor.constraint(equalTo: radioButton12.centerYAnchor).isActive = true
+        causeLabel22.centerYAnchor.constraint(equalTo: radioButton22.centerYAnchor).isActive = true
+        causeLabel3.centerYAnchor.constraint(equalTo: radioButton3.centerYAnchor).isActive = true
+        causeLabel4.centerYAnchor.constraint(equalTo: radioButton4.centerYAnchor).isActive = true
+        
+        bottomView.addSubview(autreTextView)
+        //Layout Setup
+        autreTextView.translatesAutoresizingMaskIntoConstraints = false
+        autreTextView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+        autreTextView.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        autreTextView.leadingAnchor.constraint(equalTo: causeLabel12.trailingAnchor, constant: 10).isActive = true
+        autreTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    
     @objc func cancelButton_Arrived(){
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
@@ -551,6 +751,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         })
         stackViewAccepted.alpha = 0
         stackViewOuiNonBack_Cancel.alpha = 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            self.GetCancelCause2()
+        }
         self.NonButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
         self.OuiButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
     }
@@ -564,6 +768,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         self.signatureClient.removeFromSuperview()
         stackViewPickup.alpha = 0
         stackViewOuiNonBack_Cancel.alpha = 1
+        GetCancelCause1()
         self.NonButton_Cancel.phase = "CANCEL_FROM_PICKUP"
         self.OuiButton_Cancel.phase = "CANCEL_FROM_PICKUP"
 
@@ -689,21 +894,38 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             }
         case "CANCEL_FROM_ACCEPTED":
             if (sender.yes ){
-                 print("OUI CANCEL")
+                if (self.autreTextView.text != ""){
+                    doCancel(cause: autreTextView.text)
+                } else {
+                    doCancel(cause: CancelCause)
+                }
             }else{
-               print(sender.yes)
                     UIView.animate(withDuration: 0.2, animations: { () -> Void in
                         self.bottomViewHeightConstraint.constant = self.view.frame.height * 2 / 10
                         self.view.layoutIfNeeded()
                     })
                     stackViewAccepted.alpha = 1
                     stackViewOuiNonBack_Cancel.alpha = 0
-                
+                    causeLabel12.removeFromSuperview()
+                    causeLabel22.removeFromSuperview()
+                    causeLabel3.removeFromSuperview()
+                    causeLabel4.removeFromSuperview()
+                    radioButtonsStackView2.removeFromSuperview()
+//                    LabelsStackView.removeFromSuperview()
+                    autreTextView.removeFromSuperview()
                
             }
         case "CANCEL_FROM_PICKUP":
-            if (sender.yes){
-                print("OUI CANCEL")
+            if (sender.yes ){
+                if (self.CancelCause == "La course a été annulée pour d'autres raisons"){
+                    if(self.autreTextView.text != ""){
+                        doCancel(cause: autreTextView.text)
+                    } else {
+                        doCancel(cause: CancelCause)
+                    }
+                }else{
+                    doCancel(cause: CancelCause)
+                }
             }else{
                 arrivedAnimate(){
                     // what to do after animation is over
@@ -711,6 +933,12 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         self.stackViewPickup.alpha = 1
                         self.stackViewOuiNonBack_Cancel.alpha = 0
                         self.confirmationLabel_Arrived.removeFromSuperview()
+                        self.radioButtonsStackView1.removeFromSuperview()
+                        self.causeLabel11.removeFromSuperview()
+                        self.causeLabel21.removeFromSuperview()
+                        self.causeLabel3.removeFromSuperview()
+                        self.causeLabel4.removeFromSuperview()
+                        self.autreTextView.removeFromSuperview()
                         //************stackViewType***********
                         self.view.addSubview(self.stackViewType)
                         //Layout Setup
@@ -745,31 +973,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             break
         }
     }
-    @objc func ouiButton_Arrived(){
+    func doCancel(cause:String){
+        print(cause)
     }
-    @objc func nonButton_Arrived(){
-       
-    }
-    @objc func ouiButton_Cancel(){
-       
-    }
-    @objc func nonButton_Cancel(){
-      
-    }
-    @objc func ouiButton_Go(){
-      
-    }
-    @objc func ouiButton_Pickup(){
-       
-        }
-
-    @objc func nonButton_Pickup(){
-
-    }
-
-    @objc func nonButton_Go(){
-      
-    }
+  
     @objc func goBackButton(){
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         var destViewController : UIViewController
@@ -790,7 +997,6 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
      //---------------------------------------------------------------------
   
     override func viewWillDisappear(_ animated: Bool) {
-        self.OuiButton_Arrived.alpha = 0.5
         self.signatureViewController.reset()
     }
    
@@ -870,6 +1076,59 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             print("ELSE")
         }
     //----------------------------------
+        //CANCEL CAUSES SETUP
+        radioButton11.select()
+        radioButton12.select()
+
+        radioButton11.onSelect {
+            self.radioButton21.deselect()
+            self.radioButton3.deselect()
+            self.radioButton4.deselect()
+            self.CancelCause = "Client absent"
+        }
+        radioButton12.onSelect {
+            self.radioButton22.deselect()
+            self.radioButton3.deselect()
+            self.radioButton4.deselect()
+            self.CancelCause = "J'ai eu une panne"
+        }
+        radioButton21.onSelect {
+            self.radioButton11.deselect()
+            self.radioButton3.deselect()
+            self.radioButton4.deselect()
+            self.CancelCause = "Marchandise non adaptée"
+        }
+        radioButton22.onSelect {
+            self.radioButton12.deselect()
+            self.radioButton3.deselect()
+            self.radioButton4.deselect()
+            self.CancelCause = "J'ai eu un accident"
+        }
+        radioButton3.onSelect {
+            self.radioButton11.deselect()
+            self.radioButton21.deselect()
+            self.radioButton12.deselect()
+            self.radioButton22.deselect()
+            self.radioButton4.deselect()
+            self.CancelCause = "Rue inaccessible"
+        }
+        radioButton4.onSelect {
+            self.radioButton11.deselect()
+            self.radioButton21.deselect()
+            self.radioButton12.deselect()
+            self.radioButton22.deselect()
+            self.radioButton3.deselect()
+            UIView.animate(withDuration: 0.2, animations: {
+                self.autreTextView.alpha = 1
+            })
+            self.CancelCause = "La course a été annulée pour d'autres raisons"
+        }
+        radioButton4.onDeselect {
+            self.autreTextView.text = ""
+            UIView.animate(withDuration: 0.2, animations: {
+                self.autreTextView.alpha = 0
+            })
+        }
         //**************stackViewPickup**************
         bottomView.addSubview(stackViewPickup)
         //Layout Setup stackViewAccepted
@@ -930,6 +1189,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         stackViewOuiNonBack_Pickup.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
         stackViewOuiNonBack_Pickup.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         stackViewOuiNonBack_Pickup.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+       
         //**************signatureView**************
         signatureViewController.delegate = self
         addChild(signatureViewController)

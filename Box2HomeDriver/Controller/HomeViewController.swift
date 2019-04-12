@@ -691,7 +691,6 @@ class MyTapGesture: UITapGestureRecognizer {
 }
 class MyButton: UIButton {
     var statusCode = String()
-//    var CourseTag = String()
     var adresseDepart = String()
     var longitudeDepart = Double()
     var latitudeDepart = Double()
