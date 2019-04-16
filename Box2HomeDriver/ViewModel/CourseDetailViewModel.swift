@@ -24,8 +24,10 @@ class CourseDetailViewModel {
     var showErrorClosure: (() -> ())?
 
     
-   
-    
+//   
+//    func <#name#>(<#parameters#>) -> <#return type#> {
+//        <#function body#>
+//    }
     
     
     func drawPath(startLocation : CLLocation, endLocation : CLLocation, mapView : GMSMapView){

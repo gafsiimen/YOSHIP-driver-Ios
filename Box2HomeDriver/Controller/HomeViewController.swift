@@ -14,20 +14,11 @@ import SwiftEventBus
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
      var sideMenu:ENSideMenu!
-//     var Bar = UIView()
-     let barHeight = CGFloat(3)
      var courses : [Course] = []
     let dateFormatter = DateFormatter()
     let formatter = NumberFormatter()
     
-//    var leadingBarConstraint : NSLayoutConstraint!
-//    let Bar : UIView = {
-//        let v = UIView(frame: .zero)
-//        v.translatesAutoresizingMaskIntoConstraints = false
-//        v.layoutIfNeeded()
-//        v.backgroundColor = .darkGray
-//        return v
-//    }()
+
     //---
    
     fileprivate struct C {
@@ -61,6 +52,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
   
     
     fileprivate func SetupView() {
+        self.hideKeyboardWhenTappedAround()
         self.sideMenuController()?.sideMenu?.delegate = self
         tableView.separatorStyle = .none
 //      tableView.tableFooterView = UIView()
@@ -258,21 +250,23 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             }
         }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        //endEditing closes keyboard
+        view.endEditing(true)
         CloseAllCells(animated: true, completionAfterCellCloses: nil, completionAfterAllCellsClose: nil)
         tableView.beginUpdates()
         tableView.endUpdates()
     }
  //--------------------------------------------------------------------------------------
-    fileprivate func ShowContainerViewSubviews(_ cell: CourseCell) {
+    fileprivate func ShowContainerViewSubviews(_ cell: CourseCell, _ SegIndex: Int) {
         cell.clientIcon.alpha = 1
         cell.colisIcon.alpha = 1
         cell.colisQuantityLabel.alpha = 1
         cell.firstNameLabel.alpha = 1
         cell.lastNameLabel.alpha = 1
         cell.phoneLabel.alpha = 1
-        cell.NewColisQuantityTF.alpha = 1
-        cell.updateColisQuantityButton.alpha = 1
-        cell.stackView.alpha = 1
+        cell.NewColisQuantityTF.alpha = 1-CGFloat(SegIndex)
+        cell.updateColisQuantityButton.alpha = 1-CGFloat(SegIndex)
+        cell.ButtonStackView.alpha = 1
         cell.ContainerViewLVCodeLabel.alpha = 1
         cell.observationsLabel.alpha = 1
         cell.observationsTextView.alpha = 1
@@ -287,7 +281,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.phoneLabel.alpha = 0
         cell.NewColisQuantityTF.alpha = 0
         cell.updateColisQuantityButton.alpha = 0
-        cell.stackView.alpha = 0
+        cell.ButtonStackView.alpha = 0
         cell.ContainerViewLVCodeLabel.alpha = 0
         cell.observationsLabel.alpha = 0
         cell.observationsTextView.alpha = 0
@@ -299,7 +293,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         
         cell.unfold(true, animated: animated){
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            self.ShowContainerViewSubviews(cell)
+            self.ShowContainerViewSubviews(cell,self.SeguementedControl.selectedSegmentIndex)
         }
     }
  //--------------------------------------------------------------------------------------
@@ -376,8 +370,8 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.colisIcon.contentMode = .scaleAspectFit
         //Layout Setup
         cell.colisIcon.translatesAutoresizingMaskIntoConstraints = false
-        cell.colisIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 20).isActive = true
-        cell.colisIcon.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -75).isActive = true
+        cell.colisIcon.topAnchor.constraint(equalTo: cell.containerView.topAnchor, constant: 25).isActive = true
+        cell.colisIcon.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -45).isActive = true
         cell.colisIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
         cell.colisIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
         //**************colisQuantity**************
@@ -400,19 +394,11 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         let paddingView : UIView = UIView(frame: CGRect(x: 0, y: 0, width: placeholderPaddingLeft, height: 20))
         cell.NewColisQuantityTF.leftView = paddingView
         cell.NewColisQuantityTF.leftViewMode = .always
-        
-        if (SeguementedControl.selectedSegmentIndex == 1){
-          cell.NewColisQuantityTF.backgroundColor = UIColor(white: 0, alpha: 0.3)
-          cell.NewColisQuantityTF.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
-            cell.NewColisQuantityTF.attributedPlaceholder = NSAttributedString(string: "New Value", attributes:[NSAttributedString.Key.font : UIFont(name: "Copperplate-Light", size: CGFloat(12))!,NSAttributedString.Key.foregroundColor : UIColor.white])
-            cell.NewColisQuantityTF.isUserInteractionEnabled = false
-        } else {
-            cell.NewColisQuantityTF.isUserInteractionEnabled = true
-            cell.NewColisQuantityTF.backgroundColor = UIColor.clear
-            cell.NewColisQuantityTF.layer.borderColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1).cgColor
-            cell.NewColisQuantityTF.attributedPlaceholder = NSAttributedString(string: "New Value", attributes:[NSAttributedString.Key.font : UIFont(name: "Copperplate-Light", size: CGFloat(12))!,NSAttributedString.Key.foregroundColor : UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 0.6)])
-        }
-//        cell.NewColisQuantityTF.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
+        cell.NewColisQuantityTF.isUserInteractionEnabled = true
+        cell.NewColisQuantityTF.backgroundColor = UIColor.clear
+        cell.NewColisQuantityTF.layer.borderColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1).cgColor
+        cell.NewColisQuantityTF.attributedPlaceholder = NSAttributedString(string: "New Value", attributes:[NSAttributedString.Key.font : UIFont(name: "Copperplate-Light", size: CGFloat(12))!,NSAttributedString.Key.foregroundColor : UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 0.6)])
+        cell.NewColisQuantityTF.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         //Layout Setup
         cell.NewColisQuantityTF.translatesAutoresizingMaskIntoConstraints = false
         cell.NewColisQuantityTF.topAnchor.constraint(equalTo: cell.colisIcon.bottomAnchor, constant: 2).isActive = true
@@ -420,20 +406,14 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.NewColisQuantityTF.heightAnchor.constraint(equalToConstant: 25).isActive = true
         cell.NewColisQuantityTF.widthAnchor.constraint(equalToConstant: 80).isActive = true
         //**************updateColisQuantityButton**************
-        if (SeguementedControl.selectedSegmentIndex == 1){
-            cell.updateColisQuantityButton.backgroundColor = UIColor(white: 0, alpha: 0.5)
-            cell.updateColisQuantityButton.tintColor = .white
-            cell.updateColisQuantityButton.isUserInteractionEnabled = false
-        }else{
-            cell.updateColisQuantityButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-            cell.updateColisQuantityButton.tintColor = .white
-            cell.updateColisQuantityButton.isUserInteractionEnabled = true
-        }
-        cell.updateColisQuantityButton.setTitle("Update", for: .normal)
-//        cell.updateColisQuantityButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-//        cell.updateColisQuantityButton.tintColor = .white
-        cell.updateColisQuantityButton.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        cell.updateColisQuantityButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.updateColisQuantityButton.tintColor = .white
+        cell.updateColisQuantityButton.isUserInteractionEnabled = true
         cell.updateColisQuantityButton.layer.cornerRadius = 6.5
+        cell.updateColisQuantityButton.setTitle("Update", for: .normal)
+        cell.updateColisQuantityButton.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        cell.updateColisQuantityButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        cell.updateColisQuantityButton.tintColor = .white
         //Layout Setup
         cell.updateColisQuantityButton.translatesAutoresizingMaskIntoConstraints = false
         cell.updateColisQuantityButton.centerXAnchor.constraint(equalTo: cell.NewColisQuantityTF.centerXAnchor).isActive = true
@@ -479,7 +459,8 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         cell.CourseDetailsButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
         cell.CourseDetailsButton.tintColor = .white
-        
+        cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
+        //Data to be sent the CourseDetailsController
         cell.CourseDetailsButton.statusCode = courses[indexPath.row].status.code
         cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart.latitude
         cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart.longitude
@@ -487,13 +468,6 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee.latitude
         cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee.longitude
         cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee.address
-//        if(SeguementedControl.selectedSegmentIndex == 1){
-//            cell.CourseDetailsButton.CourseTag = "assigned"
-//        }else{
-//            cell.CourseDetailsButton.CourseTag = "accepted"
-//        }
-        
-        cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
         //Layout Setup
         cell.CourseDetailsButton.translatesAutoresizingMaskIntoConstraints = false
         cell.CourseDetailsButton.topAnchor.constraint(equalTo: cell.observationsTextView.bottomAnchor, constant: 5).isActive = true
@@ -519,11 +493,11 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.SAVCallButton.addGestureRecognizer(tap2)
         cell.LVDownloadButton.addGestureRecognizer(tap3)
         //Layout Setup
-        cell.stackView.translatesAutoresizingMaskIntoConstraints = false
-        cell.stackView.bottomAnchor.constraint(equalTo: cell.containerView.bottomAnchor, constant: -15).isActive = true
-        cell.stackView.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor).isActive = true
-        cell.stackView.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        cell.stackView.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        cell.ButtonStackView.translatesAutoresizingMaskIntoConstraints = false
+        cell.ButtonStackView.bottomAnchor.constraint(equalTo: cell.containerView.bottomAnchor, constant: -15).isActive = true
+        cell.ButtonStackView.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor).isActive = true
+        cell.ButtonStackView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        cell.ButtonStackView.widthAnchor.constraint(equalToConstant: 130).isActive = true
     }
     @objc func showCourseDetails(sender: MyButton){
         print("showCourseDetails")

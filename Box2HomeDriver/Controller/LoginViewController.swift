@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
 //    }
     //--------------------------------------------------------------------------------------------
     fileprivate func setupView (){
-       
+        self.hideKeyboardWhenTappedAround()
         SetupLoginView.sharedInstance.SetupBackgroundColor(vc:self)
         SetupLogo()
         SetupTextField()

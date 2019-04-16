@@ -7,7 +7,7 @@
 //
 
 import Alamofire
-import GoogleMaps
+
 import UIKit
 
 struct CourseDetailRepository{

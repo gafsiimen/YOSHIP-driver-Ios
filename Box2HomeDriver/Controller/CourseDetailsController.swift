@@ -20,6 +20,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         var yes = Bool()
         var phase = String()
     }
+    class MyCauseLabelTap: UITapGestureRecognizer {
+        var param = String()
+    }
     //---------
     var mapView = GMSMapView()
     var mapViewHeightConstraint: NSLayoutConstraint!
@@ -50,33 +53,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         bv.backgroundColor =  UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
         return bv
     }()
- 
-    lazy var radioButtonsStackView1: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [radioButton11, radioButton21, radioButton3, radioButton4])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .vertical
-        sv.backgroundColor = .orange
-        sv.distribution = .fillEqually
-        sv.spacing = 20
-        return sv
-    }()
-    lazy var radioButtonsStackView2: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [radioButton12, radioButton22, radioButton3, radioButton4])
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.axis = .vertical
-        sv.backgroundColor = .orange
-        sv.distribution = .fillEqually
-        sv.spacing = 20
-        return sv
-    }()
-//    lazy var LabelsStackView: UIStackView = {
-//        let sv = UIStackView(arrangedSubviews: [causeLabel1, causeLabel2, causeLabel3, causeLabel4])
-//        sv.translatesAutoresizingMaskIntoConstraints = false
-//        sv.axis = .vertical
-//        sv.distribution = .fillEqually
-//        sv.spacing = 20
-//        return sv
-//    }()
+ //-----------------
     lazy var autreTextView: UITextView = {
         let tv = UITextView()
         tv.alpha = 0
@@ -97,6 +74,15 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
     }()
+    
+    let causeImage11 : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "ClientAbsent")
+        imageView.alpha = 0
+        return imageView
+    }()
+    
     let causeLabel12 : UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
@@ -105,6 +91,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.widthAnchor.constraint(equalToConstant: 130).isActive = true
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
+    }()
+    let causeImage12 : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "Panne")
+        imageView.alpha = 0
+        return imageView
     }()
     let causeLabel21 : UILabel = {
         let label = UILabel()
@@ -115,6 +108,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
     }()
+    let causeImage21 : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "NotAdapted")
+        imageView.alpha = 0
+        return imageView
+    }()
     let causeLabel22 : UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
@@ -123,6 +123,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.widthAnchor.constraint(equalToConstant: 130).isActive = true
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
+    }()
+    let causeImage22 : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "Accident")
+        imageView.alpha = 0
+        return imageView
     }()
     let causeLabel3 : UILabel = {
         let label = UILabel()
@@ -133,6 +140,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
     }()
+    let causeImage3 : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "Inaccessible")
+        imageView.alpha = 0
+        return imageView
+    }()
     let causeLabel4 : UILabel = {
         let label = UILabel()
         label.textColor = .darkGray
@@ -142,28 +156,30 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
     }()
+   
+    
     let radioButton11 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1) )
         return rb
     }()
     let radioButton12 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
         return rb
     }()
     let radioButton21 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
         return rb
     }()
     let radioButton22 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
         return rb
     }()
     let radioButton3 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
         return rb
     }()
     let radioButton4 : LTHRadioButton = {
-        let rb = LTHRadioButton(selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
+        let rb = LTHRadioButton(diameter: 20, selectedColor: UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1))
         return rb
     }()
     //---------------------------------------------------------------------
@@ -618,7 +634,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }
     func arrivedAnimate(completion: (()->Void)?){
         UIView.animate(withDuration: 0.2) {
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
             self.view.layoutIfNeeded()
         }
         completion?()
@@ -636,6 +652,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         if (self.ConfirmButton.alpha != 1){
             print("Signature manquante")
         } else {
+            self.signatureClient.removeFromSuperview()
+            
 //            print("Envoyer Signature")
 //            print("le type est: \(selectedType)")
             UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -645,10 +663,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 self.stackViewType.removeFromSuperview()
                 self.signatureViewController.view.removeFromSuperview()
-                self.signatureClient.removeFromSuperview()
                 self.stackViewPickup.alpha = 0
                 self.stackViewOuiNonBack_Pickup.alpha = 1
-                
                 self.view.addSubview(self.confirmationLabel_Pickup)
                 //Layout Setup
                 self.confirmationLabel_Pickup.translatesAutoresizingMaskIntoConstraints = false
@@ -656,97 +672,215 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.confirmationLabel_Pickup.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
             }
         }
-        
-       
-//        UIView.animate(withDuration: 0.2, animations: { () -> Void in
-//            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
-//            self.view.layoutIfNeeded()
-//        })
-//        //        stackViewAccepted.alpha = 0
-//        //        stackViewOuiNonBack_Cancel.alpha = 1
+    }
+    //------------------
+    @objc func labelTaped(sender : MyCauseLabelTap) {
+        switch sender.param {
+        case "11":
+            radioButton11.select()
+        case "12":
+            radioButton12.select()
+        case "21":
+            radioButton21.select()
+        case "22":
+            radioButton22.select()
+        case "3":
+            radioButton3.select()
+        case "4":
+            radioButton4.select()
+        default:
+            break
+        }
     }
     fileprivate func GetCancelCause1() {
         radioButton11.select()
-
-        //**************stackViewCancelCauses**************
-        bottomView.addSubview(radioButtonsStackView1)
+        //--------
+        bottomView.addSubview(radioButton11)
+        bottomView.addSubview(radioButton21)
+        bottomView.addSubview(radioButton3)
+        bottomView.addSubview(radioButton4)
         //Layout Setup
-        radioButtonsStackView1.translatesAutoresizingMaskIntoConstraints = false
-        radioButtonsStackView1.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 15).isActive = true
-        radioButtonsStackView1.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
-        radioButtonsStackView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-        radioButtonsStackView1.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        
+        radioButton11.translatesAutoresizingMaskIntoConstraints = false
+        radioButton21.translatesAutoresizingMaskIntoConstraints = false
+        radioButton3.translatesAutoresizingMaskIntoConstraints = false
+        radioButton4.translatesAutoresizingMaskIntoConstraints = false
+        radioButton11.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton21.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton11.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+        radioButton21.topAnchor.constraint(equalTo: radioButton11.bottomAnchor, constant: 20).isActive = true
+        radioButton3.topAnchor.constraint(equalTo: radioButton21.bottomAnchor, constant: 20).isActive = true
+        radioButton4.topAnchor.constraint(equalTo: radioButton3.bottomAnchor, constant: 20).isActive = true
+        radioButton11.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton21.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton3.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton4.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton11.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton21.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton3.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton4.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        //--------------
         bottomView.addSubview(causeLabel11)
         bottomView.addSubview(causeLabel21)
         bottomView.addSubview(causeLabel3)
         bottomView.addSubview(causeLabel4)
+        causeLabel11.isUserInteractionEnabled = true
+        causeLabel21.isUserInteractionEnabled = true
+        causeLabel3.isUserInteractionEnabled = true
+        causeLabel4.isUserInteractionEnabled = true
+        let tap11: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap21: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap3: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap4: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        tap11.param = "11"
+        tap21.param = "21"
+        tap3.param = "3"
+        tap4.param = "4"
+        causeLabel11.addGestureRecognizer(tap11)
+        causeLabel21.addGestureRecognizer(tap21)
+        causeLabel3.addGestureRecognizer(tap3)
+        causeLabel4.addGestureRecognizer(tap4)
         //Layout Setup
         causeLabel11.translatesAutoresizingMaskIntoConstraints = false
         causeLabel21.translatesAutoresizingMaskIntoConstraints = false
         causeLabel3.translatesAutoresizingMaskIntoConstraints = false
         causeLabel4.translatesAutoresizingMaskIntoConstraints = false
-        causeLabel11.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel21.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
+        causeLabel11.leadingAnchor.constraint(equalTo: radioButton11.trailingAnchor, constant: 10).isActive = true
+        causeLabel21.leadingAnchor.constraint(equalTo: radioButton21.trailingAnchor, constant: 10).isActive = true
+        causeLabel3.leadingAnchor.constraint(equalTo: radioButton3.trailingAnchor, constant: 10).isActive = true
+        causeLabel4.leadingAnchor.constraint(equalTo: radioButton4.trailingAnchor, constant: 10).isActive = true
         causeLabel11.centerYAnchor.constraint(equalTo: radioButton11.centerYAnchor).isActive = true
         causeLabel21.centerYAnchor.constraint(equalTo: radioButton21.centerYAnchor).isActive = true
         causeLabel3.centerYAnchor.constraint(equalTo: radioButton3.centerYAnchor).isActive = true
         causeLabel4.centerYAnchor.constraint(equalTo: radioButton4.centerYAnchor).isActive = true
-        //**************stackViewCancelCauses**************
+        //****************************
         bottomView.addSubview(autreTextView)
+        bottomView.addSubview(causeImage11)
+        bottomView.addSubview(causeImage21)
+        bottomView.addSubview(causeImage3)
         //Layout Setup
         autreTextView.translatesAutoresizingMaskIntoConstraints = false
         autreTextView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
-        autreTextView.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        autreTextView.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
         autreTextView.leadingAnchor.constraint(equalTo: causeLabel11.trailingAnchor, constant: 10).isActive = true
         autreTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        //------
+        causeImage11.translatesAutoresizingMaskIntoConstraints = false
+        causeImage11.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20).isActive = true
+        causeImage11.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage11.leadingAnchor.constraint(equalTo: causeLabel11.trailingAnchor, constant: 10).isActive = true
+        causeImage11.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        //------
+        causeImage21.translatesAutoresizingMaskIntoConstraints = false
+        causeImage21.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 30).isActive = true
+        causeImage21.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage21.leadingAnchor.constraint(equalTo: causeLabel11.trailingAnchor, constant: 30).isActive = true
+        causeImage21.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        //------
+        causeImage3.translatesAutoresizingMaskIntoConstraints = false
+        causeImage3.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 40).isActive = true
+        causeImage3.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage3.leadingAnchor.constraint(equalTo: causeLabel11.trailingAnchor, constant: 30).isActive = true
+        causeImage3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
     }
     fileprivate func GetCancelCause2() {
         radioButton12.select()
-
-        //**************stackViewCancelCauses**************
-        bottomView.addSubview(radioButtonsStackView2)
+        //-----------
+        bottomView.addSubview(radioButton12)
+        bottomView.addSubview(radioButton22)
+        bottomView.addSubview(radioButton3)
+        bottomView.addSubview(radioButton4)
         //Layout Setup
-        radioButtonsStackView2.translatesAutoresizingMaskIntoConstraints = false
-        radioButtonsStackView2.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 15).isActive = true
-        radioButtonsStackView2.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
-        radioButtonsStackView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-        radioButtonsStackView2.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        
+        radioButton12.translatesAutoresizingMaskIntoConstraints = false
+        radioButton22.translatesAutoresizingMaskIntoConstraints = false
+        radioButton3.translatesAutoresizingMaskIntoConstraints = false
+        radioButton4.translatesAutoresizingMaskIntoConstraints = false
+        radioButton12.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton22.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 10).isActive = true
+        radioButton12.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+        radioButton22.topAnchor.constraint(equalTo: radioButton12.bottomAnchor, constant: 20).isActive = true
+        radioButton3.topAnchor.constraint(equalTo: radioButton22.bottomAnchor, constant: 20).isActive = true
+        radioButton4.topAnchor.constraint(equalTo: radioButton3.bottomAnchor, constant: 20).isActive = true
+        radioButton12.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton22.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton3.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton4.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton12.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton22.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton3.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        radioButton4.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        //-----------
         bottomView.addSubview(causeLabel12)
         bottomView.addSubview(causeLabel22)
         bottomView.addSubview(causeLabel3)
         bottomView.addSubview(causeLabel4)
-        
+        causeLabel12.isUserInteractionEnabled = true
+        causeLabel22.isUserInteractionEnabled = true
+        causeLabel3.isUserInteractionEnabled = true
+        causeLabel4.isUserInteractionEnabled = true
+        let tap12: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap22: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap3: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        let tap4: MyCauseLabelTap = MyCauseLabelTap(target: self, action: #selector(labelTaped(sender:)))
+        tap12.param = "12"
+        tap22.param = "22"
+        tap3.param = "3"
+        tap4.param = "4"
+        causeLabel12.addGestureRecognizer(tap12)
+        causeLabel22.addGestureRecognizer(tap22)
+        causeLabel3.addGestureRecognizer(tap3)
+        causeLabel4.addGestureRecognizer(tap4)
+        //Layout Setup
         causeLabel12.translatesAutoresizingMaskIntoConstraints = false
         causeLabel22.translatesAutoresizingMaskIntoConstraints = false
         causeLabel3.translatesAutoresizingMaskIntoConstraints = false
         causeLabel4.translatesAutoresizingMaskIntoConstraints = false
-        
-        causeLabel12.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel22.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel3.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        causeLabel4.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 40).isActive = true
-        
+        causeLabel12.leadingAnchor.constraint(equalTo: radioButton12.trailingAnchor, constant: 10).isActive = true
+        causeLabel22.leadingAnchor.constraint(equalTo: radioButton22.trailingAnchor, constant: 10).isActive = true
+        causeLabel3.leadingAnchor.constraint(equalTo: radioButton3.trailingAnchor, constant: 10).isActive = true
+        causeLabel4.leadingAnchor.constraint(equalTo: radioButton4.trailingAnchor, constant: 10).isActive = true
         causeLabel12.centerYAnchor.constraint(equalTo: radioButton12.centerYAnchor).isActive = true
         causeLabel22.centerYAnchor.constraint(equalTo: radioButton22.centerYAnchor).isActive = true
         causeLabel3.centerYAnchor.constraint(equalTo: radioButton3.centerYAnchor).isActive = true
         causeLabel4.centerYAnchor.constraint(equalTo: radioButton4.centerYAnchor).isActive = true
-        
+        //********************************
         bottomView.addSubview(autreTextView)
+        bottomView.addSubview(causeImage12)
+        bottomView.addSubview(causeImage22)
+        bottomView.addSubview(causeImage3)
         //Layout Setup
         autreTextView.translatesAutoresizingMaskIntoConstraints = false
         autreTextView.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
-        autreTextView.bottomAnchor.constraint(equalTo: stackViewOuiNonBack_Cancel.topAnchor, constant: -20).isActive = true
+        autreTextView.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
         autreTextView.leadingAnchor.constraint(equalTo: causeLabel12.trailingAnchor, constant: 10).isActive = true
         autreTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        //----------
+        causeImage12.translatesAutoresizingMaskIntoConstraints = false
+        causeImage12.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20).isActive = true
+        causeImage12.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage12.leadingAnchor.constraint(equalTo: causeLabel12.trailingAnchor, constant: 10).isActive = true
+        causeImage12.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        //----------
+        causeImage22.translatesAutoresizingMaskIntoConstraints = false
+        causeImage22.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 30).isActive = true
+        causeImage22.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage22.leadingAnchor.constraint(equalTo: causeLabel12.trailingAnchor, constant: 10).isActive = true
+        causeImage22.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        //----------
+        causeImage3.translatesAutoresizingMaskIntoConstraints = false
+        causeImage3.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 40).isActive = true
+        causeImage3.bottomAnchor.constraint(equalTo: radioButton4.bottomAnchor, constant: 0).isActive = true
+        causeImage3.leadingAnchor.constraint(equalTo: causeLabel12.trailingAnchor, constant: 10).isActive = true
+        causeImage3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
     }
     
     @objc func cancelButton_Arrived(){
+        radioButton12.select()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
             self.view.layoutIfNeeded()
         })
         stackViewAccepted.alpha = 0
@@ -759,8 +893,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         self.OuiButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
     }
     @objc func cancelButton_Pickup(){
+        radioButton11.select()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
-            self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
             self.view.layoutIfNeeded()
         })
         self.stackViewType.removeFromSuperview()
@@ -906,12 +1041,18 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     })
                     stackViewAccepted.alpha = 1
                     stackViewOuiNonBack_Cancel.alpha = 0
+                    
+                    radioButton12.removeFromSuperview()
+                    radioButton22.removeFromSuperview()
+                    radioButton3.removeFromSuperview()
+                    radioButton4.removeFromSuperview()
                     causeLabel12.removeFromSuperview()
                     causeLabel22.removeFromSuperview()
                     causeLabel3.removeFromSuperview()
                     causeLabel4.removeFromSuperview()
-                    radioButtonsStackView2.removeFromSuperview()
-//                    LabelsStackView.removeFromSuperview()
+                    causeImage12.removeFromSuperview()
+                    causeImage22.removeFromSuperview()
+                    causeImage3.removeFromSuperview()
                     autreTextView.removeFromSuperview()
                
             }
@@ -933,11 +1074,18 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         self.stackViewPickup.alpha = 1
                         self.stackViewOuiNonBack_Cancel.alpha = 0
                         self.confirmationLabel_Arrived.removeFromSuperview()
-                        self.radioButtonsStackView1.removeFromSuperview()
+//                        self.radioButtonsStackView1.removeFromSuperview()
+                        self.radioButton11.removeFromSuperview()
+                        self.radioButton21.removeFromSuperview()
+                        self.radioButton3.removeFromSuperview()
+                        self.radioButton4.removeFromSuperview()
                         self.causeLabel11.removeFromSuperview()
                         self.causeLabel21.removeFromSuperview()
                         self.causeLabel3.removeFromSuperview()
                         self.causeLabel4.removeFromSuperview()
+                        self.causeImage11.removeFromSuperview()
+                        self.causeImage21.removeFromSuperview()
+                        self.causeImage3.removeFromSuperview()
                         self.autreTextView.removeFromSuperview()
                         //************stackViewType***********
                         self.view.addSubview(self.stackViewType)
@@ -997,19 +1145,37 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
      //---------------------------------------------------------------------
   
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         self.signatureViewController.reset()
+        NotificationCenter.default.removeObserver(self)
     }
    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         self.sideMenuController()?.sideMenu?.delegate = self
         SetupView()
     }
     
     fileprivate func SetupView() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         SetupMapView()
         SetupBottomView()
+    }
+    @objc func keyboardWillAppear() {
+        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 7.5 / 10
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    @objc func keyboardWillDisappear() {
+        UIView.animate(withDuration: 0.2, animations: { () -> Void in
+            self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
+            self.view.layoutIfNeeded()
+        })
     }
     fileprivate func SetupBottomView() {
         //**************BottomView**************
@@ -1041,7 +1207,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             stackViewAccepted.alpha = 0
             stackViewPickup.alpha = 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-                self.bottomViewHeightConstraint.constant = self.view.frame.height * 4 / 10
+                self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
                 self.view.addSubview(self.stackViewType)
                 //Layout Setup
                 self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
@@ -1077,32 +1243,66 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         }
     //----------------------------------
         //CANCEL CAUSES SETUP
-        radioButton11.select()
-        radioButton12.select()
+        
+        
 
         radioButton11.onSelect {
             self.radioButton21.deselect()
             self.radioButton3.deselect()
             self.radioButton4.deselect()
             self.CancelCause = "Client absent"
+
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage11.alpha = 1
+            })
+        }
+        radioButton11.onDeselect {
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage11.alpha = 0
+            })
         }
         radioButton12.onSelect {
             self.radioButton22.deselect()
             self.radioButton3.deselect()
             self.radioButton4.deselect()
             self.CancelCause = "J'ai eu une panne"
+
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage12.alpha = 1
+            })
+        }
+        radioButton12.onDeselect {
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage12.alpha = 0
+            })
         }
         radioButton21.onSelect {
             self.radioButton11.deselect()
             self.radioButton3.deselect()
             self.radioButton4.deselect()
             self.CancelCause = "Marchandise non adaptée"
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage21.alpha = 1
+            })
+        }
+        radioButton21.onDeselect {
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage21.alpha = 0
+            })
         }
         radioButton22.onSelect {
             self.radioButton12.deselect()
             self.radioButton3.deselect()
             self.radioButton4.deselect()
             self.CancelCause = "J'ai eu un accident"
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage22.alpha = 1
+            })
+        }
+        radioButton22.onDeselect {
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage22.alpha = 0
+            })
         }
         radioButton3.onSelect {
             self.radioButton11.deselect()
@@ -1111,6 +1311,14 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             self.radioButton22.deselect()
             self.radioButton4.deselect()
             self.CancelCause = "Rue inaccessible"
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage3.alpha = 1
+            })
+        }
+        radioButton3.onDeselect {
+            UIView.animate(withDuration: 0.1, animations: {
+                self.causeImage3.alpha = 0
+            })
         }
         radioButton4.onSelect {
             self.radioButton11.deselect()
@@ -1118,14 +1326,24 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             self.radioButton12.deselect()
             self.radioButton22.deselect()
             self.radioButton3.deselect()
-            UIView.animate(withDuration: 0.2, animations: {
+//            UIView.animate(withDuration: 0.2, animations: { () -> Void in
+//                self.bottomViewHeightConstraint.constant = self.view.frame.height * 7.5 / 10
+//                self.view.layoutIfNeeded()
+//            })
+            self.autreTextView.becomeFirstResponder()
+            UIView.animate(withDuration: 0.1, animations: {
                 self.autreTextView.alpha = 1
             })
             self.CancelCause = "La course a été annulée pour d'autres raisons"
         }
         radioButton4.onDeselect {
+            self.view.endEditing(true)
+//            UIView.animate(withDuration: 0.2, animations: { () -> Void in
+//                self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
+//                self.view.layoutIfNeeded()
+//            })
             self.autreTextView.text = ""
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.1, animations: {
                 self.autreTextView.alpha = 0
             })
         }
