@@ -24,9 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        GMSServices.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
 //        GMSPlacesClient.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         
-        //b2h api key : DEV
-        GMSServices.provideAPIKey("AIzaSyDK4545yE-PVf_5HmcKj9IBIusckDLoNmg")
-        GMSPlacesClient.provideAPIKey("AIzaSyDK4545yE-PVf_5HmcKj9IBIusckDLoNmg")
+          //b2h api key : DEV => AIzaSyDK4545yE-PVf_5HmcKj9IBIusckDLoNmg
+
+        
+        
+        GMSServices.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
+        GMSPlacesClient.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         return true
     }
 

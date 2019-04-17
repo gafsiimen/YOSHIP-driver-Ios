@@ -183,6 +183,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         return rb
     }()
     //---------------------------------------------------------------------
+    // Assigned Stackview
     lazy var stackViewAssigned: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [GoButton, BackButton1])
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -272,6 +273,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         return label
     }()
     //---------------------------------------------------------------------
+    // Accepted Stackview
     lazy var stackViewAccepted: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewArrivedOrCancel, BackButton2])
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -377,6 +379,36 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         label.text = "Êtes-vous sûr?"
         label.font = UIFont(name: "Copperplate-Light", size: CGFloat(14))!
         return label
+    }()
+    //---------------------------------------------------------------------
+    // Livraison Stackview
+    lazy var stackViewDelivering: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [ArrivedToDeliveryDestinationButton, BackButton8])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .vertical
+        sv.spacing = 5
+        sv.distribution = .fillEqually
+        return sv
+    }()
+    let ArrivedToDeliveryDestinationButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Je suis arrivé", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (40/255), green: 167/255, blue: 69/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(arrivedToDeliveryDestinationButton), for: .touchUpInside)
+        return button
+    }()
+    let BackButton8 : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Retour", for: .normal)
+        button.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
+        button.tintColor = .white
+        button.titleLabel?.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))!
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
+        return button
     }()
     //---------------------------------------------------------------------
     lazy var stackViewPickup: UIStackView = {
@@ -629,9 +661,29 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             self.confirmationLabel_Arrived.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
             //            self.confirmationLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 20).isActive = true
         }
-        //---------------------------------------------------------------------
-
     }
+   //---------------------------------------------------------------------
+        @objc func arrivedToDeliveryDestinationButton(){
+            
+//            UIView.animate(withDuration: 0.2, animations: { () -> Void in
+//                self.bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
+//                self.view.layoutIfNeeded()
+//            })
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+//                self.stackViewAccepted.alpha = 0
+//                self.stackViewOuiNonBack_Arrived.alpha = 1
+//
+//                self.view.addSubview(self.confirmationLabel_Arrived)
+                //Layout Setup
+//                self.confirmationLabel_Arrived.translatesAutoresizingMaskIntoConstraints = false
+//                self.confirmationLabel_Arrived.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 25).isActive = true
+//                self.confirmationLabel_Arrived.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
+//                //            self.confirmationLabel.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 20).isActive = true
+//            }
+    }
+//---------------------------------------------------------------------
+
     func arrivedAnimate(completion: (()->Void)?){
         UIView.animate(withDuration: 0.2) {
             self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
@@ -988,6 +1040,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             if (sender.yes){
                 print("Envoyer Signature")
                 print("le type est: \(selectedType)")
+                stackViewDelivering.alpha = 1
+                stackViewOuiNonBack_Pickup.alpha = 0
+                confirmationLabel_Pickup.removeFromSuperview()
             }else{
                 arrivedAnimate(){
                     // what to do after animation is over
@@ -1190,21 +1245,28 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
       
       //----------Init--------------
         if statusCode == "ASSIGNED"{
+            bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
             stackViewAssigned.alpha = 1
             stackViewAccepted.alpha = 0
             stackViewPickup.alpha = 0
+            stackViewDelivering.alpha = 0
         } else if statusCode == "ACCEPTEE" {
+            bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
             stackViewAssigned.alpha = 0
             stackViewPickup.alpha = 0
+            stackViewDelivering.alpha = 0
             stackViewAccepted.alpha = 1
         } else if statusCode == "LIVRAISON" {
+            bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
             stackViewAssigned.alpha = 0
             stackViewAccepted.alpha = 0
             stackViewPickup.alpha = 0
+            stackViewDelivering.alpha = 1
             print("LIVRAISON")
         } else if statusCode == "ENLEVEMENT" {
             stackViewAssigned.alpha = 0
             stackViewAccepted.alpha = 0
+            stackViewDelivering.alpha = 0
             stackViewPickup.alpha = 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
                 self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
@@ -1237,6 +1299,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 
            print("ENLEVEMENT")
         } else  {
+            bottomViewHeightConstraint.constant = self.view.frame.height * 2.5 / 10
             stackViewAssigned.alpha = 0
             stackViewAccepted.alpha = 0
             print("ELSE")
@@ -1347,6 +1410,15 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.autreTextView.alpha = 0
             })
         }
+        //**************stackViewDelivering**************
+        bottomView.addSubview(stackViewDelivering)
+        //Layout Setup stackViewDelivering
+        stackViewDelivering.translatesAutoresizingMaskIntoConstraints = false
+        stackViewDelivering.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
+        stackViewDelivering.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20).isActive = true
+//        stackViewDelivering.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
+        stackViewDelivering.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        stackViewDelivering.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         //**************stackViewPickup**************
         bottomView.addSubview(stackViewPickup)
         //Layout Setup stackViewAccepted
