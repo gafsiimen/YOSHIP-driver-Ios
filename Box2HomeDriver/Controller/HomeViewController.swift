@@ -461,6 +461,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.tintColor = .white
         cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
         //Data to be sent the CourseDetailsController
+        //>for views
         cell.CourseDetailsButton.statusCode = courses[indexPath.row].status.code
         cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart.latitude
         cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart.longitude
@@ -468,6 +469,10 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee.latitude
         cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee.longitude
         cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee.address
+        //>for socket
+        cell.CourseDetailsButton.codeCourse = courses[indexPath.row].code
+        cell.CourseDetailsButton.codeCorner = courses[indexPath.row].codeCorner
+        cell.CourseDetailsButton.courseSource = courses[indexPath.row].courseSource
         //Layout Setup
         cell.CourseDetailsButton.translatesAutoresizingMaskIntoConstraints = false
         cell.CourseDetailsButton.topAnchor.constraint(equalTo: cell.observationsTextView.bottomAnchor, constant: 5).isActive = true
@@ -505,6 +510,8 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         var destViewController : CourseDetailsController
         destViewController = mainStoryboard.instantiateViewController(withIdentifier: "DetailsCourse") as! CourseDetailsController
         destViewController.toggleSideMenuView()
+        //Sending data to CourseDetailsController
+        //>for views
         destViewController.statusCode = sender.statusCode
         destViewController.adresseDepart = "\(sender.adresseDepart)"
         destViewController.adresseArrivee = "\(sender.adresseArrivee)"
@@ -512,7 +519,10 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         destViewController.longitudeDepart = sender.longitudeDepart
         destViewController.latitudeArrivee = sender.latitudeArrivee
         destViewController.longitudeArrivee = sender.longitudeArrivee
-//        destViewController.courseTag = sender.CourseTag
+        //>for socket
+        destViewController.codeCourse = sender.codeCourse
+        destViewController.codeCorner = sender.codeCorner
+        destViewController.courseSource = sender.courseSource
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
     @objc func ClientCall(sender: MyTapGesture){
@@ -664,6 +674,7 @@ class MyTapGesture: UITapGestureRecognizer {
     var param = String()
 }
 class MyButton: UIButton {
+    //> for views
     var statusCode = String()
     var adresseDepart = String()
     var longitudeDepart = Double()
@@ -671,4 +682,8 @@ class MyButton: UIButton {
     var adresseArrivee = String()
     var longitudeArrivee = Double()
     var latitudeArrivee = Double()
+    //> for socket
+    var codeCourse = String()
+    var codeCorner = String()
+    var courseSource = String()
 }

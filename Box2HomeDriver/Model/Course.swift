@@ -29,7 +29,7 @@ struct Course {
     let manutention : Bool
     let manutentionDouble : Bool
     let estimatedKM : Double
-    let status : status
+    var status : status
     let commande : commande
     let dateDemarrage : String
     let dateAcceptation : String

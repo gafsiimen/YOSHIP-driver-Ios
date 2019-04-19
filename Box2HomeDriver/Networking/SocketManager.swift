@@ -693,6 +693,37 @@ class SocketIOManager: NSObject {
 //    immatriculation: element["immatriculation"].stringValue
 //    ))
 //    }
+    
+    //--------------------------------------------------------
+    func acceptCourse(dict: [String:Any]) {
+        SocketIOManager.socket.emitWithAck("courseAccepted", dict).timingOut(after: 0, callback: { (data) in
+//            print(JSON(data[0])["course"].description.description)
+        })
+    }
+    //--------------------------------------------------------
+    func pickUpCourse(dict: [String:Any]) {
+        SocketIOManager.socket.emitWithAck("pickUp", dict).timingOut(after: 0, callback: { (data) in
+            //            print(JSON(data[0])["course"].description.description)
+        })
+    }
+    //--------------------------------------------------------
+    func deliveringCourse(dict: [String:Any]) {
+        SocketIOManager.socket.emitWithAck("delivering", dict).timingOut(after: 0, callback: { (data) in
+            //            print(JSON(data[0])["course"].description.description)
+        })
+    }
+    //--------------------------------------------------------
+    func deposingCourse(dict: [String:Any]) {
+        SocketIOManager.socket.emitWithAck("deposing", dict).timingOut(after: 0, callback: { (data) in
+            //            print(JSON(data[0])["course"].description.description)
+        })
+    }
+    //--------------------------------------------------------
+    func endCourse(dict: [String:Any]) {
+        SocketIOManager.socket.emitWithAck("courseEnd", dict).timingOut(after: 0, callback: { (data) in
+            //            print(JSON(data[0])["course"].description.description)
+        })
+    }
     //--------------------------------------------------------
     func establishConnection() {
         SocketIOManager.socket.connect()

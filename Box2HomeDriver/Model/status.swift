@@ -9,6 +9,6 @@
 import Foundation
 struct status {
     let color : String
-    let code : String
-    let label : String
+    var code : String
+    var label : String
 }
