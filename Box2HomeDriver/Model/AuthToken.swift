@@ -1,46 +1,28 @@
-////
-////  societe.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Societe: Decodable {
-//    let name : String
-//    init(name: String) {
-//        self.name = name
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case name
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        name = try container.decode(String.self, forKey: .name)
-//    }
-//}
+//  AuthToken.swift
+//  Box2HomeDriver
 //
-////struct societe : Codable{
-////    let name : String
-////}
+//  Created by MacHD on 4/23/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
 
 import Foundation
 
-class Societe: Codable {
-    let name: String?
+class AuthToken: Codable {
+    let value: String?
+    let chauffeur: Chauffeur?
     
-    init(name: String?) {
-        self.name = name
+    init(value: String?, chauffeur: Chauffeur?) {
+        self.value = value
+        self.chauffeur = chauffeur
     }
 }
 
 
-extension Societe {
+extension AuthToken {
     convenience init(data: Data) throws {
-        let me = try newJSONDecoder().decode(Societe.self, from: data)
-        self.init(name: me.name)
+        let me = try newJSONDecoder().decode(AuthToken.self, from: data)
+        self.init(value: me.value, chauffeur: me.chauffeur)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -55,10 +37,12 @@ extension Societe {
     }
     
     func with(
-        name: String?? = nil
-        ) -> Societe {
-        return Societe(
-            name: name ?? self.name
+        value: String?? = nil,
+        chauffeur: Chauffeur?? = nil
+        ) -> AuthToken {
+        return AuthToken(
+            value: value ?? self.value,
+            chauffeur: chauffeur ?? self.chauffeur
         )
     }
     

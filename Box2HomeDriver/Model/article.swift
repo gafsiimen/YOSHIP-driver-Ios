@@ -7,5 +7,8 @@
 //
 
 import Foundation
-struct article {
+class article : Decodable {
+    init() {
+        
+    }
 }

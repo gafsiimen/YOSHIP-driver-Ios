@@ -1175,21 +1175,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
       }
     }
     fileprivate func AcceptCourse(completion:(()->())?) {
+        
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
-            "vehicule" : ["denomination":"Trafic",
-                          "haillon": false,
-                          "immatriculation" : "122 TN 444",
-                          "id" : 4,
-                          "status" : 1,
-                          "vehicule_category" :  ["type" : "S",
-                                                  "volumeMax" : 9,
-                                                  "code" : "S",
-                                                  "id" : 1       ]
-            ]
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
         ]
         
         SocketIOManager.sharedInstance.acceptCourse(dict: myDictOfDict)
@@ -1199,19 +1191,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func PickUpCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
-            "vehicule" : ["denomination":"Trafic",
-                          "haillon": false,
-                          "immatriculation" : "122 TN 444",
-                          "id" : 4,
-                          "status" : 1,
-                          "vehicule_category" :  ["type" : "S",
-                                                  "volumeMax" : 9,
-                                                  "code" : "S",
-                                                  "id" : 1       ]
-            ]
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
         ]
         
         SocketIOManager.sharedInstance.pickUpCourse(dict: myDictOfDict)
@@ -1220,19 +1203,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func DeliveringCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
-            "vehicule" : ["denomination":"Trafic",
-                          "haillon": false,
-                          "immatriculation" : "122 TN 444",
-                          "id" : 4,
-                          "status" : 1,
-                          "vehicule_category" :  ["type" : "S",
-                                                  "volumeMax" : 9,
-                                                  "code" : "S",
-                                                  "id" : 1       ]
-            ]
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
         ]
         
         SocketIOManager.sharedInstance.deliveringCourse(dict: myDictOfDict)
@@ -1241,19 +1215,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func DeposingCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
-            "vehicule" : ["denomination":"Trafic",
-                          "haillon": false,
-                          "immatriculation" : "122 TN 444",
-                          "id" : 4,
-                          "status" : 1,
-                          "vehicule_category" :  ["type" : "S",
-                                                  "volumeMax" : 9,
-                                                  "code" : "S",
-                                                  "id" : 1       ]
-            ]
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
         ]
         
         SocketIOManager.sharedInstance.pickUpCourse(dict: myDictOfDict)
@@ -1263,7 +1228,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func EndCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
             "km": 1,
             "duration" : 1,
             "codeCorner" : codeCorner,
@@ -1289,8 +1254,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 AcceptCourse(){
                 print("Course: \(self.codeCourse) was accepted")
                 var course = SessionManager.currentSession.assignedCourses.filter() { $0.code == self.codeCourse }[0]
-                course.status.label = "Acceptée"
-                course.status.code = "ACCEPTEE"
+                course.status!.label = "Acceptée"
+                course.status!.code = "ACCEPTEE"
                 SessionManager.currentSession.acceptedCourses.append(course)
                 SessionManager.currentSession.assignedCourses = SessionManager.currentSession.assignedCourses.filter{ $0.code != self.codeCourse }
                 //----------
@@ -1335,8 +1300,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
                         var C = $0
                         if $0.code == self.codeCourse {
-                            C.status.label = "Enlèvement"
-                            C.status.code = "ENLEVEMENT"
+                            C.status!.label = "Enlèvement"
+                            C.status!.code = "ENLEVEMENT"
                         }
                         return C
                     }
@@ -1411,8 +1376,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
                         var C = $0
                         if $0.code == self.codeCourse {
-                            C.status.label = "Livraison"
-                            C.status.code = "LIVRAISON"
+                            C.status!.label = "Livraison"
+                            C.status!.code = "LIVRAISON"
                         }
                         return C
                     }
@@ -1597,8 +1562,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
                     var C = $0
                     if $0.code == self.codeCourse {
-                            C.status.label = "Déchargement"
-                            C.status.code = "DECHARGEMENT"
+                            C.status!.label = "Déchargement"
+                            C.status!.code = "DECHARGEMENT"
                         }
                         return C
                     }

@@ -7,5 +7,8 @@
 //
 
 import Foundation
-struct scannedDoc {
+class scannedDoc : Decodable {
+    init() {
+        
+    }
 }

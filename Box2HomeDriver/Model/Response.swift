@@ -1,46 +1,31 @@
-////
-////  societe.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Societe: Decodable {
-//    let name : String
-//    init(name: String) {
-//        self.name = name
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case name
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        name = try container.decode(String.self, forKey: .name)
-//    }
-//}
+//  Response.swift
+//  Box2HomeDriver
 //
-////struct societe : Codable{
-////    let name : String
-////}
+//  Created by MacHD on 4/23/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
 
 import Foundation
 
-class Societe: Codable {
-    let name: String?
+class Response: Codable {
+    let message: String?
+    let coursesInPipeStats: CoursesInPipeStats?
+    let code: Int?
+    let authToken: AuthToken?
     
-    init(name: String?) {
-        self.name = name
+    init(message: String?, coursesInPipeStats: CoursesInPipeStats?, code: Int?, authToken: AuthToken?) {
+        self.message = message
+        self.coursesInPipeStats = coursesInPipeStats
+        self.code = code
+        self.authToken = authToken
     }
 }
 
-
-extension Societe {
+extension Response {
     convenience init(data: Data) throws {
-        let me = try newJSONDecoder().decode(Societe.self, from: data)
-        self.init(name: me.name)
+        let me = try newJSONDecoder().decode(Response.self, from: data)
+        self.init(message: me.message, coursesInPipeStats: me.coursesInPipeStats, code: me.code, authToken: me.authToken)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -55,10 +40,16 @@ extension Societe {
     }
     
     func with(
-        name: String?? = nil
-        ) -> Societe {
-        return Societe(
-            name: name ?? self.name
+        message: String?? = nil,
+        coursesInPipeStats: CoursesInPipeStats?? = nil,
+        code: Int?? = nil,
+        authToken: AuthToken?? = nil
+        ) -> Response {
+        return Response(
+            message: message ?? self.message,
+            coursesInPipeStats: coursesInPipeStats ?? self.coursesInPipeStats,
+            code: code ?? self.code,
+            authToken: authToken ?? self.authToken
         )
     }
     
@@ -70,6 +61,7 @@ extension Societe {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
+
 fileprivate func newJSONDecoder() -> JSONDecoder {
     let decoder = JSONDecoder()
     if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {

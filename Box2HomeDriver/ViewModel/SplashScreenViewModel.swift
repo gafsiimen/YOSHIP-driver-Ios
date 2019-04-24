@@ -54,11 +54,11 @@ class SplashScreenViewModel {
                     return
                 } else if let json = json {
                     let json = JSON(json)
-                    print(json.description)
+//                    print(json.description)
                     
                     ////  Comparing versions here
-                    print(json[0]["response"]["version"].stringValue)
-                    print(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+//                    print(json[0]["response"]["version"].stringValue)
+//                    print(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
                     ////
                   
                          self.GoodVersionMessage = "GoodVersion"

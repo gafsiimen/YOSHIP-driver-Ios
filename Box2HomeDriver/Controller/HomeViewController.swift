@@ -334,7 +334,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         //**************firstName**************
         cell.firstNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
         cell.firstNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
-        cell.firstName = courses[indexPath.row].commande.client.firstname
+        cell.firstName = courses[indexPath.row].commande!.client!.firstname!
         cell.firstNameLabel.numberOfLines = 0
         //Layout Setup
         cell.firstNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -344,7 +344,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.firstNameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
         //**************lastName**************
         cell.lastNameLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.lastName = courses[indexPath.row].commande.client.lastname
+        cell.lastName = courses[indexPath.row].commande!.client!.lastname!
         cell.lastNameLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         cell.lastNameLabel.numberOfLines = 0
         //Layout Setup
@@ -355,7 +355,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.lastNameLabel.widthAnchor.constraint(equalToConstant: 120).isActive = true
         //**************phone**************
         cell.phoneLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.phone = courses[indexPath.row].commande.client.phone
+        cell.phone = courses[indexPath.row].commande!.client!.phone!
         cell.phoneLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         cell.phoneLabel.numberOfLines = 0
         //Layout Setup
@@ -376,7 +376,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.colisIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
         //**************colisQuantity**************
         cell.colisQuantityLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.colisQuantity = courses[indexPath.row].nombreColis
+        cell.colisQuantity = courses[indexPath.row].nombreColis!
         cell.colisQuantityLabel.font = UIFont(name: "Copperplate", size: CGFloat(19))
         //Layout Setup
         cell.colisQuantityLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -422,7 +422,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.updateColisQuantityButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         //**************ContainerViewLVCodeLabel**************
         cell.ContainerViewLVCodeLabel.textColor = .darkGray
-        cell.ContainerViewLVCode = courses[indexPath.row].lettreDeVoiture.code
+        cell.ContainerViewLVCode = courses[indexPath.row].lettreDeVoiture!.code!
         cell.ContainerViewLVCodeLabel.font = UIFont(name: "Copperplate-Light", size: CGFloat(12))
         //Layout Setup
         cell.ContainerViewLVCodeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -444,7 +444,11 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.observationsTextView.contentInset = UIEdgeInsets(top: -5, left: 5, bottom: -5, right: 5)
         cell.observationsTextView.isEditable = false
         cell.observationsTextView.textColor = .darkGray
-        cell.observationsTextView.text = "\(courses[indexPath.row].observation)"
+        if (courses[indexPath.row].observation == nil){
+             cell.observationsTextView.text = ""
+        }else{
+            cell.observationsTextView.text = "\(courses[indexPath.row].observation!)"
+        }
         cell.observationsTextView.font = UIFont(name: "Copperplate-Light", size: CGFloat(12))
         cell.observationsTextView.backgroundColor = .clear
         //Layout Setup
@@ -462,17 +466,17 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
         //Data to be sent the CourseDetailsController
         //>for views
-        cell.CourseDetailsButton.statusCode = courses[indexPath.row].status.code
-        cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart.latitude
-        cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart.longitude
-        cell.CourseDetailsButton.adresseDepart = courses[indexPath.row].adresseDepart.address
-        cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee.latitude
-        cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee.longitude
-        cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee.address
+        cell.CourseDetailsButton.statusCode = courses[indexPath.row].status!.code!
+        cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart!.latitude!
+        cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart!.longitude!
+        cell.CourseDetailsButton.adresseDepart = courses[indexPath.row].adresseDepart!.address!
+        cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee!.latitude!
+        cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee!.longitude!
+        cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
         //>for socket
-        cell.CourseDetailsButton.codeCourse = courses[indexPath.row].code
-        cell.CourseDetailsButton.codeCorner = courses[indexPath.row].codeCorner
-        cell.CourseDetailsButton.courseSource = courses[indexPath.row].courseSource
+        cell.CourseDetailsButton.codeCourse = courses[indexPath.row].code!
+        cell.CourseDetailsButton.codeCorner = courses[indexPath.row].codeCorner!
+        cell.CourseDetailsButton.courseSource = courses[indexPath.row].courseSource!
         //Layout Setup
         cell.CourseDetailsButton.translatesAutoresizingMaskIntoConstraints = false
         cell.CourseDetailsButton.topAnchor.constraint(equalTo: cell.observationsTextView.bottomAnchor, constant: 5).isActive = true
@@ -487,7 +491,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         let tap2 = MyTapGesture(target: self, action: #selector(SAVCall(sender:)))
         let tap3 = MyTapGesture(target: self, action: #selector(LVDownload(sender:)))
         // Fill param here
-        tap1.param = courses[indexPath.row].commande.client.phone
+        tap1.param = courses[indexPath.row].commande!.client!.phone!
         tap2.param = "2"
         tap3.param = "3"
         //-------
@@ -587,15 +591,15 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
 
         //--------------------------------------
         //text Setup
-        cell.LVCode = courses[indexPath.row].lettreDeVoiture.code
+        cell.LVCode = courses[indexPath.row].lettreDeVoiture!.code!
         //------
-        cell.adresseDepart = courses[indexPath.row].adresseDepart.address
+        cell.adresseDepart = courses[indexPath.row].adresseDepart!.address!
         //------
-        cell.adresseArrivee = courses[indexPath.row].adresseArrivee.address
+        cell.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
         //------
-        let status = "\(courses[indexPath.row].status.label)"
-        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta.deliveryWindow
-        let dateDemarrage = dateFormatter.date(from: courses[indexPath.row].dateDemarrage)!
+        let status = "\(courses[indexPath.row].status!.label!)"
+        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta!.deliveryWindow!
+        let dateDemarrage = dateFormatter.date(from: courses[indexPath.row].dateDemarrage!)!
         let deadlineDate = Calendar.current.date(byAdding: .minute, value: deliveryWindow, to: dateDemarrage, wrappingComponents: false)!
         let yyyyMMdd = "\(Calendar.current.component(.day, from: dateDemarrage ))-\(Calendar.current.component(.month, from: dateDemarrage ))-\(Calendar.current.component(.year, from: dateDemarrage ))"
         let hour1 = "\(Calendar.current.component(.hour, from: dateDemarrage ))h"

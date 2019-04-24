@@ -5,6 +5,7 @@
 //  Created by MacHD on 3/6/19.
 //  Copyright © 2019 MacHD. All rights reserved.
 //
+import Foundation
 
 class SessionManager {
     
@@ -12,30 +13,35 @@ class SessionManager {
     
     var acceptedCourses : [Course] = []
     var assignedCourses : [Course] = []
+   
+    
+    var currentVehicule : Vehicule? = Vehicule(denomination: "Trafic", haillon: false, immatriculation: "122 TN 444", id: 4, status: 1, vehiculeCategory: VehiculeCategory(type: "S", volumeMax: 9, code: "S", id: 1))
     
     
+    var currentResponse : Response?
     
-    var message:String?
-    var authToken:String? 
-    var code:String?
-    var coursesInPipeStats:coursesInPipeStats?
-    var chauffeur: chauffeur?
-
-    func signIn(message:String,authToken:String,code:String,coursesInPipeStats:coursesInPipeStats,chauffeur:chauffeur,completion: () -> ()) {
-        self.authToken = authToken
-        self.message = message
-        self.code = code
-        self.coursesInPipeStats = coursesInPipeStats
-        self.chauffeur = chauffeur
-        completion()
+    func updateCurrentVehicule(newVehicule: Vehicule) {
+        self.currentVehicule = newVehicule
     }
+    func getCurrentVehiculeDictionary() -> [String:Any]? {
+        do {
+            let data = try currentVehicule!.jsonData()
+            return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
+    }
+    
+    func signIn(response: Response,completion: (() -> ())?) {
+        self.currentResponse = response
+        completion?()
+    }
+    
     func signOut() {
-        SocketIOManager.sharedInstance.closeConnection()
-        self.message = ""
-        self.code = ""
-        self.authToken = ""
-        self.coursesInPipeStats = nil
-        self.chauffeur = nil
+       SocketIOManager.sharedInstance.closeConnection()
+       self.currentResponse = nil
+       self.currentVehicule = nil
     }
    
 }
