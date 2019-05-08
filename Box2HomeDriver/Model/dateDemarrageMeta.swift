@@ -1,64 +1,54 @@
-////
-////  dateDemarrageMeta.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 3/25/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class DateDemarrageMeta: Decodable {
-//    var dayOfWeek: DayOfWeek?
-//    let deliveryWindow: Int
-//    let closeTime, openTime: String
+//  dateDemarrageMeta.swift
+//  Box2HomeDriver
 //
-//    init(dayOfWeek: DayOfWeek?, deliveryWindow: Int, closeTime: String, openTime: String) {
-//        self.dayOfWeek = dayOfWeek
-//        self.deliveryWindow = deliveryWindow
-//        self.closeTime = closeTime
-//        self.openTime = openTime
-//    }
-//    init( deliveryWindow: Int, closeTime: String, openTime: String) {
-//        self.deliveryWindow = deliveryWindow
-//        self.closeTime = closeTime
-//        self.openTime = openTime
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case dayOfWeek,openTime ,closeTime ,deliveryWindow
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        dayOfWeek = try container.decode(DayOfWeek.self, forKey: .dayOfWeek)
-//        openTime = try container.decode(String.self, forKey: .openTime)
-//        closeTime = try container.decode(String.self, forKey: .closeTime)
-//        deliveryWindow = try container.decode(Int.self, forKey: .deliveryWindow)
-//    }
-//}
-////struct dateDemarrageMeta : Codable {
-////    let closeTime : String
-////    let deliveryWindow : Int
-////    let openTime : String
-////
-////    init(closeTime : String, deliveryWindow : Int, openTime : String) {
-////        self.closeTime = closeTime
-////        self.deliveryWindow = deliveryWindow
-////        self.openTime = openTime
-////    }
-////
-////}
+//  Created by MacHD on 3/25/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
+
 
 import Foundation
+import RealmSwift
+import Realm
 
-class DateDemarrageMeta: Codable {
-    let deliveryWindow: Int?
-    let closeTime, openTime: String?
-    let dayOfWeek: DayOfWeek?
+@objcMembers
+class DateDemarrageMeta: Object, Codable {
+    let deliveryWindow = RealmOptional<Int>()
+    dynamic var closeTime: String? = nil
+    dynamic var openTime: String? = nil
+    dynamic var dayOfWeek: DayOfWeek?
     
-    init(deliveryWindow: Int?, closeTime: String?, openTime: String?, dayOfWeek: DayOfWeek?) {
-        self.deliveryWindow = deliveryWindow
+    enum CodingKeys: String, CodingKey {
+        case deliveryWindow, closeTime, openTime, dayOfWeek
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        openTime = try container.decodeIfPresent(String.self, forKey: .openTime) ?? nil
+        closeTime = try container.decodeIfPresent(String.self, forKey: .closeTime) ?? nil
+        self.deliveryWindow.value = try container.decodeIfPresent(Int.self, forKey:.deliveryWindow) ?? nil
+        dayOfWeek = try container.decodeIfPresent(DayOfWeek.self, forKey: .dayOfWeek) ?? nil
+        super.init()
+    }
+    
+    required init(deliveryWindow: Int?, closeTime: String?, openTime: String?, dayOfWeek: DayOfWeek?) {
+        self.deliveryWindow.value = deliveryWindow
         self.closeTime = closeTime
         self.openTime = openTime
         self.dayOfWeek = dayOfWeek
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 
@@ -66,7 +56,7 @@ class DateDemarrageMeta: Codable {
 extension DateDemarrageMeta {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(DateDemarrageMeta.self, from: data)
-        self.init(deliveryWindow: me.deliveryWindow, closeTime: me.closeTime, openTime: me.openTime, dayOfWeek: me.dayOfWeek)
+        self.init(deliveryWindow: me.deliveryWindow.value, closeTime: me.closeTime, openTime: me.openTime, dayOfWeek: me.dayOfWeek)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -87,7 +77,7 @@ extension DateDemarrageMeta {
         dayOfWeek: DayOfWeek?? = nil
         ) -> DateDemarrageMeta {
         return DateDemarrageMeta(
-            deliveryWindow: deliveryWindow ?? self.deliveryWindow,
+            deliveryWindow: deliveryWindow ?? self.deliveryWindow.value,
             closeTime: closeTime ?? self.closeTime,
             openTime: openTime ?? self.openTime,
             dayOfWeek: dayOfWeek ?? self.dayOfWeek

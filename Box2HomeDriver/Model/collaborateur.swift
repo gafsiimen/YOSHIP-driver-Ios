@@ -1,46 +1,35 @@
-////
-////  collaborateur.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-////class Collaborateur: Codable {
-////
-////    init() {
-////    }
-////}
-//class Collaborateur: Decodable {
-//    let lastname : String
-//    let firstname : String
-//    init(lastname : String, firstname : String) {
-//        self.firstname = firstname
-//        self.lastname = lastname
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case lastname, firstname
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        lastname = try container.decode(String.self, forKey: .lastname)
-//        firstname = try container.decode(String.self, forKey: .firstname)
-//    }
-//}
-////struct collaborateur : Codable {
-////    let lastname : String
-////    let firstname : String
-////}
+//  collaborateur.swift
+//  Box2HomeDriver
+//
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
 
 import Foundation
+import Realm
+import RealmSwift
 
-class Collaborateur: Codable {
-    let lastname, firstname: String?
+@objcMembers
+class Collaborateur: Object, Codable {
+    dynamic var lastname: String? = nil
+    dynamic var firstname: String? = nil
     
-    init(lastname: String?, firstname: String?) {
+    required init(lastname: String?, firstname: String?) {
         self.lastname = lastname
         self.firstname = firstname
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 

@@ -24,6 +24,8 @@ struct LoginRepository{
 //            vc.present(alert, animated:  true , completion: nil)}
 //    }
     
+
+    
     func doLogin( phone:String ,completion:    @escaping WebServiceResponse)  {
         
         let param = ["phone" : phone]
@@ -38,7 +40,6 @@ struct LoginRepository{
                 completion([jsonDict],nil)
             }
         }
-       
     }
   
     

@@ -19,6 +19,12 @@ class SplashScreenViewModel {
 //        self.SocketRepository = SocketRepository
     }
     
+    var resp: Response? {
+        didSet {
+            self.didFinishFetch?()
+        }
+    }
+    
     var error: Error? {
         didSet { self.showErrorClosure?() }
     }
@@ -34,6 +40,7 @@ class SplashScreenViewModel {
     var BadVersionMessage: String? {
         didSet { self.showBadVersionClosure?() }
     }
+    var didFinishFetch: (() -> ())?
     var showErrorClosure: (() -> ())?
     var showGoodVersionClosure: (() -> ())?
     var showBadVersionClosure: (() -> ())?
@@ -67,5 +74,36 @@ class SplashScreenViewModel {
                 }
                 
             })
+    }
+    
+    
+    
+    func Login(phone:String) {
+        
+        
+        self.SplashScreenRepository?.doLogin(phone: phone,completion: { (json, error) in
+            if  let error = error {
+                self.error = error
+                return
+            } else if let json = json {
+                let SwiftyJson = JSON(json)
+                let message = SwiftyJson[0]["message"].stringValue
+                if (message != "Success") {
+                    return
+                } else {
+                    let response : Response!
+                    do {
+                        let jsonData = try JSONSerialization.data(withJSONObject: json[0])
+                        response = try Response(data: jsonData)
+                        print("MY USELESS RESPONSE: ",response.description)
+                    }catch{
+                        self.error = error
+                        return
+                    }
+                    
+                }
+            }
+            
+        })
     }
 }

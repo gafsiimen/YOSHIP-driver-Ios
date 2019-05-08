@@ -1,67 +1,56 @@
-////
-////  configs.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Configs: Decodable {
-//    var operationalHours : [OperationalHours]?
-//    let priceBasedOnWeight, priceBasedOnNBitems, priceBasedOnPurchaseAmount, fixedPriceIncludeManutention: Bool
+//  configs.swift
+//  Box2HomeDriver
 //
-//    init(operationalHours : [OperationalHours]?, priceBasedOnWeight : Bool, priceBasedOnNBitems : Bool, priceBasedOnPurchaseAmount : Bool, fixedPriceIncludeManutention : Bool) {
-//        self.priceBasedOnWeight = priceBasedOnWeight
-//        self.priceBasedOnPurchaseAmount = priceBasedOnPurchaseAmount
-//        self.priceBasedOnNBitems = priceBasedOnNBitems
-//        self.fixedPriceIncludeManutention = fixedPriceIncludeManutention
-//        self.operationalHours = operationalHours
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case operationalHours, priceBasedOnWeight, priceBasedOnNBitems, priceBasedOnPurchaseAmount, fixedPriceIncludeManutention
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        operationalHours = try container.decode([OperationalHours].self, forKey: .operationalHours)
-//        priceBasedOnWeight = try container.decode(Bool.self, forKey: .priceBasedOnWeight)
-//        priceBasedOnNBitems = try container.decode(Bool.self, forKey: .priceBasedOnNBitems)
-//        priceBasedOnPurchaseAmount = try container.decode(Bool.self, forKey: .priceBasedOnPurchaseAmount)
-//        fixedPriceIncludeManutention = try container.decode(Bool.self, forKey: .fixedPriceIncludeManutention)
-//    }
-//}
-////struct Configs : Codable{
-////    let priceBasedOnPurchaseAmount : Bool
-////    let priceBasedOnNBitems : Bool
-////    let fixedPriceIncludeManutention : Bool
-////    var operationalHours : [operationalHours]?
-////
-////    init(priceBasedOnPurchaseAmount : Bool, priceBasedOnNBitems : Bool,fixedPriceIncludeManutention : Bool,operationalHours : [operationalHours]) {
-////        self.priceBasedOnPurchaseAmount = priceBasedOnPurchaseAmount
-////        self.priceBasedOnNBitems = priceBasedOnNBitems
-////        self.fixedPriceIncludeManutention = fixedPriceIncludeManutention
-////        self.operationalHours = operationalHours
-////    }
-////    init(priceBasedOnPurchaseAmount : Bool, priceBasedOnNBitems : Bool,fixedPriceIncludeManutention : Bool) {
-////        self.priceBasedOnPurchaseAmount = priceBasedOnPurchaseAmount
-////        self.priceBasedOnNBitems = priceBasedOnNBitems
-////        self.fixedPriceIncludeManutention = fixedPriceIncludeManutention
-////    }
-////}
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Configs: Codable {
-    let priceBasedOnWeight: Bool?
-    let operationalHours: [OperationalHour]?
-    let priceBasedOnNBitems, priceBasedOnPurchaseAmount, fixedPriceIncludeManutention: Bool?
+@objcMembers
+class Configs: Object, Codable {
+    let priceBasedOnWeight = RealmOptional<Bool>()
+    let priceBasedOnNBitems = RealmOptional<Bool>()
+    let priceBasedOnPurchaseAmount = RealmOptional<Bool>()
+    let fixedPriceIncludeManutention = RealmOptional<Bool>()
+    var operationalHours = RealmSwift.List<OperationalHour>()
     
-    init(priceBasedOnWeight: Bool?, operationalHours: [OperationalHour]?, priceBasedOnNBitems: Bool?, priceBasedOnPurchaseAmount: Bool?, fixedPriceIncludeManutention: Bool?) {
-        self.priceBasedOnWeight = priceBasedOnWeight
+    enum CodingKeys: String, CodingKey {
+        case priceBasedOnWeight, priceBasedOnNBitems, priceBasedOnPurchaseAmount, fixedPriceIncludeManutention, operationalHours
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        priceBasedOnWeight.value = try container.decodeIfPresent(Bool.self, forKey: .priceBasedOnWeight) ?? nil
+        priceBasedOnNBitems.value = try container.decodeIfPresent(Bool.self, forKey: .priceBasedOnNBitems) ?? nil
+        priceBasedOnPurchaseAmount.value = try container.decodeIfPresent(Bool.self, forKey: .priceBasedOnPurchaseAmount) ?? nil
+        fixedPriceIncludeManutention.value = try container.decodeIfPresent(Bool.self, forKey: .fixedPriceIncludeManutention) ?? nil
+        operationalHours = try container.decodeIfPresent(List<OperationalHour>.self,forKey: .operationalHours) ?? List<OperationalHour>()
+        super.init()
+    }
+    
+    init(priceBasedOnWeight: Bool?, operationalHours: List<OperationalHour>, priceBasedOnNBitems: Bool?, priceBasedOnPurchaseAmount: Bool?, fixedPriceIncludeManutention: Bool?) {
+        self.priceBasedOnWeight.value = priceBasedOnWeight
         self.operationalHours = operationalHours
-        self.priceBasedOnNBitems = priceBasedOnNBitems
-        self.priceBasedOnPurchaseAmount = priceBasedOnPurchaseAmount
-        self.fixedPriceIncludeManutention = fixedPriceIncludeManutention
+        self.priceBasedOnNBitems.value = priceBasedOnNBitems
+        self.priceBasedOnPurchaseAmount.value = priceBasedOnPurchaseAmount
+        self.fixedPriceIncludeManutention.value = fixedPriceIncludeManutention
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 
@@ -69,7 +58,7 @@ class Configs: Codable {
 extension Configs {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Configs.self, from: data)
-        self.init(priceBasedOnWeight: me.priceBasedOnWeight, operationalHours: me.operationalHours, priceBasedOnNBitems: me.priceBasedOnNBitems, priceBasedOnPurchaseAmount: me.priceBasedOnPurchaseAmount, fixedPriceIncludeManutention: me.fixedPriceIncludeManutention)
+        self.init(priceBasedOnWeight: me.priceBasedOnWeight.value, operationalHours: me.operationalHours, priceBasedOnNBitems: me.priceBasedOnNBitems.value, priceBasedOnPurchaseAmount: me.priceBasedOnPurchaseAmount.value, fixedPriceIncludeManutention: me.fixedPriceIncludeManutention.value)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -85,17 +74,17 @@ extension Configs {
     
     func with(
         priceBasedOnWeight: Bool?? = nil,
-        operationalHours: [OperationalHour]?? = nil,
+        operationalHours: List<OperationalHour>? = nil,
         priceBasedOnNBitems: Bool?? = nil,
         priceBasedOnPurchaseAmount: Bool?? = nil,
         fixedPriceIncludeManutention: Bool?? = nil
         ) -> Configs {
         return Configs(
-            priceBasedOnWeight: priceBasedOnWeight ?? self.priceBasedOnWeight,
+            priceBasedOnWeight: priceBasedOnWeight ?? self.priceBasedOnWeight.value,
             operationalHours: operationalHours ?? self.operationalHours,
-            priceBasedOnNBitems: priceBasedOnNBitems ?? self.priceBasedOnNBitems,
-            priceBasedOnPurchaseAmount: priceBasedOnPurchaseAmount ?? self.priceBasedOnPurchaseAmount,
-            fixedPriceIncludeManutention: fixedPriceIncludeManutention ?? self.fixedPriceIncludeManutention
+            priceBasedOnNBitems: priceBasedOnNBitems ?? self.priceBasedOnNBitems.value,
+            priceBasedOnPurchaseAmount: priceBasedOnPurchaseAmount ?? self.priceBasedOnPurchaseAmount.value,
+            fixedPriceIncludeManutention: fixedPriceIncludeManutention ?? self.fixedPriceIncludeManutention.value
         )
     }
     

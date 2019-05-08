@@ -43,6 +43,7 @@ class LoginViewController: UIViewController {
 //    }
     //--------------------------------------------------------------------------------------------
     fileprivate func setupView (){
+//        print(RealmManager.sharedInstance.fetchCourses().description)
         self.hideKeyboardWhenTappedAround()
         SetupLoginView.sharedInstance.SetupBackgroundColor(vc:self)
         SetupLogo()
@@ -90,11 +91,11 @@ class LoginViewController: UIViewController {
             return
         }
 
-        viewModel.Login(phone: phone )
+        viewModel.Login(phone: phone)
         
         viewModel.updateLoadingStatus = {
              let state = self.viewModel.isLoading
-            self.SetupLoading(isLoading: state)
+             self.SetupLoading(isLoading: state)
             
         }
       
@@ -102,11 +103,12 @@ class LoginViewController: UIViewController {
 //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
 //                SocketIOManager.sharedInstance.establishConnection()
 //            }
+//            SocketIOManager.token = self.viewModel.resp?.authToken?.value ?? ""
+//            SocketIOManager.sharedInstance.establishConnection()
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 print("VALID USER !!")
-                UIView.setAnimationsEnabled(false)
                 self.performSegue(withIdentifier: "LoginToHome", sender: self)
-                UIView.setAnimationsEnabled(true)
             }
             
         }
@@ -144,4 +146,5 @@ class LoginViewController: UIViewController {
             }
       }
   }
+    
 }

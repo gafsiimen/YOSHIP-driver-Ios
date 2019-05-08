@@ -1,47 +1,36 @@
-////
-////  dayOfWeek.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 3/12/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class DayOfWeek: Decodable {
-//    let code, label: String
-//    init(code: String, label: String) {
-//        self.code = code
-//        self.label = label
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case code, label
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        code = try container.decode(String.self, forKey: .code)
-//        label = try container.decode(String.self, forKey: .label)
-//    }
-//}
-////struct dayOfWeek : Codable {
-////    let label : String
-////    let code : String
-////
-////    init(label : String, code : String) {
-////        self.label = label
-////        self.code = code
-////    }
-////
-////}
+//  dayOfWeek.swift
+//  Box2HomeDriver
+//
+//  Created by MacHD on 3/12/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
 
 import Foundation
+import RealmSwift
+import Realm
 
-class DayOfWeek: Codable {
-    let label: String?
-    let code: String?
+@objcMembers
+class DayOfWeek: Object, Codable {
+     dynamic var label: String? = nil
+     dynamic var code: String? = nil
     
-    init(label: String?, code: String?) {
+    required init(label: String?, code: String?) {
         self.label = label
         self.code = code
+        super.init()
+    }
+    
+    required init() {
+       super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+      super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 

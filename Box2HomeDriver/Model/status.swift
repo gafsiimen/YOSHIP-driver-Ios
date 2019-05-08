@@ -32,19 +32,37 @@
 ////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Status: Codable {
-    var code, label, color: String?
-    
-    init(code: String?, label: String?, color: String?) {
+@objcMembers
+class Status: Object, Codable {
+    dynamic var code: String? = nil
+    dynamic var label: String? = nil
+    dynamic var color: String? = nil
+
+    required init(code: String?, label: String?, color: String?) {
         self.code = code
         self.label = label
         self.color = color
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 
 
 extension Status {
+    
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Status.self, from: data)
         self.init(code: me.code, label: me.label, color: me.color)

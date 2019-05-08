@@ -10,11 +10,12 @@ import Foundation
 import SocketIO
 import SwiftyJSON
 import SwiftEventBus
+import RealmSwift
+
 class SocketIOManager: NSObject {
-//     var InitialAcceptedCourses : [Course] = []
-     static let sharedInstance = SocketIOManager()
-     static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token":SessionManager.currentSession.currentResponse!.authToken!.value!])])
-//    RwsGzmdmMbGef2BW+IjvFR7MZlWLzedrOsQUxmfMvcAMj9lu7fQgiKO+OUZu/wnwsUw=
+    static var token = UserDefaults.standard.string(forKey: "token") ?? SessionManager.currentSession.currentResponse!.authToken!.value!
+    static let sharedInstance = SocketIOManager()
+    static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token": token])])
     static let socket = manager.defaultSocket
    
   
@@ -22,27 +23,25 @@ class SocketIOManager: NSObject {
     override init() {
        super.init()
         
-        let myDictOfDict:[String:Any] = [
-            "code" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.code!,
-            "latitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.latitude!,
-            "longitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.longitude!,
-            "heading" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.heading!,
-            "manutention" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.manutention!,
-            "deviceInfo" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.deviceInfo!,
-            "vehicule" : ["denomination":SessionManager.currentSession.currentVehicule!.denomination!,
-                          "haillon": SessionManager.currentSession.currentVehicule!.haillon!,
-                          "immatriculation" : SessionManager.currentSession.currentVehicule!.immatriculation!,
-                          "id" : SessionManager.currentSession.currentVehicule!.id!,
-                          "status" : SessionManager.currentSession.currentVehicule!.status!,
-                          "vehicule_category" :  ["type" : SessionManager.currentSession.currentVehicule!.vehiculeCategory!.type!,
-                                                  "volumeMax" : SessionManager.currentSession.currentVehicule!.vehiculeCategory!.volumeMax!,
-                                                  "code" : SessionManager.currentSession.currentVehicule!.vehiculeCategory!.code!,
-                                                  "id" : SessionManager.currentSession.currentVehicule!.vehiculeCategory!.id!       ]
-            ]
-        ]
-        
         
         SocketIOManager.socket.on(clientEvent: .connect) { data, ack in
+//            let myDictOfDict = SessionManager.currentSession.GetEmitDictionary()
+            let myDictOfDict:[String:Any] = [
+                "code" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.code!,
+                "latitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.latitude,
+                "longitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.longitude,
+                "heading" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.heading,
+                "manutention" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.manutention,
+                "deviceInfo" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.deviceInfo!,
+                "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
+            ]
+            
+            UserDefaults.standard.set(SessionManager.currentSession.currentResponse?.authToken?.value ?? SessionManager.currentSession.currentRealmResponse?.authToken?.value, forKey: "token")
+            
+            print("USER DEFAULTS TOKEN : ",SocketIOManager.token)
+            RealmManager.sharedInstance.persistResponse(SessionManager.currentSession.currentResponse!)
+//            print("REALM RESPONSE : ",SessionManager.currentSession.currentRealmResponse!.description)
+           
             SocketIOManager.socket.emitWithAck("driverConnect", myDictOfDict).timingOut(after: 0, callback: { (data) in
 //                print(JSON(data))
             })
@@ -58,7 +57,7 @@ class SocketIOManager: NSObject {
          SocketIOManager.socket.on("newCourse") { (data, ack) in
 //            print("NewCourse INC")
         }
-        SocketIOManager.socket.on("deposing") { (data, ack) in
+         SocketIOManager.socket.on("deposing") { (data, ack) in
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -66,7 +65,12 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion: nil)
+                    self.CourseAppend(tag: "accepted", course, completion:  {
+                     
+
+                        
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    })
                 }catch{
                     print(error)
                 }
@@ -80,7 +84,10 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion: nil)
+                    self.CourseAppend(tag: "accepted", course, completion:  {
+                       
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    })
                 }catch{
                     print(error)
                 }
@@ -94,7 +101,10 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion: nil)
+                    self.CourseAppend(tag: "accepted", course, completion:  {
+                      
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    })
                 }catch{
                     print(error)
                 }
@@ -108,7 +118,11 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion: nil)
+//                    print("\n\nCourse\n",course.description)
+                    self.CourseAppend(tag: "accepted", course, completion:  {
+                       
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+                    })
                 }catch{
                     print(error)
                 }
@@ -116,16 +130,30 @@ class SocketIOManager: NSObject {
         }
         
         SocketIOManager.socket.on("assigned") { (data, ack) in
+            
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
+//                print(JSON(data).description)
+//                print(data)
                 let dict: [String: Any]!
                 do {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
+//                    print(dict.description)
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "assigned", course, completion: {
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: "assigned")
-                       })
+                    
+//                    RealmManager.sharedInstance.createOrUpdateCourse(try Course(data: jsonData))
+//                    print(course)
+//                        try self.newJSONDecoder().decode(Course.self, from: jsonData)
+//                    RealmManager.sharedInstance.createOrUpdateCourse(course)
+//                    print("\n\n********************\n",RealmManager.sharedInstance.fetchCourses().description)
+//                    print("\n\n--------------------\n",course.description)
+//                    print("\n\n--------------------\n",course.articleFamilies.description)
+//                    print("\n\n--------------------\n",dict["articleFamilies"])
+//                    print("\n\n~~~~~~~~~~~~~~~~~~~~\n",dict.description)
+                    self.CourseAppend(tag: "assigned", course, completion: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+
                   }catch{
                        print(error)
                     }
@@ -135,81 +163,21 @@ class SocketIOManager: NSObject {
     }
     
     fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: (() -> ())?) {
-        switch tag{
-        case "accepted":
-            SessionManager.currentSession.acceptedCourses.append(thisCourse)
-            completion?()
-        case "assigned":
-            SessionManager.currentSession.assignedCourses.append(thisCourse)
-            completion?()
-        default:
-            break
-        }
+        RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+        completion?()
+//        switch tag{
+//        case "accepted":
+//            SessionManager.currentSession.acceptedCourses.append(thisCourse)
+//            completion?()
+//        case "assigned":
+//            SessionManager.currentSession.assignedCourses.append(thisCourse)
+//            completion?()
+//        default:
+//            break
+//        }
     }
    
-    func GetStringArray(json: JSON) -> [String] {
-        var StringArray : [String] = []
-        let strArray = json.arrayValue
-        for element in strArray {
-            StringArray.append(
-                element.stringValue
-            )
-        }
-        return StringArray
-    }
-    func GetOperationalHours(json: JSON) -> [OperationalHour] {
-        var operationalHours : [OperationalHour] = []
-        let oh = json.arrayValue
-        for element in oh {
-            operationalHours.append(
-                OperationalHour( deliveryWindow: element["deliveryWindow"].intValue,
-                                 closeTime: element["closeTime"].stringValue,
-                                 openTime: element["openTime"].stringValue,
-                                 dayOfWeek: DayOfWeek(label: element["dayOfWeek"]["label"].stringValue,
-                                                      code: element["dayOfWeek"]["code"].stringValue))
-            )
-        }
-        return operationalHours
-    }
-    func GetSignatureImages(json: JSON) -> [SignatureImage] {
-        var signatureImages : [SignatureImage] = []
-        let si = json.arrayValue
-        for element in si {
-            signatureImages.append(
-              SignatureImage(type: element["type"].stringValue,
-                             url: element["url"].stringValue)
-            )
-        }
-        return signatureImages
-    }
-    func GetArticleFamilies(json: JSON) -> [ArticleFamily] {
-        var ArticleFamilies : [ArticleFamily] = []
-        let af = json.arrayValue
-        for element in af {
-            ArticleFamilies.append(
-                ArticleFamily(code: element["code"].stringValue,
-                              label: element["label"].stringValue)
-            )
-        }
-        return ArticleFamilies
-    }
-    //--------------------------------------------------------
-//    var vehicules : [vehicule] = []
-//    let veh = dict["chauffeur"]["vehicules"].arrayValue
-//    for element in veh {
-//    vehicules.append(
-//    vehicule(id: element["id"].intValue,
-//    status: element["status"].intValue,
-//    vehicule_category: Vehicule_category(
-//    code: element["vehicule_category"]["code"].stringValue,
-//    type: element["vehicule_category"]["type"].stringValue,
-//    volumeMax:element["vehicule_category"]["volumeMax"].intValue,
-//    id: element["vehicule_category"]["id"].intValue),
-//    haillon: element["haillon"].boolValue,
-//    denomination: element["denomination"].stringValue,
-//    immatriculation: element["immatriculation"].stringValue
-//    ))
-//    }
+  
     
     //--------------------------------------------------------
     func acceptCourse(dict: [String:Any]) {
@@ -251,4 +219,11 @@ class SocketIOManager: NSObject {
     }
     
    
+   
+}
+
+extension SocketIOManager {
+    static func myManager() -> SocketManager {
+        return SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token": SessionManager.currentSession.currentResponse!.authToken!.value!])])
+    }
 }

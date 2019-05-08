@@ -39,7 +39,7 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
     let unit = UIScreen.main.bounds.height/16
     let offset = CGFloat(10)
     //---------------
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         //---------------
@@ -139,9 +139,11 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
     @objc func Button4Action(){
+        SessionManager.currentSession.signOut()
         var destViewController : UIViewController
-        destViewController = mainStoryboard.instantiateViewController(withIdentifier: "Déconnexion")
+        destViewController = mainStoryboard.instantiateViewController(withIdentifier: "splash")
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
+
     }
     @objc func Button5Action(){
         var destViewController : UIViewController

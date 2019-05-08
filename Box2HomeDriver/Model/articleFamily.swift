@@ -1,41 +1,51 @@
-////
-////  articleFamily.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class ArticleFamily: Decodable {
-//    let code, label: String
-//    init(code: String, label: String) {
-//        self.code = code
-//        self.label = label
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case code, label
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        code = try container.decode(String.self, forKey: .code)
-//        label = try container.decode(String.self, forKey: .label)
-//    }
-//}
-////struct articleFamily : Codable {
-////    let code : String
-////    let label : String
-////}
+//  articleFamily.swift
+//  Box2HomeDriver
+//
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
+
 
 import Foundation
+import Realm
+import RealmSwift
 
-class ArticleFamily: Codable {
-    let code, label: String?
+@objcMembers
+class ArticleFamily: Object, Codable {
+    dynamic var code: String? = nil
+    dynamic var label: String? = nil
     
-    init(code: String?, label: String?) {
+    enum CodingKeys: String, CodingKey {
+        case code, label
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        code = try container.decodeIfPresent(String.self, forKey: .code)  ?? nil
+        label = try container.decodeIfPresent(String.self, forKey: .label) ?? nil
+        super.init()
+    }
+    
+   required init(code: String?, label: String?) {
         self.code = code
         self.label = label
+        super.init()
     }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
 }
 
 

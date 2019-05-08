@@ -7,14 +7,40 @@
 //
 
 import Foundation
+import RealmSwift
+import Realm
 
-class AuthToken: Codable {
-    let value: String?
-    let chauffeur: Chauffeur?
+@objcMembers
+class AuthToken: Object, Codable {
+    dynamic var value: String? = nil
+    dynamic var chauffeur: Chauffeur?
     
-    init(value: String?, chauffeur: Chauffeur?) {
+    enum CodingKeys: String, CodingKey {
+        case value, chauffeur
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = try container.decodeIfPresent(String.self, forKey: .value) ?? nil
+        chauffeur = try container.decodeIfPresent(Chauffeur.self, forKey: .chauffeur) ?? nil
+        super.init()
+    }
+    required init(value: String?, chauffeur: Chauffeur?) {
         self.value = value
         self.chauffeur = chauffeur
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
     }
 }
 

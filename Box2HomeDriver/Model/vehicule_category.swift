@@ -1,73 +1,54 @@
-////
-////  vehicule_category.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class VehiculeCategory: Decodable {
-//    let code: String
-//    let type: String
-//    let volumeMax: Int
-//    var id: Int?
+//  vehicule_category.swift
+//  Box2HomeDriver
 //
-//    init(code: String, type: String, volumeMax: Int,  id: Int) {
-//        self.code = code
-//        self.volumeMax = volumeMax
-//        self.type = type
-//        self.id = id
-//    }
-//    init( code : String, type : String, volumeMax : Int) {
-//        self.code = code
-//        self.type = type
-//        self.volumeMax = volumeMax
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case code, volumeMax, type, id
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        code = try container.decode(String.self, forKey: .code)
-//        volumeMax = try container.decode(Int.self, forKey: .volumeMax)
-//        type = try container.decode(String.self, forKey: .type)
-//        id = try container.decode(Int.self, forKey: .id)
-//    }
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
-//}
-////struct VehiculeCategory : Codable {
-////    let code : String
-////    let type : String
-////    let volumeMax : Int
-////    var id : Int?
-////
-////    init( code : String, type : String, volumeMax : Int, id : Int?) {
-////        self.code = code
-////        self.type = type
-////        self.volumeMax = volumeMax
-////        self.id = id
-////    }
-////    init( code : String, type : String, volumeMax : Int) {
-////        self.code = code
-////        self.type = type
-////        self.volumeMax = volumeMax
-////    }
-////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class VehiculeCategory: Codable {
-    let type: String?
-    let volumeMax: Int?
-    let code: String?
-    let id: Int?
+@objcMembers
+class VehiculeCategory: Object, Codable {
+    let volumeMax = RealmOptional<Int>()
+    let id = RealmOptional<Int>()
+    dynamic var type: String? = nil
+    dynamic var code: String? = nil
     
-    init(type: String?, volumeMax: Int?, code: String?, id: Int?) {
+    enum CodingKeys: String, CodingKey {
+        case id, volumeMax, type, code
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id.value = try container.decodeIfPresent(Int.self, forKey:.id) ?? nil
+        self.volumeMax.value = try container.decodeIfPresent(Int.self, forKey:.volumeMax) ?? nil
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? nil
+        code = try container.decodeIfPresent(String.self, forKey: .code) ?? nil
+        super.init()
+    }
+
+    
+   required init(type: String?, volumeMax: Int?, code: String?, id: Int?) {
         self.type = type
-        self.volumeMax = volumeMax
+        self.volumeMax.value = volumeMax
         self.code = code
-        self.id = id
+        self.id.value = id
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 
@@ -75,7 +56,7 @@ class VehiculeCategory: Codable {
 extension VehiculeCategory {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(VehiculeCategory.self, from: data)
-        self.init(type: me.type, volumeMax: me.volumeMax, code: me.code, id: me.id)
+        self.init(type: me.type, volumeMax: me.volumeMax.value, code: me.code, id: me.id.value)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -97,9 +78,9 @@ extension VehiculeCategory {
         ) -> VehiculeCategory {
         return VehiculeCategory(
             type: type ?? self.type,
-            volumeMax: volumeMax ?? self.volumeMax,
+            volumeMax: volumeMax ?? self.volumeMax.value,
             code: code ?? self.code,
-            id: id ?? self.id
+            id: id ?? self.id.value
         )
     }
     

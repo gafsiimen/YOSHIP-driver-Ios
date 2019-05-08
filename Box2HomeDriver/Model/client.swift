@@ -1,66 +1,43 @@
-////
-////  client.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Client: Decodable {
-//    let firstname : String
-//    let lastname : String
-//    let phone : String
-//    let mail : String
-//    let avatarURL : String
-//    let societe : Societe
+//  client.swift
+//  Box2HomeDriver
 //
-//
-//    init(firstname : String, lastname : String, phone : String, mail : String, avatarURL : String, societe : Societe) {
-//        self.mail = mail
-//        self.firstname = firstname
-//        self.phone = phone
-//        self.lastname = lastname
-//        self.avatarURL = avatarURL
-//        self.societe = societe
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case firstname,lastname ,phone ,mail ,avatarURL ,societe
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        firstname = try container.decode(String.self, forKey: .firstname)
-//        lastname = try container.decode(String.self, forKey: .lastname)
-//        phone = try container.decode(String.self, forKey: .phone)
-//        mail = try container.decode(String.self, forKey: .mail)
-//        avatarURL = try container.decode(String.self, forKey: .avatarURL)
-//        societe = try container.decode(Societe.self, forKey: .societe)
-//    }
-//}
-////struct client : Codable {
-////    let firstname : String
-////    let lastname : String
-////    let phone : String
-////    let mail : String
-////    let avatarURL : String
-////    let societe : societe
-////}
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
 
 import Foundation
+import Realm
+import RealmSwift
 
-class Client: Codable {
-    let mail, firstname, phone, lastname: String?
-    let avatarURL: String?
-    let societe: Societe?
+@objcMembers
+class Client: Object, Codable {
+    dynamic var mail: String? = nil
+    dynamic var firstname: String? = nil
+    dynamic var phone: String? = nil
+    dynamic var lastname: String? = nil
+    dynamic var avatarURL: String? = nil
+    dynamic var societe: Societe?
     
-    init(mail: String?, firstname: String?, phone: String?, lastname: String?, avatarURL: String?, societe: Societe?) {
+    required init(mail: String?, firstname: String?, phone: String?, lastname: String?, avatarURL: String?, societe: Societe?) {
         self.mail = mail
         self.firstname = firstname
         self.phone = phone
         self.lastname = lastname
         self.avatarURL = avatarURL
         self.societe = societe
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 

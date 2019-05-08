@@ -1,54 +1,49 @@
-////
-////  coursesInPipeStats.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 3/1/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class CoursesInPipeStats: Decodable {
-//    let assigned, inprogress: Int
+//  coursesInPipeStats.swift
+//  Box2HomeDriver
 //
-//    enum CodingKeys: String, CodingKey {
-//        case assigned = "ASSIGNED"
-//        case inprogress = "INPROGRESS"
-//    }
+//  Created by MacHD on 3/1/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
-//    init(assigned: Int, inprogress: Int) {
-//        self.assigned = assigned
-//        self.inprogress = inprogress
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        assigned = try container.decode(Int.self, forKey: .assigned)
-//        inprogress = try container.decode(Int.self, forKey: .inprogress)
-//    }
-//}
-////struct coursesInPipeStats : Codable {
-////    let INPROGRESS : Int
-////    let ASSIGNED : Int
-////    init(INPROGRESS:Int,ASSIGNED:Int){
-////        self.INPROGRESS = INPROGRESS
-////        self.ASSIGNED = ASSIGNED
-////    }
-////}
+
 
 import Foundation
+import Realm
+import RealmSwift
 
-
-class CoursesInPipeStats: Codable {
-    let assigned, inprogress: Int?
+@objcMembers
+class CoursesInPipeStats: Object, Codable {
+    let assigned = RealmOptional<Int>()
+    let inprogress = RealmOptional<Int>()
     
     enum CodingKeys: String, CodingKey {
         case assigned = "ASSIGNED"
         case inprogress = "INPROGRESS"
     }
     
-    init(assigned: Int?, inprogress: Int?) {
-        self.assigned = assigned
-        self.inprogress = inprogress
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        assigned.value = try container.decodeIfPresent(Int.self, forKey: .assigned) ?? nil
+        inprogress.value = try container.decodeIfPresent(Int.self, forKey: .inprogress) ?? nil
+        super.init()
+    }
+    
+    required init(assigned: Int?, inprogress: Int?) {
+        self.assigned.value = assigned
+        self.inprogress.value = inprogress
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 
@@ -56,7 +51,7 @@ class CoursesInPipeStats: Codable {
 extension CoursesInPipeStats {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(CoursesInPipeStats.self, from: data)
-        self.init(assigned: me.assigned, inprogress: me.inprogress)
+        self.init(assigned: me.assigned.value, inprogress: me.inprogress.value)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -75,8 +70,8 @@ extension CoursesInPipeStats {
         inprogress: Int?? = nil
         ) -> CoursesInPipeStats {
         return CoursesInPipeStats(
-            assigned: assigned ?? self.assigned,
-            inprogress: inprogress ?? self.inprogress
+            assigned: assigned ?? self.assigned.value,
+            inprogress: inprogress ?? self.inprogress.value
         )
     }
     

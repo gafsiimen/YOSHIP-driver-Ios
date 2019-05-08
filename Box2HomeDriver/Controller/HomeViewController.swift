@@ -14,10 +14,15 @@ import SwiftEventBus
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
      var sideMenu:ENSideMenu!
-     var courses : [Course] = []
+    var courses : [Course] = []{
+        didSet{
+            self.tableView.reloadData()
+        }
+    }
+
     let dateFormatter = DateFormatter()
     let formatter = NumberFormatter()
-    
+     
 
     //---
    
@@ -44,10 +49,25 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     @IBOutlet weak var leadingBarConstraint: NSLayoutConstraint!
     @IBOutlet weak var widthBarConstraint: NSLayoutConstraint!
     //--------------------------------------------------------------------------------------------
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SetupView()
+        viewModel.fetchCourses(tag: "accepted")
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        toggleSideMenuView()
+        toggleSideMenuView()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+
+
+        print("allCourses: \n",SessionManager.currentSession.allCourses.count)
+        print("acceptedCourses: \n",SessionManager.currentSession.acceptedCourses.count)
+        print("assignedCourses: \n",SessionManager.currentSession.assignedCourses.count)
+
         SetupView()
+    
     }
   
     
@@ -159,10 +179,8 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
       
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "reload"), object: nil)
        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-            self.viewModel.fetchCourses(tag: "accepted")
-        }
-        
+      
+            
         let Rightswipe = UISwipeGestureRecognizer(target: self, action: #selector(Rswipe))
         let Leftswipe = UISwipeGestureRecognizer(target: self, action: #selector(Lswipe))
         Rightswipe.direction = .right
@@ -376,7 +394,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.colisIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
         //**************colisQuantity**************
         cell.colisQuantityLabel.textColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
-        cell.colisQuantity = courses[indexPath.row].nombreColis!
+        cell.colisQuantity = courses[indexPath.row].nombreColis.value!
         cell.colisQuantityLabel.font = UIFont(name: "Copperplate", size: CGFloat(19))
         //Layout Setup
         cell.colisQuantityLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -467,11 +485,11 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         //Data to be sent the CourseDetailsController
         //>for views
         cell.CourseDetailsButton.statusCode = courses[indexPath.row].status!.code!
-        cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart!.latitude!
-        cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart!.longitude!
+        cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart!.latitude.value!
+        cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart!.longitude.value!
         cell.CourseDetailsButton.adresseDepart = courses[indexPath.row].adresseDepart!.address!
-        cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee!.latitude!
-        cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee!.longitude!
+        cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee!.latitude.value!
+        cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee!.longitude.value!
         cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
         //>for socket
         cell.CourseDetailsButton.codeCourse = courses[indexPath.row].code!
@@ -598,7 +616,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
         //------
         let status = "\(courses[indexPath.row].status!.label!)"
-        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta!.deliveryWindow!
+        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta!.deliveryWindow.value!
         let dateDemarrage = dateFormatter.date(from: courses[indexPath.row].dateDemarrage!)!
         let deadlineDate = Calendar.current.date(byAdding: .minute, value: deliveryWindow, to: dateDemarrage, wrappingComponents: false)!
         let yyyyMMdd = "\(Calendar.current.component(.day, from: dateDemarrage ))-\(Calendar.current.component(.month, from: dateDemarrage ))-\(Calendar.current.component(.year, from: dateDemarrage ))"

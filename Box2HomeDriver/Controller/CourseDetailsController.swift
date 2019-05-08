@@ -1178,7 +1178,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
             "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
@@ -1191,7 +1191,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func PickUpCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
             "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
@@ -1203,7 +1203,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func DeliveringCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
             "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
@@ -1215,7 +1215,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func DeposingCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
             "codeCorner" : codeCorner,
             "courseSource" : courseSource,
             "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
@@ -1228,7 +1228,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     fileprivate func EndCourse(completion:(()->())?) {
         let myDictOfDict:[String:Any] = [
             "codeCourse" : codeCourse,
-            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
             "km": 1,
             "duration" : 1,
             "codeCorner" : codeCorner,
@@ -1253,7 +1253,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 //----------
                 AcceptCourse(){
                 print("Course: \(self.codeCourse) was accepted")
-                var course = SessionManager.currentSession.assignedCourses.filter() { $0.code == self.codeCourse }[0]
+                    let course = SessionManager.currentSession.assignedCourses.filter() { $0.code == self.codeCourse }[0]
                 course.status!.label = "Acceptée"
                 course.status!.code = "ACCEPTEE"
                 SessionManager.currentSession.acceptedCourses.append(course)
@@ -1298,7 +1298,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             if (sender.yes){
                 PickUpCourse(){
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                        var C = $0
+                    let C = $0
                         if $0.code == self.codeCourse {
                             C.status!.label = "Enlèvement"
                             C.status!.code = "ENLEVEMENT"
@@ -1374,7 +1374,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 print("Envoyer Signature")
                 print("le type est: \(self.selectedType)")
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                        var C = $0
+                    let C = $0
                         if $0.code == self.codeCourse {
                             C.status!.label = "Livraison"
                             C.status!.code = "LIVRAISON"
@@ -1560,7 +1560,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 DeposingCourse(){
                 self.signatureViewController.reset()
                 SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                    var C = $0
+                    let C = $0
                     if $0.code == self.codeCourse {
                             C.status!.label = "Déchargement"
                             C.status!.code = "DECHARGEMENT"
@@ -2059,7 +2059,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
    
         mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView.isMyLocationEnabled = true
-        mapView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * 8 / 10)
+        mapView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 140)
         
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {

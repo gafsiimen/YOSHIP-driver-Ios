@@ -11,7 +11,11 @@ import UIKit
 class NavigationController: ENSideMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         sideMenu = ENSideMenu(sourceView: self.view, menuViewController: SideMenuViewController(), menuPosition:.Left)
 //        view.bringSubviewToFront(navigationBar)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+            sideMenu = nil
     }
 }

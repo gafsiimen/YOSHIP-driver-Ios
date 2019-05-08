@@ -66,26 +66,7 @@
 		B7DE1B9222258C58007192EE /* societe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B9122258C58007192EE /* societe.swift */; };
 		B7DE1B9422258C6B007192EE /* client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B9322258C6B007192EE /* client.swift */; };
 		B7DEFCB02223EA0F00E51A19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */; };
-		B7DF8B8D226DC05000EF7403 /* CourseObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B8C226DC05000EF7403 /* CourseObject.swift */; };
-		B7DF8B90226DC1CC00EF7403 /* adresseObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B8F226DC1CC00EF7403 /* adresseObject.swift */; };
-		B7DF8B94226DC24F00EF7403 /* operationalHoursObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B93226DC24F00EF7403 /* operationalHoursObject.swift */; };
-		B7DF8B96226DC30E00EF7403 /* dayOfWeekObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B95226DC30E00EF7403 /* dayOfWeekObject.swift */; };
-		B7DF8B98226DC55400EF7403 /* moyenPaiementObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B97226DC55400EF7403 /* moyenPaiementObject.swift */; };
-		B7DF8B9A226DC61900EF7403 /* chauffeurObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B99226DC61900EF7403 /* chauffeurObject.swift */; };
-		B7DF8B9C226DC75400EF7403 /* vehiculeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B9B226DC75400EF7403 /* vehiculeObject.swift */; };
-		B7DF8B9E226DC7D000EF7403 /* vehicule_categoryObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B9D226DC7D000EF7403 /* vehicule_categoryObject.swift */; };
-		B7DF8BA0226DC8B200EF7403 /* lettreDeVoitureObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8B9F226DC8B200EF7403 /* lettreDeVoitureObject.swift */; };
-		B7DF8BA2226DC94300EF7403 /* contactObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BA1226DC94300EF7403 /* contactObject.swift */; };
-		B7DF8BA4226DC9E800EF7403 /* statusObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BA3226DC9E800EF7403 /* statusObject.swift */; };
-		B7DF8BA6226DCA2A00EF7403 /* commandeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BA5226DCA2A00EF7403 /* commandeObject.swift */; };
-		B7DF8BA8226DCA8D00EF7403 /* clientObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BA7226DCA8D00EF7403 /* clientObject.swift */; };
-		B7DF8BAA226DCAF000EF7403 /* societeObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BA9226DCAF000EF7403 /* societeObject.swift */; };
-		B7DF8BAC226DCB3800EF7403 /* canalVenteObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BAB226DCB3800EF7403 /* canalVenteObject.swift */; };
-		B7DF8BAE226DCB7C00EF7403 /* configsObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BAD226DCB7C00EF7403 /* configsObject.swift */; };
-		B7DF8BB0226DCBE400EF7403 /* articleFamilyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BAF226DCBE400EF7403 /* articleFamilyObject.swift */; };
-		B7DF8BB2226DCC9900EF7403 /* collaborateurObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BB1226DCC9900EF7403 /* collaborateurObject.swift */; };
-		B7DF8BB4226DCD3500EF7403 /* signatureImageObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BB3226DCD3500EF7403 /* signatureImageObject.swift */; };
-		B7DF8BB6226DCD8F00EF7403 /* dateDemarrageMetaObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF8BB5226DCD8F00EF7403 /* dateDemarrageMetaObject.swift */; };
+		B7EBABF422720FB0007D0DE7 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EBABF322720FB0007D0DE7 /* RealmManager.swift */; };
 		B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FA50DD2253677700B2398E /* CourseDetailsController.swift */; };
 		B7FF03082254CC700088F9A4 /* CourseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */; };
 		B7FF030A2254CC990088F9A4 /* CourseDetailRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */; };
@@ -182,26 +163,7 @@
 		B7DE1B9122258C58007192EE /* societe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = societe.swift; sourceTree = "<group>"; };
 		B7DE1B9322258C6B007192EE /* client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = client.swift; sourceTree = "<group>"; };
 		B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		B7DF8B8C226DC05000EF7403 /* CourseObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseObject.swift; sourceTree = "<group>"; };
-		B7DF8B8F226DC1CC00EF7403 /* adresseObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adresseObject.swift; sourceTree = "<group>"; };
-		B7DF8B93226DC24F00EF7403 /* operationalHoursObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = operationalHoursObject.swift; sourceTree = "<group>"; };
-		B7DF8B95226DC30E00EF7403 /* dayOfWeekObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dayOfWeekObject.swift; sourceTree = "<group>"; };
-		B7DF8B97226DC55400EF7403 /* moyenPaiementObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moyenPaiementObject.swift; sourceTree = "<group>"; };
-		B7DF8B99226DC61900EF7403 /* chauffeurObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chauffeurObject.swift; sourceTree = "<group>"; };
-		B7DF8B9B226DC75400EF7403 /* vehiculeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehiculeObject.swift; sourceTree = "<group>"; };
-		B7DF8B9D226DC7D000EF7403 /* vehicule_categoryObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vehicule_categoryObject.swift; sourceTree = "<group>"; };
-		B7DF8B9F226DC8B200EF7403 /* lettreDeVoitureObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lettreDeVoitureObject.swift; sourceTree = "<group>"; };
-		B7DF8BA1226DC94300EF7403 /* contactObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contactObject.swift; sourceTree = "<group>"; };
-		B7DF8BA3226DC9E800EF7403 /* statusObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = statusObject.swift; sourceTree = "<group>"; };
-		B7DF8BA5226DCA2A00EF7403 /* commandeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = commandeObject.swift; sourceTree = "<group>"; };
-		B7DF8BA7226DCA8D00EF7403 /* clientObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = clientObject.swift; sourceTree = "<group>"; };
-		B7DF8BA9226DCAF000EF7403 /* societeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = societeObject.swift; sourceTree = "<group>"; };
-		B7DF8BAB226DCB3800EF7403 /* canalVenteObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = canalVenteObject.swift; sourceTree = "<group>"; };
-		B7DF8BAD226DCB7C00EF7403 /* configsObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = configsObject.swift; sourceTree = "<group>"; };
-		B7DF8BAF226DCBE400EF7403 /* articleFamilyObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = articleFamilyObject.swift; sourceTree = "<group>"; };
-		B7DF8BB1226DCC9900EF7403 /* collaborateurObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collaborateurObject.swift; sourceTree = "<group>"; };
-		B7DF8BB3226DCD3500EF7403 /* signatureImageObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = signatureImageObject.swift; sourceTree = "<group>"; };
-		B7DF8BB5226DCD8F00EF7403 /* dateDemarrageMetaObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dateDemarrageMetaObject.swift; sourceTree = "<group>"; };
+		B7EBABF322720FB0007D0DE7 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		B7FA50DD2253677700B2398E /* CourseDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailsController.swift; sourceTree = "<group>"; };
 		B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailViewModel.swift; sourceTree = "<group>"; };
 		B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailRepository.swift; sourceTree = "<group>"; };
@@ -323,7 +285,6 @@
 		B708065D2216A2BC00F2C562 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B7DF8B8E226DC18A00EF7403 /* RealmObjects */,
 				B7DE1B7122254D2A007192EE /* Course.swift */,
 				B7DE1B7322258947007192EE /* adresse.swift */,
 				B7DE1B7522258991007192EE /* moyenPaiement.swift */,
@@ -412,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				B78AB8082230064600AB224D /* SessionManager.swift */,
+				B7EBABF322720FB0007D0DE7 /* RealmManager.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -446,33 +408,6 @@
 				B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */,
 			);
 			path = Paging;
-			sourceTree = "<group>";
-		};
-		B7DF8B8E226DC18A00EF7403 /* RealmObjects */ = {
-			isa = PBXGroup;
-			children = (
-				B7DF8B8C226DC05000EF7403 /* CourseObject.swift */,
-				B7DF8B8F226DC1CC00EF7403 /* adresseObject.swift */,
-				B7DF8B93226DC24F00EF7403 /* operationalHoursObject.swift */,
-				B7DF8B95226DC30E00EF7403 /* dayOfWeekObject.swift */,
-				B7DF8B97226DC55400EF7403 /* moyenPaiementObject.swift */,
-				B7DF8B99226DC61900EF7403 /* chauffeurObject.swift */,
-				B7DF8B9B226DC75400EF7403 /* vehiculeObject.swift */,
-				B7DF8B9D226DC7D000EF7403 /* vehicule_categoryObject.swift */,
-				B7DF8B9F226DC8B200EF7403 /* lettreDeVoitureObject.swift */,
-				B7DF8BA1226DC94300EF7403 /* contactObject.swift */,
-				B7DF8BA3226DC9E800EF7403 /* statusObject.swift */,
-				B7DF8BA5226DCA2A00EF7403 /* commandeObject.swift */,
-				B7DF8BA7226DCA8D00EF7403 /* clientObject.swift */,
-				B7DF8BA9226DCAF000EF7403 /* societeObject.swift */,
-				B7DF8BAB226DCB3800EF7403 /* canalVenteObject.swift */,
-				B7DF8BAD226DCB7C00EF7403 /* configsObject.swift */,
-				B7DF8BAF226DCBE400EF7403 /* articleFamilyObject.swift */,
-				B7DF8BB1226DCC9900EF7403 /* collaborateurObject.swift */,
-				B7DF8BB3226DCD3500EF7403 /* signatureImageObject.swift */,
-				B7DF8BB5226DCD8F00EF7403 /* dateDemarrageMetaObject.swift */,
-			);
-			path = RealmObjects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -776,41 +711,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				B778C6C92216C9160094FF92 /* HomeViewController.swift in Sources */,
-				B7DF8BAC226DCB3800EF7403 /* canalVenteObject.swift in Sources */,
 				B7DE1B8222258ABC007192EE /* commande.swift in Sources */,
 				B7CA7879221BF95D00281623 /* NavigationController.swift in Sources */,
 				B7FF030A2254CC990088F9A4 /* CourseDetailRepository.swift in Sources */,
-				B7DF8BA0226DC8B200EF7403 /* lettreDeVoitureObject.swift in Sources */,
 				B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */,
 				B793300622314BE200924DF5 /* NetworkManager.swift in Sources */,
 				B719C0B2221D391C00B96512 /* ENSideMenu.swift in Sources */,
-				B7DF8B8D226DC05000EF7403 /* CourseObject.swift in Sources */,
-				B7DF8B9A226DC61900EF7403 /* chauffeurObject.swift in Sources */,
 				B78957B0223A8A38000649D7 /* HomeRepository.swift in Sources */,
 				B7DE1B8C22258C12007192EE /* configs.swift in Sources */,
 				B74F2BF9222FC3B80036DF52 /* SplashScreenViewModel.swift in Sources */,
-				B7DF8BA8226DCA8D00EF7403 /* clientObject.swift in Sources */,
 				B7D03DBD2248DA5E00C9554F /* dateDemarrageMeta.swift in Sources */,
 				B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */,
-				B7DF8B94226DC24F00EF7403 /* operationalHoursObject.swift in Sources */,
 				B7DE1B9422258C6B007192EE /* client.swift in Sources */,
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
 				B7DE1B8622258B0A007192EE /* article.swift in Sources */,
 				B7CA7875221AE5ED00281623 /* SetupLoginView.swift in Sources */,
-				B7DF8BB6226DCD8F00EF7403 /* dateDemarrageMetaObject.swift in Sources */,
 				B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */,
 				B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */,
 				B7DE1B7C22258A29007192EE /* lettreDeVoiture.swift in Sources */,
 				B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */,
+				B7EBABF422720FB0007D0DE7 /* RealmManager.swift in Sources */,
 				B7D259AF2249430500E1FF59 /* SignatureImage.swift in Sources */,
-				B7DF8BA6226DCA2A00EF7403 /* commandeObject.swift in Sources */,
 				B7DE1B8822258BD6007192EE /* vehicule_category.swift in Sources */,
 				B7DE1B78222589D5007192EE /* chauffeur.swift in Sources */,
 				B7D50DFE223BAA3C00172ADF /* PagerRepository.swift in Sources */,
 				B7DE1B8022258A92007192EE /* status.swift in Sources */,
 				B7DEFCB02223EA0F00E51A19 /* MapViewController.swift in Sources */,
-				B7DF8BAA226DCAF000EF7403 /* societeObject.swift in Sources */,
-				B7DF8B9E226DC7D000EF7403 /* vehicule_categoryObject.swift in Sources */,
 				B7AB2C1E2229312700867745 /* LoginRepository.swift in Sources */,
 				B7DE1B7A22258A04007192EE /* vehicule.swift in Sources */,
 				B7AB4517226F64AF00E7C46E /* AuthToken.swift in Sources */,
@@ -819,28 +745,19 @@
 				B7DE1B9222258C58007192EE /* societe.swift in Sources */,
 				B7D50DF8223BA25300172ADF /* Slide.swift in Sources */,
 				B7AB4515226F645B00E7C46E /* Response.swift in Sources */,
-				B7DF8BB4226DCD3500EF7403 /* signatureImageObject.swift in Sources */,
 				B70806302216A28E00F2C562 /* AppDelegate.swift in Sources */,
-				B7DF8BA2226DC94300EF7403 /* contactObject.swift in Sources */,
 				B7AB2C202229335800867745 /* coursesInPipeStats.swift in Sources */,
-				B7DF8BA4226DC9E800EF7403 /* statusObject.swift in Sources */,
 				B70717132238045E00D687E4 /* dayOfWeek.swift in Sources */,
 				B774098C223278F20033F94A /* SocketManager.swift in Sources */,
 				B7DE1B8E22258C2D007192EE /* articleFamily.swift in Sources */,
 				B7AB2C1B2229269000867745 /* LoginViewModel.swift in Sources */,
-				B7DF8BB0226DCBE400EF7403 /* articleFamilyObject.swift in Sources */,
 				B7CA7877221AEA5D00281623 /* SetupSplashScreenView.swift in Sources */,
 				B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */,
 				B7DE1B9022258C44007192EE /* collaborateur.swift in Sources */,
 				B7DE1B7222254D2A007192EE /* Course.swift in Sources */,
 				B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */,
 				B77B940F222E7E1D007D9C72 /* SetupHomeView.swift in Sources */,
-				B7DF8B98226DC55400EF7403 /* moyenPaiementObject.swift in Sources */,
-				B7DF8B90226DC1CC00EF7403 /* adresseObject.swift in Sources */,
-				B7DF8B96226DC30E00EF7403 /* dayOfWeekObject.swift in Sources */,
 				B7DE1B8422258AE2007192EE /* scannedDoc.swift in Sources */,
-				B7DF8BB2226DCC9900EF7403 /* collaborateurObject.swift in Sources */,
-				B7DF8BAE226DCB7C00EF7403 /* configsObject.swift in Sources */,
 				B7DE1B7E22258A4C007192EE /* contact.swift in Sources */,
 				B78957AE223A6DEE000649D7 /* HomeViewModel.swift in Sources */,
 				B7DE1B7422258947007192EE /* adresse.swift in Sources */,
@@ -849,7 +766,6 @@
 				B793300822314E7500924DF5 /* Reachability.swift in Sources */,
 				B7D50DF5223BA15200172ADF /* PagerViewController.swift in Sources */,
 				B78AB8092230064600AB224D /* SessionManager.swift in Sources */,
-				B7DF8B9C226DC75400EF7403 /* vehiculeObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

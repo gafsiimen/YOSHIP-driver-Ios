@@ -13,8 +13,9 @@ import Alamofire
 struct SplashScreenRepository {
  static let sharedInstance = SplashScreenRepository()
     typealias WebServiceResponse = ([[String: Any]]?,Error?) -> Void
-    let urlAPI = "https://api.box2home.xyz/api/system/versioning/getLastVersion"
-    
+    let urlAPIVersioning = "https://api.box2home.xyz/api/system/versioning/getLastVersion"
+    let urlAPILogin = "https://api.box2home.xyz/mob/loginChauffeur"
+
     
     func DoCheckInternet() {
 //        NetworkManager.isReachable { networkManagerInstance in
@@ -31,7 +32,7 @@ struct SplashScreenRepository {
     func doCheckVersion( completion:    @escaping WebServiceResponse)  {
         let param = ["platform" : "ios",
                      "target"   : "driver"]
-        guard let urlToExecute = URL(string: urlAPI) else {return}
+        guard let urlToExecute = URL(string: urlAPIVersioning) else {return}
         
         AF.request(urlToExecute, method: .get, parameters: param).validate().responseJSON {
             response in
@@ -44,5 +45,19 @@ struct SplashScreenRepository {
             }
         }
         
+    }
+    func doLogin( phone:String ,completion:    @escaping WebServiceResponse)  {
+        let param = ["phone" : phone]
+        guard let urlToExecute = URL(string: urlAPILogin) else {return}
+        AF.request(urlToExecute, method: .post, parameters: param).validate().responseJSON {
+            response in
+            if let error = response.error {
+                completion(nil,error)
+            } else  if let  jsonArray = response.result.value as? [[String: Any]]{
+                completion(jsonArray,nil)
+            } else  if let  jsonDict = response.result.value as? [String: Any]{
+                completion([jsonDict],nil)
+            }
+        }
     }
 }

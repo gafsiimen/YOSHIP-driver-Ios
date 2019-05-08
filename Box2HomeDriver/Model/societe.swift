@@ -1,38 +1,34 @@
-////
-////  societe.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Societe: Decodable {
-//    let name : String
-//    init(name: String) {
-//        self.name = name
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case name
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        name = try container.decode(String.self, forKey: .name)
-//    }
-//}
+//  societe.swift
+//  Box2HomeDriver
 //
-////struct societe : Codable{
-////    let name : String
-////}
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
+
 
 import Foundation
+import Realm
+import RealmSwift
 
-class Societe: Codable {
-    let name: String?
-    
-    init(name: String?) {
+@objcMembers
+class Societe: Object, Codable {
+    dynamic var name: String? = nil
+
+   required init(name: String?) {
         self.name = name
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 

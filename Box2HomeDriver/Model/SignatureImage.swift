@@ -1,46 +1,37 @@
-////
-////  SignatureImage.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 3/25/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class SignatureImage: Decodable {
-//    let type, url: String
-//    init(type: String, url: String) {
-//        self.type = type
-//        self.url = url
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case type, url
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        type = try container.decode(String.self, forKey: .type)
-//        url = try container.decode(String.self, forKey: .url)
-//    }
-//}
-////struct signatureImage : Codable {
-////    let type : String
-////    let url : String
-////
-////    init(type : String, url : String) {
-////        self.type = type
-////        self.url = url
-////    }
-////}
+//  SignatureImage.swift
+//  Box2HomeDriver
 //
+//  Created by MacHD on 3/25/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
+
 
 import Foundation
+import RealmSwift
+import Realm
 
-class SignatureImage: Codable {
-    let type, url: String?
+@objcMembers
+class SignatureImage: Object, Codable {
+    dynamic var type: String? = nil
+    dynamic var url: String? = nil
     
-    init(type: String?, url: String?) {
+    required init(type: String?, url: String?) {
         self.type = type
         self.url = url
+        super.init()
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
     }
 }
 extension SignatureImage {

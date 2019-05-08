@@ -39,15 +39,33 @@
 ////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Contact: Codable {
-    let firstname, lastname, phone, mail: String?
+@objcMembers
+class Contact: Object, Codable {
+    dynamic var firstname: String? = nil
+    dynamic var lastname: String? = nil
+    dynamic var phone: String? = nil
+    dynamic var mail: String? = nil
     
-    init(firstname: String?, lastname: String?, phone: String?, mail: String?) {
+    required init(firstname: String?, lastname: String?, phone: String?, mail: String?) {
         self.firstname = firstname
         self.lastname = lastname
         self.phone = phone
         self.mail = mail
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 

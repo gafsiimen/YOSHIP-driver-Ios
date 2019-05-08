@@ -43,33 +43,72 @@
 //
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Vehicule: Codable {
-    let denomination: String?
-    let haillon: Bool?
-    let immatriculation: String?
-    let id, status: Int?
-    let vehiculeCategory: VehiculeCategory?
+@objcMembers
+class Vehicule: Object, Codable {
+    dynamic var denomination: String? = nil
+    dynamic var immatriculation: String? = nil
+    let haillon = RealmOptional<Bool>()
+    let id = RealmOptional<Int>()
+    let status = RealmOptional<Int>()
+    dynamic var vehiculeCategory: VehiculeCategory?
     
     enum CodingKeys: String, CodingKey {
         case denomination, haillon, immatriculation, id, status
         case vehiculeCategory = "vehicule_category"
     }
     
-    init(denomination: String?, haillon: Bool?, immatriculation: String?, id: Int?, status: Int?, vehiculeCategory: VehiculeCategory?) {
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        denomination = try container.decodeIfPresent(String.self, forKey: .denomination) ?? nil
+        immatriculation = try container.decodeIfPresent(String.self, forKey: .immatriculation) ?? nil
+        self.haillon.value = try container.decodeIfPresent(Bool.self, forKey:.haillon) ?? nil
+        self.id.value = try container.decodeIfPresent(Int.self, forKey:.id) ?? nil
+        self.status.value = try container.decodeIfPresent(Int.self, forKey:.status) ?? nil
+        vehiculeCategory = try container.decodeIfPresent(VehiculeCategory.self, forKey: .vehiculeCategory) ?? nil
+        super.init()
+    }
+    
+    required init(denomination: String?, haillon: Bool?, immatriculation: String?, id: Int?, status: Int?, vehiculeCategory: VehiculeCategory?) {
         self.denomination = denomination
-        self.haillon = haillon
+        self.haillon.value = haillon
         self.immatriculation = immatriculation
-        self.id = id
-        self.status = status
+        self.id.value = id
+        self.status.value = status
         self.vehiculeCategory = vehiculeCategory
+        super.init()
+    }
+    
+    required init() {
+        super.init()
+    }
+   
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 
 extension Vehicule {
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.denomination, forKey: .denomination)
+//        try container.encode(self.immatriculation, forKey: .immatriculation)
+//        try container.encode(self.haillon, forKey: .haillon)
+//        try container.encode(self.status, forKey: .status)
+//        try container.encode(self.vehiculeCategory, forKey: .vehiculeCategory)
+//        try container.encode(self.id, forKey: .id)
+//    }
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Vehicule.self, from: data)
-        self.init(denomination: me.denomination, haillon: me.haillon, immatriculation: me.immatriculation, id: me.id, status: me.status, vehiculeCategory: me.vehiculeCategory)
+        self.init(denomination: me.denomination, haillon: me.haillon.value, immatriculation: me.immatriculation, id: me.id.value, status: me.status.value, vehiculeCategory: me.vehiculeCategory)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -93,10 +132,10 @@ extension Vehicule {
         ) -> Vehicule {
         return Vehicule(
             denomination: denomination ?? self.denomination,
-            haillon: haillon ?? self.haillon,
+            haillon: haillon ?? self.haillon.value,
             immatriculation: immatriculation ?? self.immatriculation,
-            id: id ?? self.id,
-            status: status ?? self.status,
+            id: id ?? self.id.value,
+            status: status ?? self.status.value,
             vehiculeCategory: vehiculeCategory ?? self.vehiculeCategory
         )
     }

@@ -34,23 +34,52 @@
 ////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class LettreDeVoiture: Codable {
-    let id: Int?
-    let code, reference: String?
+@objcMembers
+class LettreDeVoiture: Object, Codable {
+    let id = RealmOptional<Int>()
+    dynamic var code: String? = nil
+    dynamic var reference: String? = nil
     
-    init(id: Int?, code: String?, reference: String?) {
-        self.id = id
+    enum CodingKeys: String, CodingKey {
+        case id, code, reference
+    }
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id.value = try container.decodeIfPresent(Int.self, forKey: .id) ?? nil
+        code = try container.decodeIfPresent(String.self, forKey: .code) ?? nil
+        reference = try container.decodeIfPresent(String.self, forKey: .reference) ?? nil
+        super.init()
+    }
+    required init(id: Int?, code: String?, reference: String?) {
+        self.id.value = id
         self.code = code
         self.reference = reference
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+     required init() {
+      super.init()
     }
 }
+
 
 
 extension LettreDeVoiture {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(LettreDeVoiture.self, from: data)
-        self.init(id: me.id, code: me.code, reference: me.reference)
+        self.init(id: me.id.value, code: me.code, reference: me.reference)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -70,7 +99,7 @@ extension LettreDeVoiture {
         reference: String?? = nil
         ) -> LettreDeVoiture {
         return LettreDeVoiture(
-            id: id ?? self.id,
+            id: id ?? self.id.value,
             code: code ?? self.code,
             reference: reference ?? self.reference
         )

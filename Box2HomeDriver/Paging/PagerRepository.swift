@@ -13,7 +13,7 @@ struct PagerRepository {
     
     func DoCreateSlides() -> [Slide] {
         var slides:[Slide] = []
-        let vehicules: [Vehicule] = SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.vehicules!
+        let vehicules: [Vehicule] = Array(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.vehicules)
         for car in vehicules {
             let slide:Slide = Bundle.main.loadNibNamed("Slide", owner: self, options: nil)?.first as! Slide
             slide.imageView.image = CarImages[GetImageIntType(s: (car.vehiculeCategory!.type!))]

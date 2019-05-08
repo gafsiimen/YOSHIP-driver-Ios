@@ -1,45 +1,44 @@
-////
-////  moyenPaiement.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class MoyenPaiement: Decodable {
-//    let code, label: String
+//  moyenPaiement.swift
+//  Box2HomeDriver
 //
-//    enum CodingKeys: String, CodingKey {
-//        case code, label
-//    }
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
-//    init(code: String, label: String) {
-//        self.code = code
-//        self.label = label
-//    }
-//
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        code = try container.decode(String.self, forKey: .code)
-//        label = try container.decode(String.self, forKey: .label)
-//    }
-//}
-////struct moyenPaiement : Codable {
-////    let code : String
-////    let label : String
-////}
 
 import Foundation
-class MoyenPaiement: Codable {
-    let code, label: String?
-    
-    init(code: String?, label: String?) {
+import RealmSwift
+import Realm
+
+@objcMembers
+class MoyenPaiement: Object, Codable {
+    dynamic var code: String? = nil
+    dynamic var label: String? = nil
+
+    required init(code: String?, label: String?) {
         self.code = code
         self.label = label
+        super.init()
+    }
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 extension MoyenPaiement {
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.code, forKey: .code)
+//        try container.encode(self.label, forKey: .label)
+//
+//    }
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(MoyenPaiement.self, from: data)
         self.init(code: me.code, label: me.label)

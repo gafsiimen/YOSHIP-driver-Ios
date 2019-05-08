@@ -1,82 +1,79 @@
-////
-////  adresse.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class Adresse: Decodable {
-//    let id : Int
-//    let label : String
-//    let address : String
-//    let latitude : Double
-//    let longitude : Double
-//    let postalCode : Int
-//    let operationalHours : [OperationalHours]
+//  adresse.swift
+//  Box2HomeDriver
 //
-//    enum CodingKeys: String, CodingKey {
-//        case id, label, address, latitude, longitude, postalCode, operationalHours
-//    }
-//    
-//    init(id : Int,label : String,address : String,latitude : Double,longitude : Double,postalCode : Int, operationalHours : [OperationalHours]) {
-//        self.postalCode = postalCode
-//        self.longitude = longitude
-//        self.address = address
-//        self.latitude = latitude
-//        self.id = id
-//        self.operationalHours = operationalHours
-//        self.label = label
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try container.decode(Int.self, forKey: .id)
-//        label = try container.decode(String.self, forKey: .label)
-//        address = try container.decode(String.self, forKey: .address)
-//        latitude = try container.decode(Double.self, forKey: .latitude)
-//        longitude = try container.decode(Double.self, forKey: .longitude)
-//        postalCode = try container.decode(Int.self, forKey: .postalCode)
-//        operationalHours = try container.decode([OperationalHours].self, forKey: .operationalHours)
-//    }
-//}
-////struct adresse : Codable {
-////    let id : Int
-////    let label : String
-////    let address : String
-////    let latitude : Double
-////    let longitude : Double
-////    let postalCode : Int
-////    let operationalHours : [operationalHours]
-////}
-
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
+//
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Adresse: Codable {
-    let postalCode: Int?
-    let longitude: Double?
-    let address: String?
-    let latitude: Double?
-    let id: Int?
-    let operationalHours: [OperationalHour]?
-    let label: String?
+@objcMembers 
+class Adresse: Object, Codable {
+    let postalCode = RealmOptional<Int>()
+    let longitude = RealmOptional<Double>()
+    dynamic var address: String? = nil
+    let latitude = RealmOptional<Double>()
+    let id = RealmOptional<Int>()
+    var operationalHours = RealmSwift.List<OperationalHour>()
+    dynamic var label: String? = nil
     
-    init(postalCode: Int?, longitude: Double?, address: String?, latitude: Double?, id: Int?, operationalHours: [OperationalHour]?, label: String?) {
-        self.postalCode = postalCode
-        self.longitude = longitude
+    enum CodingKeys: String, CodingKey {
+        case postalCode, longitude, address, latitude, id, operationalHours, label
+    }
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        address = try container.decodeIfPresent(String.self, forKey: .address) ?? nil
+        label = try container.decodeIfPresent(String.self, forKey: .label) ?? nil
+        self.postalCode.value = try container.decodeIfPresent(Int.self, forKey:.postalCode) ?? nil
+        self.longitude.value = try container.decodeIfPresent(Double.self, forKey:.longitude) ?? nil
+        self.latitude.value = try container.decodeIfPresent(Double.self, forKey:.latitude) ?? nil
+        self.id.value = try container.decodeIfPresent(Int.self, forKey:.id) ?? nil
+        operationalHours = try container.decodeIfPresent(List<OperationalHour>.self,forKey: .operationalHours) ?? List<OperationalHour>()
+        super.init()
+    }
+    required init(postalCode: Int?, longitude: Double?, address: String?, latitude: Double?, id: Int?, operationalHours: List<OperationalHour>, label: String?) {
+        self.postalCode.value = postalCode
+        self.longitude.value = longitude
         self.address = address
-        self.latitude = latitude
-        self.id = id
+        self.latitude.value = latitude
+        self.id.value = id
         self.operationalHours = operationalHours
         self.label = label
+        super.init()
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
     }
 }
 
 extension Adresse {
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.address, forKey: .address)
+//        try container.encode(self.label, forKey: .label)
+//        try container.encode(self.postalCode, forKey: .postalCode)
+//        try container.encode(self.longitude, forKey: .longitude)
+//        try container.encode(self.latitude, forKey: .latitude)
+//        try container.encode(self.id, forKey: .id)
+//        let operationalHoursArray = Array(self.operationalHours)
+//        try container.encode(operationalHoursArray, forKey: .operationalHours)
+//    }
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Adresse.self, from: data)
-        self.init(postalCode: me.postalCode, longitude: me.longitude, address: me.address, latitude: me.latitude, id: me.id, operationalHours: me.operationalHours, label: me.label)
+        self.init(postalCode: me.postalCode.value, longitude: me.longitude.value, address: me.address, latitude: me.latitude.value, id: me.id.value, operationalHours: me.operationalHours, label: me.label)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -96,15 +93,15 @@ extension Adresse {
         address: String?? = nil,
         latitude: Double?? = nil,
         id: Int?? = nil,
-        operationalHours: [OperationalHour]?? = nil,
+        operationalHours: List<OperationalHour>? = nil,
         label: String?? = nil
         ) -> Adresse {
         return Adresse(
-            postalCode: postalCode ?? self.postalCode,
-            longitude: longitude ?? self.longitude,
+            postalCode: postalCode ?? self.postalCode.value,
+            longitude: longitude ?? self.longitude.value,
             address: address ?? self.address,
-            latitude: latitude ?? self.latitude,
-            id: id ?? self.id,
+            latitude: latitude ?? self.latitude.value,
+            id: id ?? self.id.value,
             operationalHours: operationalHours ?? self.operationalHours,
             label: label ?? self.label
         )

@@ -1,54 +1,54 @@
-////
-////  canalVente.swift
-////  Box2HomeDriver
-////
-////  Created by MacHD on 2/26/19.
-////  Copyright © 2019 MacHD. All rights reserved.
-////
 //
-//import Foundation
-//class CanalVente: Decodable {
-//    let articleFamilies: [ArticleFamily]
-//    let name, code: String
-//    let configs: Configs
+//  canalVente.swift
+//  Box2HomeDriver
 //
-//    init(configs: Configs,code: String, name: String, articleFamilies: [ArticleFamily]) {
-//        self.articleFamilies = articleFamilies
-//        self.name = name
-//        self.code = code
-//        self.configs = configs
-//    }
-//    enum CodingKeys: String, CodingKey {
-//        case articleFamilies, name, code, configs
-//    }
-//    required init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        articleFamilies = try container.decode([ArticleFamily].self, forKey: .articleFamilies)
-//        name = try container.decode(String.self, forKey: .name)
-//        code = try container.decode(String.self, forKey: .code)
-//        configs = try container.decode(Configs.self, forKey: .configs)
-//    }
-//}
+//  Created by MacHD on 2/26/19.
+//  Copyright © 2019 MacHD. All rights reserved.
 //
-////struct canalVente : Codable{
-////    let configs : configs
-////    let code : String
-////    let name : String
-////    let articleFamilies : [articleFamily]
-////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class CanalVente: Codable {
-    let articleFamilies: [ArticleFamily]?
-    let name, code: String?
-    let configs: Configs?
+@objcMembers
+class CanalVente: Object, Codable {
+    var articleFamilies = RealmSwift.List<ArticleFamily>()
+    dynamic var configs: Configs?
+    dynamic var name: String? = nil
+    dynamic var code: String? = nil
     
-    init(articleFamilies: [ArticleFamily]?, name: String?, code: String?, configs: Configs?) {
+    enum CodingKeys: String, CodingKey {
+        case articleFamilies, configs, name, code
+    }
+    
+    required init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? nil
+        code = try container.decodeIfPresent(String.self, forKey: .code) ?? nil
+        configs = try container.decodeIfPresent(Configs.self, forKey: .configs) ?? nil
+        articleFamilies = try container.decodeIfPresent(List<ArticleFamily>.self,forKey: .articleFamilies) ?? List<ArticleFamily>()
+
+        super.init()
+    }
+    
+    required init(articleFamilies: List<ArticleFamily>, name: String?, code: String?, configs: Configs?) {
         self.articleFamilies = articleFamilies
         self.name = name
         self.code = code
         self.configs = configs
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 
@@ -70,7 +70,7 @@ extension CanalVente {
     }
     
     func with(
-        articleFamilies: [ArticleFamily]?? = nil,
+        articleFamilies: List<ArticleFamily>? = nil,
         name: String?? = nil,
         code: String?? = nil,
         configs: Configs?? = nil

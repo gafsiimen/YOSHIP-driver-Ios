@@ -70,15 +70,20 @@
 ////}
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Commande: Codable {
-    let canalVente: CanalVente?
-    let client: Client?
-    let montantGlobalHT: Double?
-    let codeTva: Int?
-    let collaborateur: Collaborateur?
-    let montantGlobalTtc: Double?
-    let promotion, etatPaiement, commandeExtra: String?
+@objcMembers
+class Commande: Object, Codable {
+    dynamic var canalVente: CanalVente?
+    dynamic var client: Client?
+    let montantGlobalHT = RealmOptional<Double>()
+    let codeTva = RealmOptional<Int>()
+    dynamic var collaborateur: Collaborateur?
+    let montantGlobalTtc = RealmOptional<Double>()
+    dynamic var promotion: String? = nil
+    dynamic var etatPaiement: String? = nil
+    dynamic var commandeExtra: String? = nil
     
     enum CodingKeys: String, CodingKey {
         case canalVente, client
@@ -86,22 +91,49 @@ class Commande: Codable {
         case collaborateur, montantGlobalTtc, codeTva, promotion, etatPaiement, commandeExtra
     }
     
-    init(canalVente: CanalVente?, client: Client?, montantGlobalHT: Double?, collaborateur: Collaborateur?, montantGlobalTtc: Double?, codeTva: Int?, promotion: String?, etatPaiement: String?, commandeExtra: String?) {
+        required init(from decoder: Decoder) throws
+        {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.montantGlobalHT.value = try container.decodeIfPresent(Double.self, forKey:.montantGlobalHT) ?? nil
+            self.codeTva.value = try container.decodeIfPresent(Int.self, forKey:.codeTva) ?? nil
+            self.montantGlobalTtc.value = try container.decodeIfPresent(Double.self, forKey:.montantGlobalTtc) ?? nil
+            promotion = try container.decodeIfPresent(String.self, forKey: .promotion) ?? nil
+            etatPaiement = try container.decodeIfPresent(String.self, forKey: .etatPaiement) ?? nil
+            commandeExtra = try container.decodeIfPresent(String.self, forKey: .commandeExtra) ?? nil
+            canalVente = try container.decodeIfPresent(CanalVente.self, forKey: .canalVente) ?? nil
+            client = try container.decodeIfPresent(Client.self, forKey: .client) ?? nil
+            collaborateur = try container.decodeIfPresent(Collaborateur.self, forKey: .collaborateur) ?? nil
+            super.init()
+        }
+
+    required init(canalVente: CanalVente?, client: Client?, montantGlobalHT: Double?, collaborateur: Collaborateur?, montantGlobalTtc: Double?, codeTva: Int?, promotion: String?, etatPaiement: String?, commandeExtra: String?) {
         self.canalVente = canalVente
         self.client = client
-        self.montantGlobalHT = montantGlobalHT
+        self.montantGlobalHT.value = montantGlobalHT
         self.collaborateur = collaborateur
-        self.montantGlobalTtc = montantGlobalTtc
-        self.codeTva = codeTva
+        self.montantGlobalTtc.value = montantGlobalTtc
+        self.codeTva.value = codeTva
         self.promotion = promotion
         self.etatPaiement = etatPaiement
         self.commandeExtra = commandeExtra
+        super.init()
+    }
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
+    required init() {
+        super.init()
     }
 }
 extension Commande {
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Commande.self, from: data)
-        self.init(canalVente: me.canalVente, client: me.client, montantGlobalHT: me.montantGlobalHT, collaborateur: me.collaborateur, montantGlobalTtc: me.montantGlobalTtc, codeTva: me.codeTva, promotion: me.promotion, etatPaiement: me.etatPaiement, commandeExtra: me.commandeExtra)
+        self.init(canalVente: me.canalVente, client: me.client, montantGlobalHT: me.montantGlobalHT.value, collaborateur: me.collaborateur, montantGlobalTtc: me.montantGlobalTtc.value, codeTva: me.codeTva.value, promotion: me.promotion, etatPaiement: me.etatPaiement, commandeExtra: me.commandeExtra)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -118,7 +150,7 @@ extension Commande {
     func with(
         canalVente: CanalVente?? = nil,
         client: Client?? = nil,
-        montantGlobalHT: Double?? = nil,
+        montantGlobalHT: Double?? = 0.0,
         collaborateur: Collaborateur?? = nil,
         montantGlobalTtc: Double?? = nil,
         codeTva: Int?? = nil,
@@ -129,10 +161,10 @@ extension Commande {
         return Commande(
             canalVente: canalVente ?? self.canalVente,
             client: client ?? self.client,
-            montantGlobalHT: montantGlobalHT ?? self.montantGlobalHT,
+            montantGlobalHT: montantGlobalHT ?? self.montantGlobalHT.value,
             collaborateur: collaborateur ?? self.collaborateur,
-            montantGlobalTtc: montantGlobalTtc ?? self.montantGlobalTtc,
-            codeTva: codeTva ?? self.codeTva,
+            montantGlobalTtc: montantGlobalTtc ?? self.montantGlobalTtc.value,
+            codeTva: codeTva ?? self.codeTva.value,
             promotion: promotion ?? self.promotion,
             etatPaiement: etatPaiement ?? self.etatPaiement,
             commandeExtra: commandeExtra ?? self.commandeExtra

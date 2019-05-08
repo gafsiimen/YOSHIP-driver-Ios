@@ -13,13 +13,21 @@ import SwiftEventBus
 class SplashScreenViewController: UIViewController {
     //Local Variables
     // Dependecies
+    @IBOutlet weak var test: UIView!
     let viewModel = SplashScreenViewModel(SplashScreenRepository: SplashScreenRepository())
     //IBOutlets
     @IBOutlet weak var logo: UIImageView!
     @IBOutlet weak var loadingView: NVActivityIndicatorView!
    
     //--------------------------------------------------------------------------------------------
- 
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "SplashToHome" {
+//            if let viewController = segue.destination as? HomeViewController {
+//                viewController.toggleSideMenuView()
+//                viewController.toggleSideMenuView()
+//            }
+//        }
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,13 +65,49 @@ class SplashScreenViewController: UIViewController {
                 self.present(alert, animated:  true , completion: nil)
             }
         }
+        viewModel.didFinishFetch = {
+                print("VALID USER !!")
+                self.test.backgroundColor = .green
+            
+           
+            
+        }
         viewModel.showGoodVersionClosure  = {
-            if let message = self.viewModel.GoodVersionMessage {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        print(message)
+           
+             let sessionState = UserDefaults.standard.bool(forKey: "sessionState")
+            switch sessionState {
+            case true:
+                if let phone = RealmManager.sharedInstance.fetchResponse().first?.authToken?.chauffeur?.phone{
+                    print("phone: ",phone)
+                    self.viewModel.Login(phone: phone)
+                    self.test.backgroundColor = .green
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        self.performSegue(withIdentifier: "SplashToHome", sender: self)
+                    }
+                }
+                    else {
+                        print("phone is nil")
+                        self.test.backgroundColor = .yellow
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.performSegue(withIdentifier: "SplashToLogin", sender: self)
+                    }
+                }
+//
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+//                            self.performSegue(withIdentifier: "SplashToLogin", sender: self)
+//                        }
+//                }
+
+               
+                
+            case false:
+                self.test.backgroundColor = .red
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.performSegue(withIdentifier: "SplashToLogin", sender: self)
                 }
             }
+            
+            
         }
         viewModel.showBadVersionClosure  = {
             if let message = self.viewModel.BadVersionMessage {
