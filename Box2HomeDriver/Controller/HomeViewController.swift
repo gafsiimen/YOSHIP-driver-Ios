@@ -14,17 +14,14 @@ import SwiftEventBus
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
      var sideMenu:ENSideMenu!
-    var courses : [Course] = []{
-        didSet{
-            self.tableView.reloadData()
-        }
-    }
+    var courses : [Course] = []
 
     let dateFormatter = DateFormatter()
     let formatter = NumberFormatter()
      
 
     //---
+    
    
     fileprivate struct C {
         struct CellHeight {
@@ -33,7 +30,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
         }
     }
     //---
-   
+ 
     
     var cellHeights : [CGFloat] = []
     //Dependecies`
@@ -51,7 +48,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     //--------------------------------------------------------------------------------------------
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        SetupView()
+//        SetupView()
         viewModel.fetchCourses(tag: "accepted")
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -161,6 +158,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     }
    //--------------------------------------------------------------------------------------------
     @objc func refresh(_ notification: Notification) {
+        print("I AM THE NOTIFICATION")
         if SeguementedControl.selectedSegmentIndex == 1{
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
             self.viewModel.fetchCourses(tag: "assigned")

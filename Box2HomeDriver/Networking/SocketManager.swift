@@ -25,22 +25,20 @@ class SocketIOManager: NSObject {
         
         
         SocketIOManager.socket.on(clientEvent: .connect) { data, ack in
+            
+            print("SOCKET IS CONNECTED")
 //            let myDictOfDict = SessionManager.currentSession.GetEmitDictionary()
             let myDictOfDict:[String:Any] = [
                 "code" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.code!,
-                "latitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.latitude,
-                "longitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.longitude,
-                "heading" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.heading,
-                "manutention" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.manutention,
+                "latitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.latitude.value!,
+                "longitude" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.longitude.value!,
+                "heading" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.heading.value!,
+                "manutention" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.manutention.value!,
                 "deviceInfo" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.deviceInfo!,
                 "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
             ]
             
-            UserDefaults.standard.set(SessionManager.currentSession.currentResponse?.authToken?.value ?? SessionManager.currentSession.currentRealmResponse?.authToken?.value, forKey: "token")
-            
-            print("USER DEFAULTS TOKEN : ",SocketIOManager.token)
-            RealmManager.sharedInstance.persistResponse(SessionManager.currentSession.currentResponse!)
-//            print("REALM RESPONSE : ",SessionManager.currentSession.currentRealmResponse!.description)
+            print(myDictOfDict.description)
            
             SocketIOManager.socket.emitWithAck("driverConnect", myDictOfDict).timingOut(after: 0, callback: { (data) in
 //                print(JSON(data))
@@ -48,7 +46,7 @@ class SocketIOManager: NSObject {
           
         }
         SocketIOManager.socket.on(clientEvent: .disconnect) { (data, ack) in
-        
+            print("SOCKET IS CONNECTED")
         }
         SocketIOManager.socket.on(clientEvent: .error) { (data, ack) in
             
@@ -58,6 +56,7 @@ class SocketIOManager: NSObject {
 //            print("NewCourse INC")
         }
          SocketIOManager.socket.on("deposing") { (data, ack) in
+            print("DEPOSING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -65,18 +64,14 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion:  {
-                     
-
-                        
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-                    })
+                    self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
                 }
             }
         }
         SocketIOManager.socket.on("delivering") { (data, ack) in
+            print("DELIVERING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -84,16 +79,14 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion:  {
-                       
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-                    })
+                    self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
                 }
             }
         }
         SocketIOManager.socket.on("pickUp") { (data, ack) in
+            print("PICKUP COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -101,16 +94,14 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    self.CourseAppend(tag: "accepted", course, completion:  {
-                      
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-                    })
+                    self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
                 }
             }
         }
         SocketIOManager.socket.on("accepted") { (data, ack) in
+            print("ACCEPTED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -119,10 +110,7 @@ class SocketIOManager: NSObject {
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
 //                    print("\n\nCourse\n",course.description)
-                    self.CourseAppend(tag: "accepted", course, completion:  {
-                       
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-                    })
+                    self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
                 }
@@ -130,7 +118,7 @@ class SocketIOManager: NSObject {
         }
         
         SocketIOManager.socket.on("assigned") { (data, ack) in
-            
+            print("ASSIGNED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
 //                print(JSON(data).description)
@@ -138,22 +126,11 @@ class SocketIOManager: NSObject {
                 let dict: [String: Any]!
                 do {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
-//                    print(dict.description)
+//                    print("dict.description : ",dict.description)
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-                    
-//                    RealmManager.sharedInstance.createOrUpdateCourse(try Course(data: jsonData))
-//                    print(course)
-//                        try self.newJSONDecoder().decode(Course.self, from: jsonData)
-//                    RealmManager.sharedInstance.createOrUpdateCourse(course)
-//                    print("\n\n********************\n",RealmManager.sharedInstance.fetchCourses().description)
-//                    print("\n\n--------------------\n",course.description)
-//                    print("\n\n--------------------\n",course.articleFamilies.description)
-//                    print("\n\n--------------------\n",dict["articleFamilies"])
-//                    print("\n\n~~~~~~~~~~~~~~~~~~~~\n",dict.description)
+//                    print("course.description : ",course.description)
                     self.CourseAppend(tag: "assigned", course, completion: nil)
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-
                   }catch{
                        print(error)
                     }

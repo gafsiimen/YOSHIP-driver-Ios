@@ -95,7 +95,12 @@ class SplashScreenViewModel {
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: json[0])
                         response = try Response(data: jsonData)
-                        print("MY USELESS RESPONSE: ",response.description)
+                        print("MY USELESS RECONNECT RESPONSE : ",response.description)
+                        SessionManager.currentSession.Reconnect(response: response)
+                        {
+                            self.resp = response
+                            SocketIOManager.sharedInstance.establishConnection()
+                        }
                     }catch{
                         self.error = error
                         return

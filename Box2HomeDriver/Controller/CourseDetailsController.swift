@@ -853,6 +853,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 //---------------------------------------------------------------------
 
     @objc func finishButton(){
+        if (self.FinishButton.alpha != 1){
+            print("Signature arrivée manquante")
+        } else {
         signatureViewController.view.removeFromSuperview()
         signatureClient.removeFromSuperview()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -876,11 +879,11 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             self.confirmationLabel_End.bottomAnchor.constraint(equalTo: self.stackViewOuiNonBack_End.topAnchor, constant: -10).isActive = true
             self.confirmationLabel_End.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor).isActive = true
         }
+      }
     }
-    
     @objc func confirmButton(){
         if (self.ConfirmButton.alpha != 1){
-            print("Signature manquante")
+            print("Signature départ manquante")
         } else {
             signatureViewController.view.removeFromSuperview()
             signatureClient.removeFromSuperview()
@@ -1253,11 +1256,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 //----------
                 AcceptCourse(){
                 print("Course: \(self.codeCourse) was accepted")
-                    let course = SessionManager.currentSession.assignedCourses.filter() { $0.code == self.codeCourse }[0]
-                course.status!.label = "Acceptée"
-                course.status!.code = "ACCEPTEE"
-                SessionManager.currentSession.acceptedCourses.append(course)
-                SessionManager.currentSession.assignedCourses = SessionManager.currentSession.assignedCourses.filter{ $0.code != self.codeCourse }
+                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                RealmManager.sharedInstance.acceptCourse(course)
                 //----------
                 self.confirmationLabel_Go.removeFromSuperview()
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -1297,14 +1297,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         case "ARRIVED":
             if (sender.yes){
                 PickUpCourse(){
-                SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                    let C = $0
-                        if $0.code == self.codeCourse {
-                            C.status!.label = "Enlèvement"
-                            C.status!.code = "ENLEVEMENT"
-                        }
-                        return C
-                    }
+                    print("Course: \(self.codeCourse) is being picked up")
+                    let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                    RealmManager.sharedInstance.pickupCourse(course)
+                    
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
                     self.bottomViewHeightConstraint.constant = self.highHeight
                     self.view.layoutIfNeeded()
@@ -1373,14 +1369,12 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                  DeliveringCourse(){
                 print("Envoyer Signature")
                 print("le type est: \(self.selectedType)")
-                SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                    let C = $0
-                        if $0.code == self.codeCourse {
-                            C.status!.label = "Livraison"
-                            C.status!.code = "LIVRAISON"
-                        }
-                        return C
-                    }
+                print("Course: \(self.codeCourse) is being delivered")
+                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                RealmManager.sharedInstance.deliveringCourse(course)
+                    
+                   
+             
                 self.confirmationLabel_Pickup.removeFromSuperview()
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
                     self.bottomViewHeightConstraint.constant = self.lowHeight
@@ -1559,14 +1553,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             if (sender.yes){
                 DeposingCourse(){
                 self.signatureViewController.reset()
-                SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.map{
-                    let C = $0
-                    if $0.code == self.codeCourse {
-                            C.status!.label = "Déchargement"
-                            C.status!.code = "DECHARGEMENT"
-                        }
-                        return C
-                    }
+                print("Course: \(self.codeCourse) is being deposed")
+                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                RealmManager.sharedInstance.deposingCourse(course)
+            
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
                     self.bottomViewHeightConstraint.constant = self.highHeight
                     self.view.layoutIfNeeded()
@@ -1624,8 +1614,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         case "END":
             if (sender.yes){
             EndCourse(){
-                SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.acceptedCourses.filter{ $0.code != self.codeCourse }
+                SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != self.codeCourse }
+                RealmManager.sharedInstance.EndCourse(primaryKey: self.codeCourse)
                 print("Course: \(self.codeCourse) has ended")
+                
                 let alert = UIAlertController(title: "Bravo!", message: "La course: \(self.codeCourse) est terminée. ", preferredStyle: .alert)
                 let action = UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
                     let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)

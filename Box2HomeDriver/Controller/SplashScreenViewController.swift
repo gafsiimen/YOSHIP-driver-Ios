@@ -66,11 +66,10 @@ class SplashScreenViewController: UIViewController {
             }
         }
         viewModel.didFinishFetch = {
-                print("VALID USER !!")
-                self.test.backgroundColor = .green
-            
-           
-            
+            if let response = self.viewModel.resp {
+                SessionManager.currentSession.reconnectResponse = response
+                print("RECONNECT RESPONSE IS SET !!")
+            }
         }
         viewModel.showGoodVersionClosure  = {
            
@@ -78,7 +77,7 @@ class SplashScreenViewController: UIViewController {
             switch sessionState {
             case true:
                 if let phone = RealmManager.sharedInstance.fetchResponse().first?.authToken?.chauffeur?.phone{
-                    print("phone: ",phone)
+                    print("STORED PHONE : ",phone)
                     self.viewModel.Login(phone: phone)
                     self.test.backgroundColor = .green
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -86,7 +85,7 @@ class SplashScreenViewController: UIViewController {
                     }
                 }
                     else {
-                        print("phone is nil")
+                        print("STORED PHONE IS NIL")
                         self.test.backgroundColor = .yellow
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.performSegue(withIdentifier: "SplashToLogin", sender: self)

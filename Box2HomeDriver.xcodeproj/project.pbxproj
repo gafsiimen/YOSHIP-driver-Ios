@@ -17,6 +17,7 @@
 		B70806502216A29100F2C562 /* Box2HomeDriverUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B708064F2216A29100F2C562 /* Box2HomeDriverUITests.swift */; };
 		B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70806622216A3BB00F2C562 /* LoginViewController.swift */; };
 		B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */; };
+		B714CC5422844AAC00C96CAB /* avi.swift in Sources */ = {isa = PBXBuildFile; fileRef = B714CC5322844AAC00C96CAB /* avi.swift */; };
 		B719C0B2221D391C00B96512 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B719C0B0221D391C00B96512 /* ENSideMenu.swift */; };
 		B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */; };
 		B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */; };
@@ -114,6 +115,7 @@
 		B70806512216A29100F2C562 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B70806622216A3BB00F2C562 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		B714CC5322844AAC00C96CAB /* avi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = avi.swift; sourceTree = "<group>"; };
 		B719C0B0221D391C00B96512 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenu.swift; sourceTree = "<group>"; };
 		B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenuNavigationController.swift; sourceTree = "<group>"; };
 		B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenRepository.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				B7D259AE2249430500E1FF59 /* SignatureImage.swift */,
 				B7AB4514226F645B00E7C46E /* Response.swift */,
 				B7AB4516226F64AF00E7C46E /* AuthToken.swift */,
+				B714CC5322844AAC00C96CAB /* avi.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -726,6 +729,7 @@
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
 				B7DE1B8622258B0A007192EE /* article.swift in Sources */,
 				B7CA7875221AE5ED00281623 /* SetupLoginView.swift in Sources */,
+				B714CC5422844AAC00C96CAB /* avi.swift in Sources */,
 				B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */,
 				B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */,
 				B7DE1B7C22258A29007192EE /* lettreDeVoiture.swift in Sources */,

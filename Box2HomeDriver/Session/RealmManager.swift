@@ -16,7 +16,72 @@ class RealmManager {
     }
     
     let realm = try! Realm()
-
+    
+//-------------
+    func EndCourse(primaryKey : String) {
+        do {
+            if let course = realm.object(ofType: Course.self, forPrimaryKey: primaryKey){
+                try realm.write {
+                    realm.delete(course)
+               }
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+//-------------
+    func deposingCourse(_ course: Course) {
+        do {
+            try realm.write {
+                course.status!.label = "Déchargement"
+                course.status!.code = "DECHARGEMENT"
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+    //-------------
+    func deliveringCourse(_ course: Course) {
+        do {
+            try realm.write {
+                course.status!.label = "Livraison"
+                course.status!.code = "LIVRAISON"
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+    //-------------
+    func pickupCourse(_ course: Course) {
+        do {
+            try realm.write {
+                course.status!.label = "Enlèvement"
+                course.status!.code = "ENLEVEMENT"
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+//-------------
+    func acceptCourse(_ course: Course) {
+        do {
+            try realm.write {
+                course.status!.label = "Acceptée"
+                course.status!.code = "ACCEPTEE"
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
 //-------------
     func createOrUpdateCourse(_ course: Course) {
         do {

@@ -75,6 +75,7 @@ class LoginViewModel {
                             response = try Response(data: jsonData)
                             SessionManager.currentSession.signIn(response: response)
                             {
+                                
                                 self.resp = response
                                 SocketIOManager.sharedInstance.establishConnection()
                             }

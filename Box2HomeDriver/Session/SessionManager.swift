@@ -22,15 +22,18 @@ class SessionManager {
     }
     
     var database : RealmManager?
-    var notificationTokenCourses : NotificationToken? = nil
-    var notificationTokenResponse : NotificationToken? = nil
+    var notificationTokenCourses : NotificationToken? = NotificationToken()
+    var notificationTokenResponse : NotificationToken? = NotificationToken()
     
     var acceptedCourses : [Course] = []
     var assignedCourses : [Course] = []
+    
     var allCourses : [Course] = [] {
         didSet {
             SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.allCourses.filter{$0.status!.code! != "ASSIGNED"}
             SessionManager.currentSession.assignedCourses = SessionManager.currentSession.allCourses.filter{$0.status!.code! == "ASSIGNED"}
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+
         }
     }
     
@@ -80,7 +83,6 @@ class SessionManager {
                          results.forEach({ (course) in
                             let course = course
                             SessionManager.currentSession.allCourses.append(course)
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
         
                         })
                         break
@@ -92,19 +94,21 @@ class SessionManager {
                         }
                         insertions.forEach({ (index) in
                            SessionManager.currentSession.allCourses.append(results[index])
-                            print("rekt")
-                            DispatchQueue.main.async(execute: {
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-                            })
+                            print(results[index].code!,"IS CREATED")
                         })
-//                        modifications.forEach({ (index) in
-//                            SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.id.value != results[index].id.value }
-//                            SessionManager.currentSession.allCourses.append(results[index])
-//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
-//
-//                        })
+                        modifications.forEach({ (index) in
+                            SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != results[index].code! }
+                            SessionManager.currentSession.allCourses.append(results[index])
+                            print(results[index].code!," IS UPDATED")
+
+                        })
+                        
+                        deletions.forEach({ (index) in
+                         
+                        })
         
-        
+                       
+
                         break
                     case .error(let error):
                         print(error)
@@ -129,6 +133,8 @@ class SessionManager {
     //    var currentRealmAssigned : [Course]?
     
     var currentResponse : Response?
+    var reconnectResponse : Response?
+
     //    func GetEmitDictionary() -> [String: Any] {
     //        let myDictOfDict:[String:Any] = [
     //            "code" : currentResponse!.authToken!.chauffeur!.code!,
@@ -158,16 +164,22 @@ class SessionManager {
     
     func signIn(response: Response,completion: (() -> ())?) {
         self.sessionState = true
-        //        RealmManager.sharedInstance.persistResponse(response)
-        //        {
         self.currentResponse = response
-        //            UserDefaults.standard.set("\(response.authToken!.value!)", forKey: "token")
-        //        }
-        //        self.currentRealmResponse = response
-        //        SocketIOManager.manager = SocketIOManager.myManager()
+        
+        print("SIGNIN RESPONSE TOKEN : ",response.authToken!.value!)
+        UserDefaults.standard.set(response.authToken!.value!, forKey: "token")
+        print("USER DEFAULTS TOKEN : ",UserDefaults.standard.string(forKey: "token")!)
+        
+        print("SIGNIN RESPONSE : ",response.description)
+        RealmManager.sharedInstance.persistResponse(response)
+        print("PERSISTED SIGNIN RESPONSE : ",RealmManager.sharedInstance.fetchResponse())
+
         completion?()
     }
-    
+    func Reconnect(response: Response,completion: (() -> ())?) {
+        self.reconnectResponse = response
+        completion?()
+    }
     func signOut() {
         SocketIOManager.sharedInstance.closeConnection()
         RealmManager.sharedInstance.deleteResponse()

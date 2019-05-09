@@ -170,13 +170,13 @@ class Chauffeur: Object, Codable {
     dynamic var avatarURL: String? = nil
     dynamic var vehiculeType: String? = nil
     dynamic var lastLogoutAt: String? = nil
-    dynamic var avis: String? = nil
     dynamic var lastLoginAt: String? = nil
     dynamic var immatriculation: String? = nil
     dynamic var deviceInfo: String? = nil
     dynamic var lastname: String? = nil
     dynamic var firstname: String? = nil
     dynamic var code: String? = nil
+    var avis = RealmSwift.List<Avi>()
     var coursesInPipe = RealmSwift.List<String>()
     var vehicules = RealmSwift.List<Vehicule>()
 
@@ -193,7 +193,6 @@ class Chauffeur: Object, Codable {
         avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL) ?? nil
         vehiculeType = try container.decodeIfPresent(String.self, forKey: .vehiculeType) ?? nil
         lastLogoutAt = try container.decodeIfPresent(String.self, forKey: .lastLogoutAt) ?? nil
-        avis = try container.decodeIfPresent(String.self, forKey: .avis) ?? nil
         lastLoginAt = try container.decodeIfPresent(String.self, forKey: .lastLoginAt) ?? nil
         immatriculation = try container.decodeIfPresent(String.self, forKey: .immatriculation) ?? nil
         deviceInfo = try container.decodeIfPresent(String.self, forKey: .deviceInfo) ?? nil
@@ -213,6 +212,8 @@ class Chauffeur: Object, Codable {
         self.id.value = try container.decodeIfPresent(Int.self, forKey:.id) ?? nil
         coursesInPipe = try container.decodeIfPresent(List<String>.self,forKey: .coursesInPipe) ?? List<String>()
         vehicules = try container.decodeIfPresent(List<Vehicule>.self,forKey: .vehicules) ?? List<Vehicule>()
+        avis = try container.decodeIfPresent(List<Avi>.self, forKey: .avis) ?? List<Avi>()
+
         super.init()
     }
     
@@ -223,7 +224,7 @@ class Chauffeur: Object, Codable {
         super.init()
     }
     
-    required init(etat: Int?, manutention: Bool?, companyName: String?, avatarURL: String?, code: String?, vehiculeType: String?, lastLogoutAt: String?, avis: String?, latitude: Double?, heading: Int?, lastLoginAt: String?, immatriculation: String?, deviceInfo: String?, moyenneEtoiles: Double?, coursesInPipe: List<String>, firstname: String?, lastname: String?, onDuty: Bool?, longitude: Double?, vehiculeID: Int?, phone: String?, status: Int?, vehicules: List<Vehicule>, id: Int?) {
+    required init(etat: Int?, manutention: Bool?, companyName: String?, avatarURL: String?, code: String?, vehiculeType: String?, lastLogoutAt: String?, avis: List<Avi>, latitude: Double?, heading: Int?, lastLoginAt: String?, immatriculation: String?, deviceInfo: String?, moyenneEtoiles: Double?, coursesInPipe: List<String>, firstname: String?, lastname: String?, onDuty: Bool?, longitude: Double?, vehiculeID: Int?, phone: String?, status: Int?, vehicules: List<Vehicule>, id: Int?) {
         self.etat.value = etat
         self.manutention.value = manutention
         self.companyName = companyName
@@ -321,7 +322,7 @@ extension Chauffeur {
         code: String?? = nil,
         vehiculeType: String?? = nil,
         lastLogoutAt: String?? = nil,
-        avis: String?? = nil,
+        avis: List<Avi>? = nil,
         latitude: Double?? = nil,
         heading: Int?? = nil,
         lastLoginAt: String?? = nil,
