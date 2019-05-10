@@ -1224,7 +1224,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
         ]
         
-        SocketIOManager.sharedInstance.pickUpCourse(dict: myDictOfDict)
+        SocketIOManager.sharedInstance.deposingCourse(dict: myDictOfDict)
         completion?()
     }
    
@@ -1556,7 +1556,6 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 print("Course: \(self.codeCourse) is being deposed")
                 let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
                 RealmManager.sharedInstance.deposingCourse(course)
-            
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
                     self.bottomViewHeightConstraint.constant = self.highHeight
                     self.view.layoutIfNeeded()
@@ -1637,7 +1636,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.signatureViewController.reset()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.confirmationLabel_End.removeFromSuperview()
-                    self.stackViewOuiNonBack_Go.removeFromSuperview()
+                    self.stackViewOuiNonBack_End.removeFromSuperview()
                     //**************stackViewDeposing**************
                     self.bottomView.addSubview(self.stackViewDeposing)
                     //Layout Setup
@@ -1728,7 +1727,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         }
        
     }
-    
+   
     @objc func keyboardWillDisappear() {
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.highHeight

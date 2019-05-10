@@ -95,7 +95,7 @@ class SplashScreenViewModel {
                     do {
                         let jsonData = try JSONSerialization.data(withJSONObject: json[0])
                         response = try Response(data: jsonData)
-                        print("MY USELESS RECONNECT RESPONSE : ",response.description)
+//                        print("MY USELESS RECONNECT RESPONSE : ",response.description)
                         SessionManager.currentSession.Reconnect(response: response)
                         {
                             self.resp = response

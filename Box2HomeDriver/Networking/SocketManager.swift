@@ -13,7 +13,7 @@ import SwiftEventBus
 import RealmSwift
 
 class SocketIOManager: NSObject {
-    static var token = UserDefaults.standard.string(forKey: "token") ?? SessionManager.currentSession.currentResponse!.authToken!.value!
+    static var token = UserDefaults.standard.string(forKey: "token")!
     static let sharedInstance = SocketIOManager()
     static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token": token])])
     static let socket = manager.defaultSocket
@@ -27,6 +27,7 @@ class SocketIOManager: NSObject {
         SocketIOManager.socket.on(clientEvent: .connect) { data, ack in
             
             print("SOCKET IS CONNECTED")
+            NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
 //            let myDictOfDict = SessionManager.currentSession.GetEmitDictionary()
             let myDictOfDict:[String:Any] = [
                 "code" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.code!,
@@ -38,7 +39,7 @@ class SocketIOManager: NSObject {
                 "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
             ]
             
-            print(myDictOfDict.description)
+//            print(myDictOfDict.description)
            
             SocketIOManager.socket.emitWithAck("driverConnect", myDictOfDict).timingOut(after: 0, callback: { (data) in
 //                print(JSON(data))
@@ -46,17 +47,17 @@ class SocketIOManager: NSObject {
           
         }
         SocketIOManager.socket.on(clientEvent: .disconnect) { (data, ack) in
-            print("SOCKET IS CONNECTED")
+            print("SOCKET IS DISCONNECTED")
         }
         SocketIOManager.socket.on(clientEvent: .error) { (data, ack) in
-            
+            NotificationCenter.default.post(name: NSNotification.Name("unreachable"), object: nil)
         }
         
          SocketIOManager.socket.on("newCourse") { (data, ack) in
 //            print("NewCourse INC")
         }
          SocketIOManager.socket.on("deposing") { (data, ack) in
-            print("DEPOSING COURRSE INC")
+//            print("DEPOSING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -64,6 +65,7 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
+//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -71,7 +73,7 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("delivering") { (data, ack) in
-            print("DELIVERING COURRSE INC")
+//            print("DELIVERING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -79,6 +81,7 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
+//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -86,7 +89,7 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("pickUp") { (data, ack) in
-            print("PICKUP COURRSE INC")
+//            print("PICKUP COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -94,6 +97,7 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
+//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -101,7 +105,7 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("accepted") { (data, ack) in
-            print("ACCEPTED COURRSE INC")
+//            print("ACCEPTED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -109,7 +113,7 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourse\n",course.description)
+//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -118,7 +122,7 @@ class SocketIOManager: NSObject {
         }
         
         SocketIOManager.socket.on("assigned") { (data, ack) in
-            print("ASSIGNED COURRSE INC")
+//            print("ASSIGNED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
 //                print(JSON(data).description)
@@ -129,7 +133,7 @@ class SocketIOManager: NSObject {
 //                    print("dict.description : ",dict.description)
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("course.description : ",course.description)
+//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "assigned", course, completion: nil)
                   }catch{
                        print(error)
@@ -142,16 +146,6 @@ class SocketIOManager: NSObject {
     fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: (() -> ())?) {
         RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
         completion?()
-//        switch tag{
-//        case "accepted":
-//            SessionManager.currentSession.acceptedCourses.append(thisCourse)
-//            completion?()
-//        case "assigned":
-//            SessionManager.currentSession.assignedCourses.append(thisCourse)
-//            completion?()
-//        default:
-//            break
-//        }
     }
    
   
@@ -159,31 +153,32 @@ class SocketIOManager: NSObject {
     //--------------------------------------------------------
     func acceptCourse(dict: [String:Any]) {
         SocketIOManager.socket.emitWithAck("courseAccepted", dict).timingOut(after: 0, callback: { (data) in
-//            print(JSON(data[0])["course"].description.description)
+//            print(data.description)
         })
     }
     //--------------------------------------------------------
     func pickUpCourse(dict: [String:Any]) {
         SocketIOManager.socket.emitWithAck("pickUp", dict).timingOut(after: 0, callback: { (data) in
-            //            print(JSON(data[0])["course"].description.description)
+//                        print(data.description)
         })
     }
     //--------------------------------------------------------
     func deliveringCourse(dict: [String:Any]) {
         SocketIOManager.socket.emitWithAck("delivering", dict).timingOut(after: 0, callback: { (data) in
-            //            print(JSON(data[0])["course"].description.description)
+//                        print(data.description)
         })
     }
     //--------------------------------------------------------
     func deposingCourse(dict: [String:Any]) {
+        print("DEPOSE MFFF")
         SocketIOManager.socket.emitWithAck("deposing", dict).timingOut(after: 0, callback: { (data) in
-            //            print(JSON(data[0])["course"].description.description)
+//                        print(data.description)
         })
     }
     //--------------------------------------------------------
     func endCourse(dict: [String:Any]) {
         SocketIOManager.socket.emitWithAck("courseEnd", dict).timingOut(after: 0, callback: { (data) in
-            //            print(JSON(data[0])["course"].description.description)
+//                        print(data.description)
         })
     }
     //--------------------------------------------------------

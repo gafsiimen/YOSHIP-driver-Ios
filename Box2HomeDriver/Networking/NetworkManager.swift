@@ -40,8 +40,24 @@ class NetworkManager: NSObject {
     }
     
     @objc func networkStatusChanged(_ notification: Notification) {
-        // Do something globally here!
+        
+        let reachability = notification.object as! Reachability
+        
+        switch reachability.connection {
+        case .wifi:
+            print("Reachable via WiFi")
+            NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+        case .cellular:
+            print("Reachable via Cellular")
+            NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+        case .none:
+            NotificationCenter.default.post(name: NSNotification.Name("unreachable"), object: nil)
+            print("Network not reachable")
+        }
+        
+      
     }
+    
     
     static func stopNotifier() -> Void {
         do {

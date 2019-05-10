@@ -52,7 +52,7 @@ class SessionManager {
                         }
                         SessionManager.currentSession.currentResponse = response
                         SessionManager.currentSession.phone = response.authToken?.chauffeur?.phone
-                        print("INITIAL REALM RESPONSE : ",SessionManager.currentSession.currentResponse!.description)
+//                        print("INITIAL REALM RESPONSE : ",SessionManager.currentSession.currentResponse!.description)
         
                         break
                     case .update(_,let deletions,let insertions,let modifications):
@@ -61,7 +61,7 @@ class SessionManager {
                         insertions.forEach({ (index) in
                             SessionManager.currentSession.currentResponse = response
                             SessionManager.currentSession.phone = response.authToken?.chauffeur?.phone
-                            print("NEW REALM RESPONSE : ",SessionManager.currentSession.currentResponse!.description)
+//                            print("NEW REALM RESPONSE : ",SessionManager.currentSession.currentResponse!.description)
                         })
                         
         
@@ -94,12 +94,12 @@ class SessionManager {
                         }
                         insertions.forEach({ (index) in
                            SessionManager.currentSession.allCourses.append(results[index])
-                            print(results[index].code!,"IS CREATED")
+//                            print(results[index].code!,"IS CREATED")
                         })
                         modifications.forEach({ (index) in
                             SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != results[index].code! }
                             SessionManager.currentSession.allCourses.append(results[index])
-                            print(results[index].code!," IS UPDATED")
+//                            print(results[index].code!," IS UPDATED")
 
                         })
                         
@@ -166,13 +166,13 @@ class SessionManager {
         self.sessionState = true
         self.currentResponse = response
         
-        print("SIGNIN RESPONSE TOKEN : ",response.authToken!.value!)
+//        print("SIGNIN RESPONSE TOKEN : ",response.authToken!.value!)
         UserDefaults.standard.set(response.authToken!.value!, forKey: "token")
-        print("USER DEFAULTS TOKEN : ",UserDefaults.standard.string(forKey: "token")!)
+//        print("USER DEFAULTS TOKEN : ",UserDefaults.standard.string(forKey: "token")!)
         
-        print("SIGNIN RESPONSE : ",response.description)
+//        print("SIGNIN RESPONSE : ",response.description)
         RealmManager.sharedInstance.persistResponse(response)
-        print("PERSISTED SIGNIN RESPONSE : ",RealmManager.sharedInstance.fetchResponse())
+//        print("PERSISTED SIGNIN RESPONSE : ",RealmManager.sharedInstance.fetchResponse())
 
         completion?()
     }

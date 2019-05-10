@@ -13,7 +13,7 @@ import SwiftEventBus
 
 class HomeViewController: UIViewController, ENSideMenuDelegate {
     //Local Variables
-     var sideMenu:ENSideMenu!
+    var sideMenu:ENSideMenu!
     var courses : [Course] = []
 
     let dateFormatter = DateFormatter()
@@ -48,21 +48,69 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     //--------------------------------------------------------------------------------------------
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        SetupView()
         viewModel.fetchCourses(tag: "accepted")
     }
     override func viewWillAppear(_ animated: Bool) {
         toggleSideMenuView()
         toggleSideMenuView()
     }
+    //----------------------
+    let connectionLostView: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .orange
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.alpha = 0
+        label.text = "Problème de connexion !"
+        label.font = UIFont(name: "Copperplate-Light", size: CGFloat(16))!
+        return label
+    }()
+    //--------------------------
+    @objc
+    func connectionLost(){
+        self.connectionLostView.removeFromSuperview()
+        self.view.addSubview(self.connectionLostView)
+        //Layout Setup
+        self.connectionLostView.translatesAutoresizingMaskIntoConstraints = false
+        self.connectionLostView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0).isActive = true
+        self.connectionLostView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0).isActive = true
+        self.connectionLostView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0).isActive = true
+        self.connectionLostView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        UIView.animate(withDuration: 0.5) {
+            self.connectionLostView.alpha = 1
+        }
+    }
+     @objc
+     func connectionEstablished(){
+        UIView.animate(withDuration: 0.5) {
+            self.connectionLostView.alpha = 0
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.connectionLostView.removeFromSuperview()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
-        print("allCourses: \n",SessionManager.currentSession.allCourses.count)
-        print("acceptedCourses: \n",SessionManager.currentSession.acceptedCourses.count)
-        print("assignedCourses: \n",SessionManager.currentSession.assignedCourses.count)
-
+//        print("storedStatus: \n",RealmManager.sharedInstance.fetchCourses().first?.status!.description)
+//        print("storedId: \n",RealmManager.sharedInstance.fetchCourses().first?.id.value!)
+//        print("allCourses: \n",SessionManager.currentSession.allCourses.count)
+//        print("acceptedCourses: \n",SessionManager.currentSession.acceptedCourses.first?.status?.code ?? "")
+//        print("assignedCourses: \n",SessionManager.currentSession.assignedCourses.description)
+        
+ NotificationCenter.default.addObserver(self, selector: #selector(connectionLost), name: NSNotification.Name(rawValue: "unreachable"), object: nil)
+ NotificationCenter.default.addObserver(self, selector: #selector(connectionEstablished), name: NSNotification.Name(rawValue: "reachable"), object: nil)
+        
+//        NetworkManager.sharedInstance.reachability.whenReachable = { _ in
+//            self.connectionEstablished()
+//        }
+//        NetworkManager.sharedInstance.reachability.whenUnreachable = { _ in
+//            self.connectionLost()
+//        }
+        
+        
         SetupView()
     
     }
@@ -158,7 +206,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     }
    //--------------------------------------------------------------------------------------------
     @objc func refresh(_ notification: Notification) {
-        print("I AM THE NOTIFICATION")
+//        print("I AM THE NOTIFICATION")
         if SeguementedControl.selectedSegmentIndex == 1{
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
             self.viewModel.fetchCourses(tag: "assigned")
