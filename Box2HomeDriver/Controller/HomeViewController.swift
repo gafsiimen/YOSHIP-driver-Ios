@@ -93,7 +93,6 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
 //        print("storedStatus: \n",RealmManager.sharedInstance.fetchCourses().first?.status!.description)
 //        print("storedId: \n",RealmManager.sharedInstance.fetchCourses().first?.id.value!)
 //        print("allCourses: \n",SessionManager.currentSession.allCourses.count)
@@ -556,7 +555,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         let tap3 = MyTapGesture(target: self, action: #selector(LVDownload(sender:)))
         // Fill param here
         tap1.param = courses[indexPath.row].commande!.client!.phone!
-        tap2.param = "2"
+        tap2.param = "0182881887"
         tap3.param = "3"
         //-------
         cell.ClientCallButton.isUserInteractionEnabled = true
@@ -594,9 +593,23 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
     @objc func ClientCall(sender: MyTapGesture){
+        if let url = URL(string: "tel://\(sender.param)"), UIApplication.shared.canOpenURL(url) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(url)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
         print("Calling : \(sender.param)")
     }
     @objc func SAVCall(sender: MyTapGesture){
+        if let url = URL(string: "tel://\(sender.param)"), UIApplication.shared.canOpenURL(url) {
+            if #available(iOS 10, *) {
+                UIApplication.shared.open(url)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
         print("Calling : \(sender.param)")
     }
     @objc func LVDownload(sender: MyTapGesture){

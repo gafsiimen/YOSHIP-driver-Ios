@@ -27,10 +27,10 @@ class SessionManager {
     
     var acceptedCourses : [Course] = []
     var assignedCourses : [Course] = []
-    
+
     var allCourses : [Course] = [] {
         didSet {
-            SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.allCourses.filter{$0.status!.code! != "ASSIGNED"}
+            SessionManager.currentSession.acceptedCourses = SessionManager.currentSession.allCourses.filter{$0.status!.code! != "ASSIGNED" && $0.status!.code! != "END"}
             SessionManager.currentSession.assignedCourses = SessionManager.currentSession.allCourses.filter{$0.status!.code! == "ASSIGNED"}
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
 
@@ -178,6 +178,7 @@ class SessionManager {
     }
     func Reconnect(response: Response,completion: (() -> ())?) {
         self.reconnectResponse = response
+        UserDefaults.standard.set(response.authToken!.value!, forKey: "token")
         completion?()
     }
     func signOut() {

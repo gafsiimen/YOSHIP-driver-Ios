@@ -32,7 +32,7 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
     let label1Y = UIScreen.main.bounds.height/4
     let label2Y = UIScreen.main.bounds.height/3.5
     let labelHeight = CGFloat(20)
-    let labelWidth = CGFloat(160)
+    let labelWidth = CGFloat(200)
     let PaddingLeft = CGFloat(30)
     let SectionDistance = CGFloat(30)
     let base = UIScreen.main.bounds.height/2.9
@@ -61,13 +61,14 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         avatar.clipsToBounds = false;
         //---------------
         label1.frame = CGRect(x: PaddingLeft, y: label1Y , width: labelWidth, height: labelHeight)
-        label1.text = "Nom Prénom"
+        label1.text = "\(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.lastname!) \(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.firstname!)"
         label1.textColor = .white
+        label1.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         //---------------
         label2.frame = CGRect(x: PaddingLeft, y: label2Y , width: labelWidth, height: labelHeight)
-        label2.text = "Fonction"
+        label2.text = "\(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.companyName!)"
         label2.textColor = .white
-        label2.font = UIFont(name: label2.font.fontName, size: 14)
+        label2.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))
         //---------------
         Button1.frame = CGRect(x: 0, y: base, width: menuWidth, height: unit)
         Button1.setTitle("Mes courses", for: .normal)
@@ -146,9 +147,15 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
 
     }
     @objc func Button5Action(){
-        var destViewController : UIViewController
-        destViewController = mainStoryboard.instantiateViewController(withIdentifier: "MentionLégale")
-        sideMenuController()?.setContentViewController(contentViewController: destViewController)
+        guard let url = URL(string: "https://www.box2home.fr/politique-de-confidentialite") else {
+            return //be safe
+        }
+        
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     @objc func Button6Action(){
         var destViewController : UIViewController

@@ -16,14 +16,68 @@ class RealmManager {
     }
     
     let realm = try! Realm()
-    
 //-------------
-    func EndCourse(primaryKey : String) {
+    func CourseIfExists (primaryKey: String) -> Course? {
+        return realm.object(ofType: Course.self, forPrimaryKey: primaryKey)
+//        return realm.object(ofType: Course.self, forPrimaryKey: primaryKey) != nil
+    }
+//-------------
+//    func EndCourse(primaryKey : String) {
+//        do {
+//            if let course = realm.object(ofType: Course.self, forPrimaryKey: primaryKey){
+//                try realm.write {
+//                    realm.delete(course)
+//               }
+//            }
+//        } catch {
+//            print(error)
+//            post(error)
+//        }
+//    }
+    
+    //-------------
+    func setSignatureArrivee(_ course: Course,imageURL: String) {
         do {
-            if let course = realm.object(ofType: Course.self, forPrimaryKey: primaryKey){
-                try realm.write {
-                    realm.delete(course)
-               }
+            try realm.write {
+                course.signaturesImages[1] = SignatureImage(type: "ARRIVEE", url: imageURL)
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+    //-------------
+    func setSignatureDepart(_ course: Course,imageURL: String) {
+        do {
+            try realm.write {
+                course.signaturesImages[0] = SignatureImage(type: "depart", url: imageURL)
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+//-------------
+    func setPointEnlevementCourse(_ course: Course,type: String) {
+        do {
+            try realm.write {
+                course.pointEnlevement = type
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+    //-------------
+    func EndCourse(_ course: Course) {
+        do {
+            try realm.write {
+                course.status!.label = "Terminée"
+                course.status!.code = "END"
+                realm.add(course,update: true)
             }
         } catch {
             print(error)

@@ -8,9 +8,6 @@
 
 import Foundation
 import SocketIO
-import SwiftyJSON
-import SwiftEventBus
-import RealmSwift
 
 class SocketIOManager: NSObject {
     static var token = UserDefaults.standard.string(forKey: "token")!
@@ -54,10 +51,9 @@ class SocketIOManager: NSObject {
         }
         
          SocketIOManager.socket.on("newCourse") { (data, ack) in
-//            print("NewCourse INC")
         }
+        
          SocketIOManager.socket.on("deposing") { (data, ack) in
-//            print("DEPOSING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -65,7 +61,6 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -73,7 +68,6 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("delivering") { (data, ack) in
-//            print("DELIVERING COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -81,7 +75,6 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -89,7 +82,6 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("pickUp") { (data, ack) in
-//            print("PICKUP COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -97,7 +89,6 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -105,7 +96,6 @@ class SocketIOManager: NSObject {
             }
         }
         SocketIOManager.socket.on("accepted") { (data, ack) in
-//            print("ACCEPTED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
                 let dict: [String: Any]!
@@ -113,7 +103,6 @@ class SocketIOManager: NSObject {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "accepted", course, completion: nil)
                 }catch{
                     print(error)
@@ -122,18 +111,13 @@ class SocketIOManager: NSObject {
         }
         
         SocketIOManager.socket.on("assigned") { (data, ack) in
-//            print("ASSIGNED COURRSE INC")
             let str = data[0] as! String
             if let data = str.data(using: .utf8){
-//                print(JSON(data).description)
-//                print(data)
                 let dict: [String: Any]!
                 do {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
-//                    print("dict.description : ",dict.description)
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
-//                    print("\n\nCourseStatus\n",course.status!.description)
                     self.CourseAppend(tag: "assigned", course, completion: nil)
                   }catch{
                        print(error)
@@ -143,8 +127,256 @@ class SocketIOManager: NSObject {
         
     }
     
+
+    
+    fileprivate func emitCourseAccept(_ thisCourse: Course) {
+        let myDictOfDict:[String:Any] = [
+            "codeCourse" : thisCourse.code!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
+            "codeCorner" : thisCourse.codeCorner!,
+            "courseSource" : thisCourse.courseSource!,
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
+        ]
+        acceptCourse(dict: myDictOfDict)
+    }
+    
+    fileprivate func emitCoursePickup(_ thisCourse: Course) {
+        let myDictOfDict:[String:Any] = [
+            "codeCourse" : thisCourse.code!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
+            "codeCorner" : thisCourse.codeCorner!,
+            "courseSource" : thisCourse.courseSource!,
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
+        ]
+        pickUpCourse(dict: myDictOfDict)
+    }
+    
+    fileprivate func emitCourseDelivering(_ thisCourse: Course) {
+        let myDictOfDict:[String:Any] = [
+            "codeCourse" : thisCourse.code!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
+            "codeCorner" : thisCourse.codeCorner!,
+            "courseSource" : thisCourse.courseSource!,
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
+        ]
+        deliveringCourse(dict: myDictOfDict)
+    }
+    
+    fileprivate func emitCourseDeposing(_ thisCourse: Course) {
+        let myDictOfDict:[String:Any] = [
+            "codeCourse" : thisCourse.code!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
+            "codeCorner" : thisCourse.codeCorner!,
+            "courseSource" : thisCourse.courseSource!,
+            "vehicule" : SessionManager.currentSession.getCurrentVehiculeDictionary()!
+        ]
+        deposingCourse(dict: myDictOfDict)
+    }
+    
+    fileprivate func isLastCourse() -> Int {
+        if (SessionManager.currentSession.acceptedCourses.count == 1) {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    
+    fileprivate func emitCourseEnd(_ thisCourse: Course) {
+        let myDictOfDict:[String:Any] = [
+            "codeCourse" : thisCourse.code!,
+            "idChauffeur" : SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.id.value!,
+            "km": 1,
+            "duration" : 1,
+            "codeCorner" : thisCourse.codeCorner!,
+            "courseSource" : thisCourse.courseSource!,
+            "isLastCourse" : isLastCourse()
+        ]
+        endCourse(dict: myDictOfDict)
+    }
+    
     fileprivate func CourseAppend(tag: String,_ thisCourse: Course,completion: (() -> ())?) {
-        RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+        if let course = RealmManager.sharedInstance.CourseIfExists(primaryKey: thisCourse.code!) {
+            
+            switch course.status!.code! {
+            case "ASSIGNED":
+                print("hahaha  ASSIGNED course")
+                
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: ASSIGNED , thisCourse: ASSIGNED")
+//                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+                case "ACCEPTEE":
+                    print("course: ASSIGNED , thisCourse: ACCEPTEE")
+                case "ENLEVEMENT":
+                    print("course: ASSIGNED , thisCourse: ENLEVEMENT")
+                case "LIVRAISON":
+                    print("course: ASSIGNED , thisCourse: LIVRAISON")
+                case "DECHARGEMENT":
+                    print("course: ASSIGNED , thisCourse: DECHARGEMENT")
+                default:
+                    print("\n status is not one of the four known values of status \n")
+                    return
+                    }
+            case "ACCEPTEE":
+                print("hahaha  ACCEPTEE course")
+                
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: ACCEPTEE , thisCourse: ASSIGNED")
+                    emitCourseAccept(thisCourse)
+                case "ACCEPTEE":
+                    print("course: ACCEPTEE , thisCourse: ACCEPTEE")
+//                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+                case "ENLEVEMENT":
+                    print("course: ACCEPTEE , thisCourse: ENLEVEMENT")
+                case "LIVRAISON":
+                    print("course: ACCEPTEE , thisCourse: LIVRAISON")
+                case "DECHARGEMENT":
+                    print("course: ACCEPTEE , thisCourse: DECHARGEMENT")
+                default:
+                    print("\n status is not one of the four known values of status \n")
+                    return
+                }
+            case "ENLEVEMENT":
+                print("hahaha  ENLEVEMENT course")
+                
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: ENLEVEMENT , thisCourse: ASSIGNED")
+                    emitCourseAccept(thisCourse)
+                    emitCoursePickup(thisCourse)
+                case "ACCEPTEE":
+                    print("course: ENLEVEMENT , thisCourse: ACCEPTEE")
+                    emitCoursePickup(thisCourse)
+                case "ENLEVEMENT":
+                    print("course: ENLEVEMENT , thisCourse: ENLEVEMENT")
+//                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+                case "LIVRAISON":
+                    print("course: ENLEVEMENT , thisCourse: LIVRAISON")
+                case "DECHARGEMENT":
+                    print("course: ENLEVEMENT , thisCourse: DECHARGEMENT")
+                default:
+                    print("\n status is not one of the four known values of status \n")
+                    return
+                }
+            case "LIVRAISON":
+                print("hahaha  LIVRAISON course")
+
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: LIVRAISON , thisCourse: ASSIGNED")
+                    emitCourseAccept(thisCourse)
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                case "ACCEPTEE":
+                    print("course: LIVRAISON , thisCourse: ACCEPTEE")
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                case "ENLEVEMENT":
+                    print("course: LIVRAISON , thisCourse: ENLEVEMENT")
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                case "LIVRAISON":
+                    print("course: LIVRAISON , thisCourse: LIVRAISON")
+//                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+                case "DECHARGEMENT":
+                    print("course: LIVRAISON , thisCourse: DECHARGEMENT")
+                default:
+                    print("\n status is not one of the four known values of status \n")
+                    return
+                }
+            case "DECHARGEMENT":
+                print("hahaha  DECHARGEMENT course")
+
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: DECHARGEMENT , thisCourse: ASSIGNED")
+                    emitCourseAccept(thisCourse)
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                case "ACCEPTEE":
+                    print("course: DECHARGEMENT , thisCourse: ACCEPTEE")
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                case "ENLEVEMENT":
+                    print("course: DECHARGEMENT , thisCourse: ENLEVEMENT")
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                case "LIVRAISON":
+                    print("course: DECHARGEMENT , thisCourse: LIVRAISON")
+                    emitCourseDeposing(thisCourse)
+                case "DECHARGEMENT":
+                    print("course: DECHARGEMENT , thisCourse: DECHARGEMENT")
+//                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+                default:
+                    print("\n thisCourse's status is not one of the four known values of status \n")
+                    return
+                }
+            case "END":
+                print("hahaha  END course")
+                
+                switch thisCourse.status!.code! {
+                case "ASSIGNED":
+                    print("course: END , thisCourse: ASSIGNED")
+                    emitCourseAccept(thisCourse)
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                    print(course.signaturesImages[1])
+                    emitCourseEnd(thisCourse)
+                case "ACCEPTEE":
+                    print("course: END , thisCourse: ACCEPTEE")
+                    emitCoursePickup(thisCourse)
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                    print(course.signaturesImages[1])
+                    emitCourseEnd(thisCourse)
+                case "ENLEVEMENT":
+                    print("course: END , thisCourse: ENLEVEMENT")
+                    emitCourseDelivering(thisCourse)
+                    print(course.pointEnlevement!)
+                    print(course.signaturesImages[0])
+                    emitCourseDeposing(thisCourse)
+                    print(course.signaturesImages[1])
+                    emitCourseEnd(thisCourse)
+                case "LIVRAISON":
+                    print("course: END , thisCourse: LIVRAISON")
+                    emitCourseDeposing(thisCourse)
+                    print(course.signaturesImages[1])
+                    emitCourseEnd(thisCourse)
+                case "DECHARGEMENT":
+                    print("course: END , thisCourse: DECHARGEMENT")
+                    print(course.signaturesImages[1])
+                    emitCourseEnd(thisCourse)
+                default:
+                    print("\n thisCourse's status is not one of the four known values of status \n")
+                    return
+                }
+            default:
+                print("\n course's status is not one of the four( + 'END') known values of status \n")
+                return
+              }
+            }else{
+            print("hahaha new course")
+            RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
+        }
         completion?()
     }
    
@@ -170,7 +402,6 @@ class SocketIOManager: NSObject {
     }
     //--------------------------------------------------------
     func deposingCourse(dict: [String:Any]) {
-        print("DEPOSE MFFF")
         SocketIOManager.socket.emitWithAck("deposing", dict).timingOut(after: 0, callback: { (data) in
 //                        print(data.description)
         })

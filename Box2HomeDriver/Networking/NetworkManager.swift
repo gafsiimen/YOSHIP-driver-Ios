@@ -45,14 +45,20 @@ class NetworkManager: NSObject {
         
         switch reachability.connection {
         case .wifi:
-            print("Reachable via WiFi")
-            NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            DispatchQueue.main.async {
+                print("Reachable via WiFi")
+                NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            }
         case .cellular:
-            print("Reachable via Cellular")
-            NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            DispatchQueue.main.async {
+                print("Reachable via Cellular")
+                NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            }
         case .none:
-            NotificationCenter.default.post(name: NSNotification.Name("unreachable"), object: nil)
-            print("Network not reachable")
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: NSNotification.Name("unreachable"), object: nil)
+                print("Network not reachable")
+            }
         }
         
       

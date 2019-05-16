@@ -46,9 +46,10 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     var courseSource:String = ""
     //---------
     //local
-    var selectedType = 1
+    var selectedType = "Habitat"
     var CancelCause = ""
-    var signatureImage: UIImage?
+    var signatureImageURL = ""
+    var signatureImage : UIImage?
     //---------
     //views
     let bottomView: UIView = {
@@ -784,17 +785,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }()
     //---------------------------------------------------------------------
     @objc func typePickButton(sender: UIButton){
-        self.selectedType = sender.tag
         switch sender.tag{
         case 1:
+          self.selectedType = "Habitat"
           self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
           self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
           self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
         case 2:
+          self.selectedType = "Magasin"
           self.Habitat.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
           self.Magasin.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
           self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
         case 3:
+          self.selectedType = "Bureau"
           self.Habitat.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
           self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
           self.Bureau.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
@@ -1367,10 +1370,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         case "PICKUP":
             if (sender.yes){
                  DeliveringCourse(){
-                print("Envoyer Signature")
-                print("le type est: \(self.selectedType)")
+                self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "depart", vc: self)
+                self.viewModel.setPointEnlevement(codeCourse: self.codeCourse, pointEnlevement: self.selectedType)
+                    
                 print("Course: \(self.codeCourse) is being delivered")
                 let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+//                RealmManager.sharedInstance.setSignatureDepart(course, imageURL: self.signatureImageURL)
+                RealmManager.sharedInstance.setPointEnlevementCourse(course, type: self.selectedType)
                 RealmManager.sharedInstance.deliveringCourse(course)
                     
                    
@@ -1397,7 +1403,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.bottomViewHeightConstraint.constant = self.highHeight
                     self.view.layoutIfNeeded()
                 })
-                    self.selectedType = 1
+                    self.selectedType = "Habitat"
                     self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
                     self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
                     self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
@@ -1492,7 +1498,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     doCancel(cause: CancelCause)
                 }
             }else{
-                        self.selectedType = 1
+                        self.selectedType = "Habitat"
                         self.Habitat.backgroundColor = UIColor(displayP3Red: (25/255), green: 25/255, blue: 112/255, alpha: 1)
                         self.Magasin.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
                         self.Bureau.backgroundColor = UIColor(displayP3Red: (100/255), green: 149/255, blue: 239/255, alpha: 1)
@@ -1612,11 +1618,29 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             }
         case "END":
             if (sender.yes){
-            EndCourse(){
-                SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != self.codeCourse }
-                RealmManager.sharedInstance.EndCourse(primaryKey: self.codeCourse)
-                print("Course: \(self.codeCourse) has ended")
+//                let testImage : UIImageView = {
+//                    let imageView = UIImageView()
+//                    imageView.contentMode = .scaleAspectFit
+//                    imageView.image = self.signatureViewController.fullSignatureImage!
+//                    return imageView
+//                }()
+//                self.view.addSubview(testImage)
+//                testImage.translatesAutoresizingMaskIntoConstraints = false
+//                testImage.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200).isActive = true
+//                testImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0).isActive = true
+//                testImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0).isActive = true
+//                testImage.heightAnchor.constraint(equalToConstant: 200).isActive = true
+//
                 
+                            EndCourse(){
+                    self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "arrivee", vc: self)
+
+                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != self.codeCourse }
+                RealmManager.sharedInstance.EndCourse(course)
+//                RealmManager.sharedInstance.EndCourse(primaryKey: self.codeCourse)
+                print("Course: \(self.codeCourse) has ended")
+
                 let alert = UIAlertController(title: "Bravo!", message: "La course: \(self.codeCourse) est terminée. ", preferredStyle: .alert)
                 let action = UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
                     let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
@@ -1626,7 +1650,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.sideMenuController()?.setContentViewController(contentViewController: destViewController)                })
                 alert.addAction(action)
                 self.present(alert, animated:  true , completion: nil)
-                
+
                 }
             }else{
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -1716,6 +1740,14 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         SetupMapView()
         SetupBottomView()
+        viewModel.showErrorClosure = {
+            if let error = self.viewModel.error {
+                let alert = UIAlertController(title: "Oops!", message: "\(error.localizedDescription)", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated:  true , completion: nil)
+            }
+        }
     }
     @objc func keyboardWillAppear(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
