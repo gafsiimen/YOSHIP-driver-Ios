@@ -21,9 +21,9 @@ struct SplashScreenRepository {
 //        NetworkManager.isReachable { networkManagerInstance in
 //            print("Network is available")
 //        }
-        NetworkManager.sharedInstance.reachability.whenReachable = { reachability in
-            print("reachable")
-        }
+//        NetworkManager.sharedInstance.reachability.whenReachable = { reachability in
+//            print("reachable")
+//        }
 //        NetworkManager.isUnreachable { networkManagerInstance in
 //            print("Network is Unavailable")
 //        }

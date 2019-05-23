@@ -36,6 +36,18 @@ class RealmManager {
 //    }
     
     //-------------
+    func addColisImagesData(_ course: Course,data: Data) {
+        do {
+            try realm.write {
+                course.colisImagesData.append(data)
+                realm.add(course,update: true)
+            }
+        } catch {
+            print(error)
+            post(error)
+        }
+    }
+    //-------------
     func setSignatureArrivee(_ course: Course,imageURL: String) {
         do {
             try realm.write {

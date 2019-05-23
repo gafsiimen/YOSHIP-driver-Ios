@@ -60,13 +60,19 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         avatar.layer.shadowRadius = 1.0;
         avatar.clipsToBounds = false;
         //---------------
+        if let lastname = SessionManager.currentSession.currentResponse?.authToken?.chauffeur?.lastname,
+           let firstname = SessionManager.currentSession.currentResponse?.authToken?.chauffeur?.firstname,
+           let companyname = SessionManager.currentSession.currentResponse?.authToken?.chauffeur?.companyName
+            {
+                label1.text = "\(lastname) \(firstname)"
+                label2.text = "\(companyname)"
+            }
+        
         label1.frame = CGRect(x: PaddingLeft, y: label1Y , width: labelWidth, height: labelHeight)
-        label1.text = "\(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.lastname!) \(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.firstname!)"
         label1.textColor = .white
         label1.font = UIFont(name: "Copperplate-Light", size: CGFloat(15))
         //---------------
         label2.frame = CGRect(x: PaddingLeft, y: label2Y , width: labelWidth, height: labelHeight)
-        label2.text = "\(SessionManager.currentSession.currentResponse!.authToken!.chauffeur!.companyName!)"
         label2.textColor = .white
         label2.font = UIFont(name: "Copperplate-Light", size: CGFloat(13))
         //---------------

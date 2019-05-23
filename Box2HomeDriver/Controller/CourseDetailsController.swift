@@ -10,8 +10,13 @@ import UIKit
 import GoogleMaps
 import UberSignature
 import LTHRadioButton
+import AVFoundation
+import DKCamera
 
 class CourseDetailsController: UIViewController, SignatureDrawingViewControllerDelegate, ENSideMenuDelegate {
+    
+    
+    
     let viewModel = CourseDetailViewModel(CourseDetailRepository: CourseDetailRepository())
     private let signatureViewController = SignatureDrawingViewController()
     //----------
@@ -40,10 +45,24 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     var longitudeArrivee:Double = 0
     var adresseDepart: String = ""
     var adresseArrivee: String = ""
-    //> for socket
-    var codeCourse:String = ""
-    var codeCorner:String = ""
-    var courseSource:String = ""
+    var codeCorner: String = ""
+    var courseSource: String = ""
+    
+    var codeCourse:String = "" {
+        didSet{
+            let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+            self.statusCode = course.status?.code ?? ""
+            self.adresseDepart = course.adresseDepart?.address ?? ""
+            self.adresseArrivee = course.adresseArrivee?.address ?? ""
+            self.codeCorner = course.codeCorner ?? ""
+            self.courseSource = course.courseSource ?? ""
+            self.latitudeDepart = course.adresseDepart?.latitude.value ?? 0.0
+            self.longitudeDepart = course.adresseDepart?.longitude.value ?? 0.0
+            self.latitudeArrivee = course.adresseArrivee?.latitude.value ?? 0.0
+            self.longitudeArrivee = course.adresseArrivee?.longitude.value ?? 0.0
+        }
+    }
+   
     //---------
     //local
     var selectedType = "Habitat"
@@ -622,6 +641,20 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let cameraIcon : UIImageView = {
+       let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "cameraIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    let imagesIcon : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "imagesIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_End: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_End, BackButton11])
@@ -784,6 +817,56 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         return button
     }()
     //---------------------------------------------------------------------
+//    let cameraView: UIView = {
+//       let view = UIView()
+//        view.backgroundColor = .yellow
+//       return view
+//    }()
+    //---------------------------------------------------------------------
+    @objc func showImages(sender: MyTapGesture){
+      print("show images!")
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
+        var destViewController : CollectionViewController
+        destViewController = mainStoryboard.instantiateViewController(withIdentifier: "colisImages") as! CollectionViewController
+        destViewController.toggleSideMenuView()
+        
+        destViewController.codeCourse = self.codeCourse
+       
+        sideMenuController()?.setContentViewController(contentViewController: destViewController)
+//        self.view.addSubview(self.colisImageCollectionView)
+//        //Layout Setup
+//        self.colisImageCollectionView.translatesAutoresizingMaskIntoConstraints = false
+//        self.colisImageCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
+//        self.colisImageCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
+//        self.colisImageCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25).isActive = true
+//        self.colisImageCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25).isActive = true
+    }
+    @objc func showCamera(sender: MyTapGesture){
+      print("show camera!")
+
+        
+        let camera = DKCamera()
+        camera.didCancel = { () in
+            print("didCancel")
+            
+            self.dismiss(animated: false, completion: nil)
+        }
+        
+        camera.didFinishCapturingImage = { (image: UIImage?, metadata: [AnyHashable : Any]?) in
+            print("didFinishCapturingImage")
+            self.dismiss(animated: false ){
+                if let data = image?.pngData(){
+                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                RealmManager.sharedInstance.addColisImagesData(course, data: data)
+                }}
+        }
+        self.present(camera, animated: false, completion: nil)
+    
+
+
+    }
+
+    //---------------------------------------------------------------------
     @objc func typePickButton(sender: UIButton){
         switch sender.tag{
         case 1:
@@ -867,6 +950,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         })
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.stackViewDeposing.removeFromSuperview()
+            self.cameraIcon.removeFromSuperview()
+            self.imagesIcon.removeFromSuperview()
             //**************stackViewOuiNonBack_End**************
             self.bottomView.addSubview(self.stackViewOuiNonBack_End)
             //Layout Setup
@@ -1582,7 +1667,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 //Layout Setup
                 self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
                 self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewDeposing.topAnchor, constant: -15).isActive = true
-                self.signatureViewController.view.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                self.signatureViewController.view.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 35).isActive = true
                 self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                 self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
                 //**************signatureView**************
@@ -1597,6 +1682,30 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
                 self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                 self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                //**************cameraIcon**************
+                self.bottomView.addSubview(self.cameraIcon)
+                self.cameraIcon.isUserInteractionEnabled = true
+                let tap = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+                tap.param = "arrivee"
+                self.cameraIcon.addGestureRecognizer(tap)
+                //Layout Setup
+                self.cameraIcon.translatesAutoresizingMaskIntoConstraints = false
+                self.cameraIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                //**************imagesIcon**************
+                self.bottomView.addSubview(self.imagesIcon)
+                self.imagesIcon.isUserInteractionEnabled = true
+                let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+                tap.param = "arrivee"
+                self.imagesIcon.addGestureRecognizer(tap2)
+                //Layout Setup
+                self.imagesIcon.translatesAutoresizingMaskIntoConstraints = false
+                self.imagesIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIcon.leadingAnchor.constraint(equalTo: self.cameraIcon.trailingAnchor, constant: 20).isActive = true
                     } }
             }else{
                 confirmationLabel_Delivering.removeFromSuperview()
@@ -1674,7 +1783,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     //Layout Setup
                     self.signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
                     self.signatureViewController.view.bottomAnchor.constraint(equalTo: self.stackViewDeposing.topAnchor, constant: -15).isActive = true
-                    self.signatureViewController.view.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+                    self.signatureViewController.view.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 35).isActive = true
                     self.signatureViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                     self.signatureViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
                     //**************signatureView**************
@@ -1689,7 +1798,30 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
                     self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                     self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
-                    
+                    //**************cameraIcon**************
+                    self.view.addSubview(self.cameraIcon)
+                    self.cameraIcon.isUserInteractionEnabled = true
+                    let tap = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+                    tap.param = "arrivee"
+                    self.cameraIcon.addGestureRecognizer(tap)
+                    //Layout Setup
+                    self.cameraIcon.translatesAutoresizingMaskIntoConstraints = false
+                    self.cameraIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.cameraIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                    //**************imagesIcon**************
+                    self.bottomView.addSubview(self.imagesIcon)
+                    self.imagesIcon.isUserInteractionEnabled = true
+                    let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+                    tap.param = "arrivee"
+                    self.imagesIcon.addGestureRecognizer(tap2)
+                    //Layout Setup
+                    self.imagesIcon.translatesAutoresizingMaskIntoConstraints = false
+                    self.imagesIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.imagesIcon.leadingAnchor.constraint(equalTo: self.cameraIcon.trailingAnchor, constant: 20).isActive = true
                 }
             }
         default:
@@ -1866,7 +1998,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             //Layout Setup
             signatureViewController.view.translatesAutoresizingMaskIntoConstraints = false
             signatureViewController.view.bottomAnchor.constraint(equalTo: stackViewDeposing.topAnchor, constant: -15).isActive = true
-            signatureViewController.view.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20).isActive = true
+            signatureViewController.view.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 35).isActive = true
             signatureViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             signatureViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
             //**************signatureView**************
@@ -1881,7 +2013,30 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             signatureClient.topAnchor.constraint(equalTo: signatureViewController.view.topAnchor, constant: 0).isActive = true
             signatureClient.centerXAnchor.constraint(equalTo: signatureViewController.view.centerXAnchor).isActive = true
             signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            
+            //**************cameraIcon**************
+            bottomView.addSubview(cameraIcon)
+            cameraIcon.isUserInteractionEnabled = true
+            let tap = MyTapGesture(target: self, action: #selector(showCamera(sender:)))
+            tap.param = "arrivee"
+            cameraIcon.addGestureRecognizer(tap)
+            //Layout Setup
+            cameraIcon.translatesAutoresizingMaskIntoConstraints = false
+            cameraIcon.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+            cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            cameraIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+            //**************imagesIcon**************
+            bottomView.addSubview(self.imagesIcon)
+            imagesIcon.isUserInteractionEnabled = true
+            let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+            tap.param = "arrivee"
+            imagesIcon.addGestureRecognizer(tap2)
+            //Layout Setup
+            imagesIcon.translatesAutoresizingMaskIntoConstraints = false
+            imagesIcon.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+            imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            imagesIcon.leadingAnchor.constraint(equalTo: cameraIcon.trailingAnchor, constant: 20).isActive = true
             print("DECHARGEMENT")
         } else{
             print("STATUSCODE UNKNOWN")
@@ -1971,10 +2126,6 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             self.radioButton12.deselect()
             self.radioButton22.deselect()
             self.radioButton3.deselect()
-//            UIView.animate(withDuration: 0.2, animations: { () -> Void in
-//                self.bottomViewHeightConstraint.constant = self.view.frame.height * 7.5 / 10
-//                self.view.layoutIfNeeded()
-//            })
             self.autreTextView.becomeFirstResponder()
             UIView.animate(withDuration: 0.1, animations: {
                 self.autreTextView.alpha = 1
@@ -1983,96 +2134,12 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         }
         radioButton4.onDeselect {
             self.view.endEditing(true)
-//            UIView.animate(withDuration: 0.2, animations: { () -> Void in
-//                self.bottomViewHeightConstraint.constant = self.view.frame.height * 5 / 10
-//                self.view.layoutIfNeeded()
-//            })
             self.autreTextView.text = ""
             UIView.animate(withDuration: 0.1, animations: {
                 self.autreTextView.alpha = 0
             })
         }
-//        //**************stackViewDelivering**************
-//        bottomView.addSubview(stackViewDelivering)
-//        //Layout Setup stackViewDelivering
-//        stackViewDelivering.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewDelivering.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewDelivering.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 20).isActive = true
-////        stackViewDelivering.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewDelivering.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewDelivering.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewPickup**************
-//        bottomView.addSubview(stackViewPickup)
-//        //Layout Setup stackViewAccepted
-//        stackViewPickup.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewPickup.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewPickup.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewPickup.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewPickup.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewAccepted**************
-//        bottomView.addSubview(stackViewAccepted)
-//        //Layout Setup stackViewAccepted
-//        stackViewAccepted.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewAccepted.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewAccepted.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewAccepted.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewAccepted.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewAssigned**************
-//        bottomView.addSubview(stackViewAssigned)
-//        //Layout Setup stackViewAssigned
-//        stackViewAssigned.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewAssigned.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewAssigned.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewAssigned.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewAssigned.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewOuiNonBack_Arrived**************
-//        bottomView.addSubview(stackViewOuiNonBack_Arrived)
-//        stackViewOuiNonBack_Arrived.alpha = 0
-//        //Layout Setup
-//        stackViewOuiNonBack_Arrived.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewOuiNonBack_Arrived.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewOuiNonBack_Arrived.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewOuiNonBack_Arrived.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewOuiNonBack_Arrived.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewOuiNonBack_Go**************
-//        bottomView.addSubview(stackViewOuiNonBack_Go)
-//        stackViewOuiNonBack_Go.alpha = 0
-//        //Layout Setup
-//        stackViewOuiNonBack_Go.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewOuiNonBack_Go.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewOuiNonBack_Go.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 70).isActive = true
-//        stackViewOuiNonBack_Go.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewOuiNonBack_Go.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewOuiNonBack_Cancel**************
-//        bottomView.addSubview(stackViewOuiNonBack_Cancel)
-//        stackViewOuiNonBack_Cancel.alpha = 0
-//        //Layout Setup
-//        stackViewOuiNonBack_Cancel.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewOuiNonBack_Cancel.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewOuiNonBack_Cancel.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewOuiNonBack_Cancel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewOuiNonBack_Cancel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        //**************stackViewOuiNonBack_Pickup**************
-//        bottomView.addSubview(stackViewOuiNonBack_Pickup)
-//        stackViewOuiNonBack_Pickup.alpha = 0
-//        //Layout Setup
-//        stackViewOuiNonBack_Pickup.translatesAutoresizingMaskIntoConstraints = false
-//        stackViewOuiNonBack_Pickup.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -20).isActive = true
-//        stackViewOuiNonBack_Pickup.heightAnchor.constraint(equalToConstant: bottomViewHeightConstraint.constant - 50).isActive = true
-//        stackViewOuiNonBack_Pickup.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-//        stackViewOuiNonBack_Pickup.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-       
-//        //**************signatureView**************
-//        signatureViewController.delegate = self
-//        addChild(signatureViewController)
-//        signatureViewController.didMove(toParent: self)
-//        signatureViewController.view.backgroundColor = UIColor(white: 230/255, alpha: 1)
-//        signatureViewController.view.layer.shadowColor = UIColor(ciColor: .black).cgColor
-//        signatureViewController.view.layer.shadowOffset = CGSize(width: 0, height: 1);
-//        signatureViewController.view.layer.shadowOpacity = 1;
-//        signatureViewController.view.layer.shadowRadius = 1.0;
-//        signatureViewController.view.clipsToBounds = false;
-       
+
     }
     fileprivate func SetupMapView() {
         //**************mapView**************
@@ -2105,3 +2172,43 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 
 
 }
+//extension CourseDetailsController : UICollectionViewDataSource  {
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+//        return course.colisImagesData.count
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CollectionViewCell
+//        let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+//
+//        cell.colisImageView.image = UIImage(data: course.colisImagesData[indexPath.row])
+//        return cell
+//    }
+//
+//    class CollectionViewCell: UICollectionViewCell {
+//        override init(frame: CGRect){
+//            super.init(frame: frame)
+//            setupCollectionViewCell()
+//        }
+//
+//        let colisImageView : UIImageView = {
+//            let imageView =  UIImageView()
+//            imageView.translatesAutoresizingMaskIntoConstraints = false
+//            return imageView
+//        }()
+//
+//
+//
+//        func setupCollectionViewCell(){
+//            addSubview(colisImageView)
+////            colisImageView.frame = super.frame
+//            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-16-|", metrics: nil, views: ["v0":colisImageView]))
+//            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[v0]-16-|", metrics: nil, views: ["v0":colisImageView]))
+//        }
+//        required init?(coder aDecoder: NSCoder) {
+//            fatalError("init(coder:) has not been implemented")
+//        }
+//    }
+//}

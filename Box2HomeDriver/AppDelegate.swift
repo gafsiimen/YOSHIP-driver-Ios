@@ -28,29 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
           //b2h api key : DEV => AIzaSyDK4545yE-PVf_5HmcKj9IBIusckDLoNmg
 
-//        self.window = UIWindow(frame: UIScreen.main.bounds)
-//        
-//        
-//        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
-//        var HomeVC : UIViewController
-//        var SplashVC : UIViewController
-//        var naviguationVC : ENSideMenuNavigationController
-//        HomeVC = mainStoryboard.instantiateViewController(withIdentifier: "HomeViewController")as!HomeViewController
-//        SplashVC = mainStoryboard.instantiateViewController(withIdentifier: "SplashScreenViewController")as!SplashScreenViewController
-//        naviguationVC = ENSideMenuNavigationController(menuViewController: SideMenuViewController(), contentViewController: HomeVC)
-//       
-//        switch UserDefaults.standard.bool(forKey: "sessionState") {
-//        case true:
-//            self.window?.rootViewController = naviguationVC
-//        case false:
-//            self.window?.rootViewController = SplashVC
-//        }
-//        
-//        HomeVC.toggleSideMenuView()
-//        HomeVC.toggleSideMenuView()
-//        self.window?.makeKeyAndVisible()
-        
-        
+       
         
         GMSServices.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")
         GMSPlacesClient.provideAPIKey("AIzaSyDTQuShv02FYRxiZ6Ry-pUpGPXsT5aHnVs")

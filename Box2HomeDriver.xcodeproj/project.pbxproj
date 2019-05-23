@@ -22,6 +22,8 @@
 		B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */; };
 		B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */; };
 		B74F2BF9222FC3B80036DF52 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */; };
+		B76E384A2296A5CC004DEA99 /* MyButtonWithParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */; };
+		B76E384C2296B35A004DEA99 /* MyTapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76E384B2296B35A004DEA99 /* MyTapGesture.swift */; };
 		B774098C223278F20033F94A /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B774098B223278F20033F94A /* SocketManager.swift */; };
 		B778C6C92216C9160094FF92 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B778C6C82216C9160094FF92 /* HomeViewController.swift */; };
 		B778C6CB2216D18E0094FF92 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B778C6CA2216D18E0094FF92 /* Main.storyboard */; };
@@ -48,6 +50,8 @@
 		B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */; };
 		B7D50DFE223BAA3C00172ADF /* PagerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */; };
 		B7D50E04223BEE4200172ADF /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D50E03223BEE4200172ADF /* CourseCell.swift */; };
+		B7D89E9C2295567D000C8380 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D89E9B2295567D000C8380 /* CollectionViewController.swift */; };
+		B7D89E9E22956297000C8380 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D89E9D22956297000C8380 /* CollectionViewCell.swift */; };
 		B7DE1B7222254D2A007192EE /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7122254D2A007192EE /* Course.swift */; };
 		B7DE1B7422258947007192EE /* adresse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7322258947007192EE /* adresse.swift */; };
 		B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DE1B7522258991007192EE /* moyenPaiement.swift */; };
@@ -120,6 +124,8 @@
 		B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenuNavigationController.swift; sourceTree = "<group>"; };
 		B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenRepository.swift; sourceTree = "<group>"; };
 		B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
+		B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyButtonWithParam.swift; sourceTree = "<group>"; };
+		B76E384B2296B35A004DEA99 /* MyTapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTapGesture.swift; sourceTree = "<group>"; };
 		B774098B223278F20033F94A /* SocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
 		B778C6C82216C9160094FF92 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B778C6CA2216D18E0094FF92 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../.Trash/Main.storyboard; sourceTree = "<group>"; };
@@ -146,6 +152,8 @@
 		B7D50DFB223BAA1C00172ADF /* PagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewModel.swift; sourceTree = "<group>"; };
 		B7D50DFD223BAA3C00172ADF /* PagerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerRepository.swift; sourceTree = "<group>"; };
 		B7D50E03223BEE4200172ADF /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
+		B7D89E9B2295567D000C8380 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		B7D89E9D22956297000C8380 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		B7DE1B7122254D2A007192EE /* Course.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
 		B7DE1B7322258947007192EE /* adresse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = adresse.swift; sourceTree = "<group>"; };
 		B7DE1B7522258991007192EE /* moyenPaiement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moyenPaiement.swift; sourceTree = "<group>"; };
@@ -331,14 +339,15 @@
 		B708065F2216A2C300F2C562 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				B76E38482296A50B004DEA99 /* UtilityClasses */,
 				B7CA7878221BF95D00281623 /* NavigationController.swift */,
 				B7CA787F221C03FD00281623 /* SideMenuViewController.swift */,
 				B70806622216A3BB00F2C562 /* LoginViewController.swift */,
 				B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */,
 				B778C6C82216C9160094FF92 /* HomeViewController.swift */,
 				B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */,
-				B7D50E03223BEE4200172ADF /* CourseCell.swift */,
 				B7FA50DD2253677700B2398E /* CourseDetailsController.swift */,
+				B7D89E9B2295567D000C8380 /* CollectionViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -360,6 +369,17 @@
 				B70806382216A29100F2C562 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		B76E38482296A50B004DEA99 /* UtilityClasses */ = {
+			isa = PBXGroup;
+			children = (
+				B7D50E03223BEE4200172ADF /* CourseCell.swift */,
+				B7D89E9D22956297000C8380 /* CollectionViewCell.swift */,
+				B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */,
+				B76E384B2296B35A004DEA99 /* MyTapGesture.swift */,
+			);
+			path = UtilityClasses;
 			sourceTree = "<group>";
 		};
 		B778C6C02216C1FD0094FF92 /* UISetup */ = {
@@ -727,12 +747,14 @@
 				B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */,
 				B7DE1B9422258C6B007192EE /* client.swift in Sources */,
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
+				B7D89E9E22956297000C8380 /* CollectionViewCell.swift in Sources */,
 				B7DE1B8622258B0A007192EE /* article.swift in Sources */,
 				B7CA7875221AE5ED00281623 /* SetupLoginView.swift in Sources */,
 				B714CC5422844AAC00C96CAB /* avi.swift in Sources */,
 				B7FA50DE2253677700B2398E /* CourseDetailsController.swift in Sources */,
 				B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */,
 				B7DE1B7C22258A29007192EE /* lettreDeVoiture.swift in Sources */,
+				B76E384A2296A5CC004DEA99 /* MyButtonWithParam.swift in Sources */,
 				B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */,
 				B7EBABF422720FB0007D0DE7 /* RealmManager.swift in Sources */,
 				B7D259AF2249430500E1FF59 /* SignatureImage.swift in Sources */,
@@ -757,6 +779,8 @@
 				B7AB2C1B2229269000867745 /* LoginViewModel.swift in Sources */,
 				B7CA7877221AEA5D00281623 /* SetupSplashScreenView.swift in Sources */,
 				B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */,
+				B76E384C2296B35A004DEA99 /* MyTapGesture.swift in Sources */,
+				B7D89E9C2295567D000C8380 /* CollectionViewController.swift in Sources */,
 				B7DE1B9022258C44007192EE /* collaborateur.swift in Sources */,
 				B7DE1B7222254D2A007192EE /* Course.swift in Sources */,
 				B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */,

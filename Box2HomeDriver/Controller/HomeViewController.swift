@@ -18,7 +18,8 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
 
     let dateFormatter = DateFormatter()
     let formatter = NumberFormatter()
-     
+    var reachability: Reachability!
+
 
     //---
     
@@ -98,7 +99,7 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
 //        print("allCourses: \n",SessionManager.currentSession.allCourses.count)
 //        print("acceptedCourses: \n",SessionManager.currentSession.acceptedCourses.first?.status?.code ?? "")
 //        print("assignedCourses: \n",SessionManager.currentSession.assignedCourses.description)
-        
+       
  NotificationCenter.default.addObserver(self, selector: #selector(connectionLost), name: NSNotification.Name(rawValue: "unreachable"), object: nil)
  NotificationCenter.default.addObserver(self, selector: #selector(connectionEstablished), name: NSNotification.Name(rawValue: "reachable"), object: nil)
         
@@ -108,12 +109,52 @@ class HomeViewController: UIViewController, ENSideMenuDelegate {
 //        NetworkManager.sharedInstance.reachability.whenUnreachable = { _ in
 //            self.connectionLost()
 //        }
+        // Initialise reachability
+        reachability = Reachability()
         
+        // Register an observer for the network status
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(networkStatusChanged(_:)),
+            name: .reachabilityChanged,
+            object: reachability
+        )
+        
+        do {
+            // Start the network status notifier
+            try reachability.startNotifier()
+        } catch {
+            print("Unable to start notifier")
+        }
         
         SetupView()
     
     }
   
+    @objc func networkStatusChanged(_ notification: Notification) {
+        
+        let reachability = notification.object as! Reachability
+        
+        switch reachability.connection {
+        case .wifi:
+            DispatchQueue.main.async {
+                print("Reachable via WiFi")
+//                NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            }
+        case .cellular:
+            DispatchQueue.main.async {
+                print("Reachable via Cellular")
+//                NotificationCenter.default.post(name: NSNotification.Name("reachable"), object: nil)
+            }
+        case .none:
+            DispatchQueue.main.async {
+//                NotificationCenter.default.post(name: NSNotification.Name("unreachable"), object: nil)
+                print("Network not reachable")
+            }
+        }
+        
+        
+    }
     
     fileprivate func SetupView() {
         self.hideKeyboardWhenTappedAround()
@@ -527,19 +568,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.CourseDetailsButton.backgroundColor = UIColor(displayP3Red: (43/255), green: 155/255, blue: 205/255, alpha: 1)
         cell.CourseDetailsButton.tintColor = .white
         cell.CourseDetailsButton.addTarget(self, action: #selector(showCourseDetails(sender:)), for: .touchUpInside)
-        //Data to be sent the CourseDetailsController
-        //>for views
-        cell.CourseDetailsButton.statusCode = courses[indexPath.row].status!.code!
-        cell.CourseDetailsButton.latitudeDepart = courses[indexPath.row].adresseDepart!.latitude.value!
-        cell.CourseDetailsButton.longitudeDepart = courses[indexPath.row].adresseDepart!.longitude.value!
-        cell.CourseDetailsButton.adresseDepart = courses[indexPath.row].adresseDepart!.address!
-        cell.CourseDetailsButton.latitudeArrivee = courses[indexPath.row].adresseArrivee!.latitude.value!
-        cell.CourseDetailsButton.longitudeArrivee = courses[indexPath.row].adresseArrivee!.longitude.value!
-        cell.CourseDetailsButton.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
-        //>for socket
-        cell.CourseDetailsButton.codeCourse = courses[indexPath.row].code!
-        cell.CourseDetailsButton.codeCorner = courses[indexPath.row].codeCorner!
-        cell.CourseDetailsButton.courseSource = courses[indexPath.row].courseSource!
+        cell.CourseDetailsButton.param = courses[indexPath.row].code!
         //Layout Setup
         cell.CourseDetailsButton.translatesAutoresizingMaskIntoConstraints = false
         cell.CourseDetailsButton.topAnchor.constraint(equalTo: cell.observationsTextView.bottomAnchor, constant: 5).isActive = true
@@ -571,25 +600,13 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.ButtonStackView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cell.ButtonStackView.widthAnchor.constraint(equalToConstant: 130).isActive = true
     }
-    @objc func showCourseDetails(sender: MyButton){
+    @objc func showCourseDetails(sender: MyButtonWithParam){
         print("showCourseDetails")
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         var destViewController : CourseDetailsController
         destViewController = mainStoryboard.instantiateViewController(withIdentifier: "DetailsCourse") as! CourseDetailsController
         destViewController.toggleSideMenuView()
-        //Sending data to CourseDetailsController
-        //>for views
-        destViewController.statusCode = sender.statusCode
-        destViewController.adresseDepart = "\(sender.adresseDepart)"
-        destViewController.adresseArrivee = "\(sender.adresseArrivee)"
-        destViewController.latitudeDepart = sender.latitudeDepart
-        destViewController.longitudeDepart = sender.longitudeDepart
-        destViewController.latitudeArrivee = sender.latitudeArrivee
-        destViewController.longitudeArrivee = sender.longitudeArrivee
-        //>for socket
-        destViewController.codeCourse = sender.codeCourse
-        destViewController.codeCorner = sender.codeCorner
-        destViewController.courseSource = sender.courseSource
+        destViewController.codeCourse = sender.param
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
     }
     @objc func ClientCall(sender: MyTapGesture){
@@ -723,21 +740,6 @@ extension UISegmentedControl {
         
         
     }
-    //    func normal()  {
-    //        let segAttributesNormal: NSDictionary = [
-    //            NSAttributedString.Key.foregroundColor: UIColor(white: 255, alpha: 0.2)
-    //        ]
-    //          self.setTitleTextAttributes(segAttributesNormal as [NSObject : AnyObject] as [NSObject : AnyObject] as? [NSAttributedString.Key : Any], for: UIControl.State.normal)
-    //    }
-    //
-    //    func selected()  {
-    //        let segAttributesSelected: NSDictionary = [
-    //            NSAttributedString.Key.foregroundColor: UIColor(white: 255, alpha: 0.8)
-    //        ]
-    //          self.setTitleTextAttributes(segAttributesSelected as [NSObject : AnyObject] as [NSObject : AnyObject] as? [NSAttributedString.Key : Any], for: UIControl.State.selected)
-    //    }
-    
-    
     // create a 1x1 image with this color
     private func imageWithColor(color: UIColor) -> UIImage {
         let rect = CGRect(x: 0.0, y: 0.0, width:  1.0, height: 1.0)
@@ -751,20 +753,6 @@ extension UISegmentedControl {
     }
     
 }
-class MyTapGesture: UITapGestureRecognizer {
-    var param = String()
-}
-class MyButton: UIButton {
-    //> for views
-    var statusCode = String()
-    var adresseDepart = String()
-    var longitudeDepart = Double()
-    var latitudeDepart = Double()
-    var adresseArrivee = String()
-    var longitudeArrivee = Double()
-    var latitudeArrivee = Double()
-    //> for socket
-    var codeCourse = String()
-    var codeCorner = String()
-    var courseSource = String()
-}
+
+
+
