@@ -170,15 +170,7 @@ struct CourseDetailRepository{
                 
                 let responseString = String(data: data, encoding: .utf8)
                 print("responseString = \(String(describing: responseString!))")
-                let alert = UIAlertController(title: "Bravo!", message: "La course: \(queryParams["codeCourse"] ?? "") est terminée. ", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
-                    let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
-                    var destViewController : UIViewController
-                    destViewController = mainStoryboard.instantiateViewController(withIdentifier: "HomeViewController")
-                    destViewController.toggleSideMenuView()
-                    vc.sideMenuController()?.setContentViewController(contentViewController: destViewController)                })
-                alert.addAction(action)
-                vc.present(alert, animated:  true , completion: nil)
+              
             }
             
             task.resume()

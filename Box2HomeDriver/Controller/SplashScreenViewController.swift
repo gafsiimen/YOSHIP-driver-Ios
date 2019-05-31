@@ -13,7 +13,6 @@ import SwiftEventBus
 class SplashScreenViewController: UIViewController {
     //Local Variables
     // Dependecies
-    @IBOutlet weak var test: UIView!
     let viewModel = SplashScreenViewModel(SplashScreenRepository: SplashScreenRepository())
     //IBOutlets
     @IBOutlet weak var logo: UIImageView!
@@ -79,14 +78,12 @@ class SplashScreenViewController: UIViewController {
                 if let phone = RealmManager.sharedInstance.fetchResponse().first?.authToken?.chauffeur?.phone{
 //                    print("STORED PHONE : ",phone)
                     self.viewModel.Login(phone: phone)
-                    self.test.backgroundColor = .green
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.performSegue(withIdentifier: "SplashToHome", sender: self)
                     }
                 }
                     else {
                         print("STORED PHONE IS NIL")
-                        self.test.backgroundColor = .yellow
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.performSegue(withIdentifier: "SplashToLogin", sender: self)
                     }
@@ -100,7 +97,6 @@ class SplashScreenViewController: UIViewController {
                
                 
             case false:
-                self.test.backgroundColor = .red
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     self.performSegue(withIdentifier: "SplashToLogin", sender: self)
                 }

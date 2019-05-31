@@ -53,7 +53,7 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         //---------------
         avatar.frame = CGRect(x: PaddingLeft ,y: avatarY, width: avatarWidth, height: avatarHeight)
         avatar.layer.cornerRadius = avatarHeight/2
-        avatar.backgroundColor = .red
+        avatar.image = UIImage(named: "avatar")
         avatar.layer.shadowColor = UIColor(ciColor: .black).cgColor
         avatar.layer.shadowOffset = CGSize(width: 0, height: 1);
         avatar.layer.shadowOpacity = 0.5;

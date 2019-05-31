@@ -2041,7 +2041,15 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 //                RealmManager.sharedInstance.EndCourse(primaryKey: self.codeCourse)
                 print("Course: \(self.codeCourse) has ended")
 
-               
+                 let alert = UIAlertController(title: "Bravo!", message: "La course: \(self.codeCourse) est terminée. ", preferredStyle: .alert)
+                 let action = UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
+                 let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
+                 var destViewController : UIViewController
+                     destViewController = mainStoryboard.instantiateViewController(withIdentifier: "HomeViewController")
+                     destViewController.toggleSideMenuView()
+                     self.sideMenuController()?.setContentViewController(contentViewController: destViewController)                })
+                     alert.addAction(action)
+                     self.present(alert, animated:  true , completion: nil)
 
                 }
             }else{
