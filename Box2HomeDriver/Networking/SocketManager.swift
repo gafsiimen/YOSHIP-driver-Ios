@@ -14,7 +14,8 @@ class SocketIOManager: NSObject {
     static let sharedInstance = SocketIOManager()
     static let manager = SocketManager(socketURL: URL(string: "https://rt.box2home.xyz")!, config: [.log(false), .connectParams(["token": token])])
     static let socket = manager.defaultSocket
-   
+    let viewModel = SocketViewModel(SocketRepository: SocketRepository())
+
   
     
     override init() {
@@ -116,6 +117,7 @@ class SocketIOManager: NSObject {
                 let dict: [String: Any]!
                 do {
                     dict = try JSONSerialization.jsonObject(with: data) as? [String : Any]
+//                    print(dict.description)
                     let jsonData = try JSONSerialization.data(withJSONObject: dict)
                     let course = try Course(data: jsonData)
                     self.CourseAppend(tag: "assigned", course, completion: nil)
@@ -268,19 +270,31 @@ class SocketIOManager: NSObject {
                     emitCourseAccept(thisCourse)
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                 case "ACCEPTEE":
                     print("course: LIVRAISON , thisCourse: ACCEPTEE")
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                 case "ENLEVEMENT":
                     print("course: LIVRAISON , thisCourse: ENLEVEMENT")
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                 case "LIVRAISON":
                     print("course: LIVRAISON , thisCourse: LIVRAISON")
 //                    RealmManager.sharedInstance.createOrUpdateCourse(thisCourse)
@@ -299,21 +313,33 @@ class SocketIOManager: NSObject {
                     emitCourseAccept(thisCourse)
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
                 case "ACCEPTEE":
                     print("course: DECHARGEMENT , thisCourse: ACCEPTEE")
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
                 case "ENLEVEMENT":
                     print("course: DECHARGEMENT , thisCourse: ENLEVEMENT")
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
                 case "LIVRAISON":
                     print("course: DECHARGEMENT , thisCourse: LIVRAISON")
@@ -334,37 +360,69 @@ class SocketIOManager: NSObject {
                     emitCourseAccept(thisCourse)
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    let imagesArrivee = Array(course.colisImagesDataArrivee).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadPhotos(images: imagesArrivee, codeCourse: course.code!, type: "arrivee")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
-                    print(course.signaturesImages[1])
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureArriveeData!)! , codeCourse: course.code!, type: "arrivee")
                     emitCourseEnd(thisCourse)
                 case "ACCEPTEE":
                     print("course: END , thisCourse: ACCEPTEE")
                     emitCoursePickup(thisCourse)
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    let imagesArrivee = Array(course.colisImagesDataArrivee).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadPhotos(images: imagesArrivee, codeCourse: course.code!, type: "arrivee")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
-                    print(course.signaturesImages[1])
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureArriveeData!)! , codeCourse: course.code!, type: "arrivee")
                     emitCourseEnd(thisCourse)
                 case "ENLEVEMENT":
                     print("course: END , thisCourse: ENLEVEMENT")
                     emitCourseDelivering(thisCourse)
-                    print(course.pointEnlevement!)
-                    print(course.signaturesImages[0])
+                    viewModel.setPointEnlevement(codeCourse: course.code!, pointEnlevement: course.pointEnlevement!)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                    let imagesArrivee = Array(course.colisImagesDataArrivee).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesDepart, codeCourse: course.code!, type: "depart")
+                    viewModel.uploadPhotos(images: imagesArrivee, codeCourse: course.code!, type: "arrivee")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureDepartData!)! , codeCourse: course.code!, type: "depart")
                     emitCourseDeposing(thisCourse)
-                    print(course.signaturesImages[1])
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureArriveeData!)! , codeCourse: course.code!, type: "arrivee")
                     emitCourseEnd(thisCourse)
                 case "LIVRAISON":
                     print("course: END , thisCourse: LIVRAISON")
+                    let imagesArrivee = Array(course.colisImagesDataArrivee).map{
+                        UIImage(data: $0)!
+                    }
+                    viewModel.uploadPhotos(images: imagesArrivee, codeCourse: course.code!, type: "arrivee")
                     emitCourseDeposing(thisCourse)
-                    print(course.signaturesImages[1])
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureArriveeData!)! , codeCourse: course.code!, type: "arrivee")
                     emitCourseEnd(thisCourse)
                 case "DECHARGEMENT":
                     print("course: END , thisCourse: DECHARGEMENT")
-                    print(course.signaturesImages[1])
+                    var imagesArrivee : [Data] = []
+                    imagesArrivee.append(contentsOf: course.colisImagesDataArrivee)
+                    viewModel.uploadPhotos(images: imagesArrivee.map{ UIImage(data: $0)! }, codeCourse: course.code!, type: "arrivee")
+                    viewModel.uploadSignature(image: UIImage(data: course.signatureArriveeData!)! , codeCourse: course.code!, type: "arrivee")
                     emitCourseEnd(thisCourse)
+
                 default:
                     print("\n thisCourse's status is not one of the four known values of status \n")
                     return

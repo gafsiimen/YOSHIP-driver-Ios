@@ -24,7 +24,7 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
     var Button6 = UIButton(type: .system)
     var separator = UIView()
     
-    let menuWidth = CGFloat(300)
+    let menuWidth = UIScreen.main.bounds.width * 2.5 / 3
     let headerHeight = UIScreen.main.bounds.height/3
     let avatarY = UIScreen.main.bounds.height/10
     let avatarWidth = CGFloat(80)
@@ -80,6 +80,9 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         Button1.setTitle("Mes courses", for: .normal)
         Button1.tintColor = .darkGray
         Button1.addTarget(self,action: #selector(Button1Action),for: .touchUpInside)
+        Button1.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button1.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+
         //---------------
        
         //---------------
@@ -87,34 +90,49 @@ let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
         Button2.setTitle("Mes informations", for: .normal)
         Button2.tintColor = .darkGray
         Button2.addTarget(self,action: #selector(Button2Action),for: .touchUpInside)
+        Button2.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button2.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+
         //---------------
         Button3.frame = CGRect(x: 0, y: base + 2*(unit + offset), width: menuWidth, height: unit)
         Button3.setTitle("Mon historique", for: .normal)
         Button3.tintColor = .darkGray
         Button3.addTarget(self,action: #selector(Button3Action),for: .touchUpInside)
+        Button3.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button3.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+
         //---------------
         separator.frame = CGRect(x: 0, y:  base + 2*offset+3*unit + (SectionDistance+offset)/2,  width: menuWidth, height: 1)
-        separator.backgroundColor = .darkGray
+        separator.backgroundColor = .lightGray
         separator.layer.shadowColor = UIColor(ciColor: .black).cgColor
         separator.layer.shadowOffset = CGSize(width: 0, height: 0.1);
         separator.layer.shadowOpacity = 0.4;
         separator.layer.shadowRadius = 0.5;
         separator.clipsToBounds = false;
+        separator.alpha = 0.6
         //---------------
         Button4.frame = CGRect(x: 0, y: base + 3*(unit + offset)+SectionDistance, width: menuWidth, height: unit)
         Button4.setTitle("Déconnexion", for: .normal)
         Button4.tintColor = .darkGray
         Button4.addTarget(self,action: #selector(Button4Action),for: .touchUpInside)
+        Button4.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button4.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
         //---------------
         Button5.frame = CGRect(x: 0, y: base + 4*(unit + offset)+SectionDistance, width: menuWidth, height: unit)
         Button5.setTitle("Mention légale", for: .normal)
         Button5.tintColor = .darkGray
         Button5.addTarget(self,action: #selector(Button5Action),for: .touchUpInside)
+        Button5.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button5.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+
         //---------------
         Button6.frame = CGRect(x: 0, y: base + 5*(unit + offset)+SectionDistance, width: menuWidth, height: unit)
         Button6.setTitle("À propos", for: .normal)
         Button6.tintColor = .darkGray
         Button6.addTarget(self,action: #selector(Button6Action),for: .touchUpInside)
+        Button6.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        Button6.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+
         //---------------
         view.addSubview(header)
         view.addSubview(avatar)

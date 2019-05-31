@@ -34,43 +34,52 @@ class RealmManager {
 //            post(error)
 //        }
 //    }
-    
-    //-------------
-    func addColisImagesData(_ course: Course,data: Data) {
+    func addSignatureImageData(_ course: Course,data: Data, type: String) {
         do {
-            try realm.write {
-                course.colisImagesData.append(data)
-                realm.add(course,update: true)
+            switch type {
+            case "depart":
+                try realm.write {
+                    course.signatureDepartData = data
+                    realm.add(course,update: true)
+                }
+            case "arrivee":
+                try realm.write {
+                    course.signatureArriveeData = data
+                    realm.add(course,update: true)
+                }
+            default:
+                print("Invalid 'type' parameter passed to 'addSignatureImageData' function")
             }
+            
         } catch {
             print(error)
             post(error)
         }
     }
     //-------------
-    func setSignatureArrivee(_ course: Course,imageURL: String) {
+    func addColisImagesData(_ course: Course,data: Data, type: String) {
         do {
-            try realm.write {
-                course.signaturesImages[1] = SignatureImage(type: "ARRIVEE", url: imageURL)
-                realm.add(course,update: true)
+            switch type {
+            case "depart":
+                try realm.write {
+                    course.colisImagesDataDepart.append(data)
+                    realm.add(course,update: true)
+                }
+            case "arrivee":
+                try realm.write {
+                    course.colisImagesDataArrivee.append(data)
+                    realm.add(course,update: true)
+                }
+            default:
+                print("Invalid 'type' parameter passed to 'addColisImagesData' function")
             }
+            
         } catch {
             print(error)
             post(error)
         }
     }
-    //-------------
-    func setSignatureDepart(_ course: Course,imageURL: String) {
-        do {
-            try realm.write {
-                course.signaturesImages[0] = SignatureImage(type: "depart", url: imageURL)
-                realm.add(course,update: true)
-            }
-        } catch {
-            print(error)
-            post(error)
-        }
-    }
+  
 //-------------
     func setPointEnlevementCourse(_ course: Course,type: String) {
         do {

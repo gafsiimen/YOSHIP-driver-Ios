@@ -22,7 +22,7 @@ class HomeViewModel {
         didSet { self.ArrayDidChangeClosure?() }
     }
   
-   
+
     var CoursesFetchedClosure: (() -> ())?
     var ArrayDidChangeClosure: (() -> ())?
     

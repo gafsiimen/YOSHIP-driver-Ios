@@ -16,7 +16,7 @@ class CollectionViewController: UIViewController {
     var codeCourse:String = "" {
         didSet{
             let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
-            self.dataArray = Array(course.colisImagesData)
+            self.dataArray = Array(course.colisImagesDataDepart) + Array(course.colisImagesDataArrivee)
         }
     }
 

@@ -12,6 +12,7 @@ import UberSignature
 import LTHRadioButton
 import AVFoundation
 import DKCamera
+import NVActivityIndicatorView
 
 class CourseDetailsController: UIViewController, SignatureDrawingViewControllerDelegate, ENSideMenuDelegate {
     
@@ -32,7 +33,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     var mapView = GMSMapView()
     var mapViewHeightConstraint: NSLayoutConstraint!
     var bottomViewHeightConstraint: NSLayoutConstraint!
-    var lowHeight:CGFloat = 140
+    var lowHeight:CGFloat = 155
     var confirmationHeight: CGFloat = 160
     var highHeight:CGFloat = 300
     //---------
@@ -81,6 +82,8 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         bv.backgroundColor =  UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
         return bv
     }()
+ //-----------------
+    
  //-----------------
     lazy var autreTextView: UITextView = {
         let tv = UITextView()
@@ -240,6 +243,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let wazeIconAssigned : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "wazeIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Go: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Go, BackButton4])
@@ -348,6 +358,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let wazeIconAccepted : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "wazeIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Arrived: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Arrived, BackButton7])
@@ -437,6 +454,13 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
+    }()
+    let wazeIconDelivering : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "wazeIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
     }()
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Delivering: UIStackView = {
@@ -546,6 +570,27 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
+    let cameraIconPickup : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "cameraIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    let imagesIconPickup : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "imagesIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    let wazeIconPickup : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "wazeIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     //---------------------------------------------------------------------
     lazy var stackViewOuiNonBack_Pickup: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [stackViewOuiNon_Pickup, BackButton3])
@@ -641,17 +686,24 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         button.addTarget(self, action: #selector(goBackButton), for: .touchUpInside)
         return button
     }()
-    let cameraIcon : UIImageView = {
+    let cameraIconDeposing : UIImageView = {
        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "cameraIcon")
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
-    let imagesIcon : UIImageView = {
+    let imagesIconDeposing : UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "imagesIcon")
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    let wazeIconDeposing : UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "wazeIcon")
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -817,11 +869,26 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         return button
     }()
     //---------------------------------------------------------------------
-//    let cameraView: UIView = {
+//    let activityIndicator: UIView = {
 //       let view = UIView()
-//        view.backgroundColor = .yellow
+//        view.backgroundColor = .red
+//        view.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
+//        view.alpha = 0
 //       return view
 //    }()
+    
+    //---------------------------------------------------------------------
+    @objc func openWaze(sender: wazeTapGesture){
+            if UIApplication.shared.canOpenURL(URL(string: "waze://")!) {
+                // Waze is installed. Launch Waze and start navigation
+                let urlStr: String = "waze://?ll=\(sender.latitude),\(sender.longitude)&navigate=yes"
+                UIApplication.shared.openURL(URL(string: urlStr)!)
+            }
+            else {
+                // Waze is not installed. Launch AppStore to install Waze app
+                UIApplication.shared.openURL(URL(string: "http://itunes.apple.com/us/app/id323229106")!)
+            }
+    }
     //---------------------------------------------------------------------
     @objc func showImages(sender: MyTapGesture){
       print("show images!")
@@ -829,41 +896,38 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         var destViewController : CollectionViewController
         destViewController = mainStoryboard.instantiateViewController(withIdentifier: "colisImages") as! CollectionViewController
         destViewController.toggleSideMenuView()
-        
         destViewController.codeCourse = self.codeCourse
-       
         sideMenuController()?.setContentViewController(contentViewController: destViewController)
-//        self.view.addSubview(self.colisImageCollectionView)
-//        //Layout Setup
-//        self.colisImageCollectionView.translatesAutoresizingMaskIntoConstraints = false
-//        self.colisImageCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
-//        self.colisImageCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
-//        self.colisImageCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25).isActive = true
-//        self.colisImageCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25).isActive = true
     }
+    
+    fileprivate func storeImage(_ image: UIImage?,type: String, completion: (() -> Void)? = nil) {
+        print("1")
+        if let data = image?.pngData(){
+        print("2")
+        let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+            RealmManager.sharedInstance.addColisImagesData(course, data: data, type: type)
+        }
+        print("3")
+        self.toggleSideMenuView()
+        self.sideMenuController()?.setContentViewController(contentViewController: self)
+
+    }
+    
     @objc func showCamera(sender: MyTapGesture){
       print("show camera!")
-
-        
         let camera = DKCamera()
         camera.didCancel = { () in
             print("didCancel")
-            
-            self.dismiss(animated: false, completion: nil)
+            self.toggleSideMenuView()
+            self.sideMenuController()?.setContentViewController(contentViewController: self)
         }
-        
         camera.didFinishCapturingImage = { (image: UIImage?, metadata: [AnyHashable : Any]?) in
             print("didFinishCapturingImage")
-            self.dismiss(animated: false ){
-                if let data = image?.pngData(){
-                let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
-                RealmManager.sharedInstance.addColisImagesData(course, data: data)
-                }}
+            self.storeImage(image, type: sender.param)
         }
-        self.present(camera, animated: false, completion: nil)
-    
-
-
+        
+        camera.toggleSideMenuView()
+        sideMenuController()?.setContentViewController(contentViewController: camera)
     }
 
     //---------------------------------------------------------------------
@@ -890,6 +954,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }
     //---------------------------------------------------------------------
     @objc func arrivedButton(){
+        wazeIconAccepted.removeFromSuperview()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
                             self.bottomViewHeightConstraint.constant = self.confirmationHeight
                             self.view.layoutIfNeeded()
@@ -915,6 +980,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }
    //---------------------------------------------------------------------
         @objc func arrivedToDeliveryDestinationButton(){
+            wazeIconDelivering.removeFromSuperview()
             UIView.animate(withDuration: 0.2, animations: { () -> Void in
                 self.bottomViewHeightConstraint.constant = self.confirmationHeight
                 self.view.layoutIfNeeded()
@@ -944,14 +1010,15 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         } else {
         signatureViewController.view.removeFromSuperview()
         signatureClient.removeFromSuperview()
+        self.cameraIconDeposing.removeFromSuperview()
+        self.imagesIconDeposing.removeFromSuperview()
+        self.wazeIconDeposing.removeFromSuperview()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.confirmationHeight
             self.view.layoutIfNeeded()
         })
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.stackViewDeposing.removeFromSuperview()
-            self.cameraIcon.removeFromSuperview()
-            self.imagesIcon.removeFromSuperview()
             //**************stackViewOuiNonBack_End**************
             self.bottomView.addSubview(self.stackViewOuiNonBack_End)
             //Layout Setup
@@ -973,6 +1040,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         if (self.ConfirmButton.alpha != 1){
             print("Signature départ manquante")
         } else {
+            cameraIconPickup.removeFromSuperview()
+            imagesIconPickup.removeFromSuperview()
+            wazeIconPickup.removeFromSuperview()
             signatureViewController.view.removeFromSuperview()
             signatureClient.removeFromSuperview()
             stackViewType.removeFromSuperview()
@@ -1220,6 +1290,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
     }
     
     @objc func cancelButton_Arrived(){
+        wazeIconAccepted.removeFromSuperview()
         radioButton12.select()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.highHeight
@@ -1233,6 +1304,9 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         self.OuiButton_Cancel.phase = "CANCEL_FROM_ACCEPTED"
     }
     @objc func cancelButton_Pickup(){
+        cameraIconPickup.removeFromSuperview()
+        imagesIconPickup.removeFromSuperview()
+        wazeIconPickup.removeFromSuperview()
         radioButton11.select()
         stackViewType.removeFromSuperview()
         signatureViewController.view.removeFromSuperview()
@@ -1244,6 +1318,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 
     }
     @objc func goButton(){
+        wazeIconAssigned.removeFromSuperview()
         UIView.animate(withDuration: 0.2, animations: { () -> Void in
             self.bottomViewHeightConstraint.constant = self.confirmationHeight
             self.view.layoutIfNeeded()
@@ -1341,6 +1416,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
         switch sender.phase{
         case "GO":
             if (sender.yes){
+                wazeIconAssigned.removeFromSuperview()
                 //----------
                 AcceptCourse(){
                 print("Course: \(self.codeCourse) was accepted")
@@ -1362,6 +1438,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.stackViewAccepted.heightAnchor.constraint(equalToConstant: 100).isActive = true
                     self.stackViewAccepted.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                     self.stackViewAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                    //**************wazeIcon**************
+                    self.bottomView.addSubview(self.wazeIconAccepted)
+                    self.wazeIconAccepted.isUserInteractionEnabled = true
+                    let wazeTapAccepted = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                    wazeTapAccepted.latitude = self.latitudeArrivee
+                    wazeTapAccepted.longitude = self.longitudeArrivee
+                    self.wazeIconAccepted.addGestureRecognizer(wazeTapAccepted)
+                    //Layout Setup
+                    self.wazeIconAccepted.translatesAutoresizingMaskIntoConstraints = false
+                    self.wazeIconAccepted.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.wazeIconAccepted.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconAccepted.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                 }
             }
             }else{
@@ -1380,10 +1469,24 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.stackViewAssigned.heightAnchor.constraint(equalToConstant: 100).isActive = true
                 self.stackViewAssigned.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                 self.stackViewAssigned.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //**************wazeIcon**************
+                self.bottomView.addSubview(self.wazeIconAssigned)
+                self.wazeIconAssigned.isUserInteractionEnabled = true
+                let wazeTapAssigned = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                wazeTapAssigned.latitude = self.latitudeArrivee
+                wazeTapAssigned.longitude = self.longitudeArrivee
+                self.wazeIconAssigned.addGestureRecognizer(wazeTapAssigned)
+                //Layout Setup
+                self.wazeIconAssigned.translatesAutoresizingMaskIntoConstraints = false
+                self.wazeIconAssigned.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.wazeIconAssigned.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconAssigned.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconAssigned.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
               }
             }
         case "ARRIVED":
             if (sender.yes){
+                wazeIconAccepted.removeFromSuperview()
                 PickUpCourse(){
                     print("Course: \(self.codeCourse) is being picked up")
                     let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
@@ -1409,7 +1512,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         //Layout Setup
                         self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
                         self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
-                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 35).isActive = true
                         self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                         self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
                         //************signatureViewController.view***********
@@ -1432,6 +1535,43 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
                         self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                         self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                        //**************cameraIcon**************
+                        self.view.addSubview(self.cameraIconPickup)
+                        self.cameraIconPickup.isUserInteractionEnabled = true
+                        let tap3 = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+                        tap3.param = "depart"
+                        self.cameraIconPickup.addGestureRecognizer(tap3)
+                        //Layout Setup
+                        self.cameraIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.cameraIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.cameraIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.cameraIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.cameraIconPickup.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                        //**************imagesIcon**************
+                        self.bottomView.addSubview(self.imagesIconPickup)
+                        self.imagesIconPickup.isUserInteractionEnabled = true
+                        let tap4 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+                        tap4.param = "depart"
+                        self.imagesIconPickup.addGestureRecognizer(tap4)
+                        //Layout Setup
+                        self.imagesIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.imagesIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.imagesIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.imagesIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.imagesIconPickup.leadingAnchor.constraint(equalTo: self.cameraIconPickup.trailingAnchor, constant: 20).isActive = true
+                        //**************wazeIcon**************
+                        self.bottomView.addSubview(self.wazeIconPickup)
+                        self.wazeIconPickup.isUserInteractionEnabled = true
+                        let wazeTapPickup = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                        wazeTapPickup.latitude = self.latitudeArrivee
+                        wazeTapPickup.longitude = self.longitudeArrivee
+                        self.wazeIconDelivering.addGestureRecognizer(wazeTapPickup)
+                        //Layout Setup
+                        self.wazeIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.wazeIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.wazeIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.wazeIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.wazeIconPickup.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                     }
                 }
             }else{
@@ -1450,20 +1590,37 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.stackViewAccepted.heightAnchor.constraint(equalToConstant: 100).isActive = true
                 self.stackViewAccepted.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                 self.stackViewAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //**************wazeIcon**************
+                self.bottomView.addSubview(self.wazeIconAccepted)
+                self.wazeIconAccepted.isUserInteractionEnabled = true
+                let wazeTapAccepted = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                wazeTapAccepted.latitude = self.latitudeArrivee
+                wazeTapAccepted.longitude = self.longitudeArrivee
+                self.wazeIconAssigned.addGestureRecognizer(wazeTapAccepted)
+                //Layout Setup
+                self.wazeIconAccepted.translatesAutoresizingMaskIntoConstraints = false
+                self.wazeIconAccepted.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.wazeIconAccepted.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconAccepted.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                 }
             }
         case "PICKUP":
             if (sender.yes){
                  DeliveringCourse(){
-                self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "depart", vc: self)
-                self.viewModel.setPointEnlevement(codeCourse: self.codeCourse, pointEnlevement: self.selectedType)
-                    
                 print("Course: \(self.codeCourse) is being delivered")
                 let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
-//                RealmManager.sharedInstance.setSignatureDepart(course, imageURL: self.signatureImageURL)
+                    let imagesDepart = Array(course.colisImagesDataDepart).map{
+                        UIImage(data: $0)!
+                    }
+                self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "depart", vc: self)
+                self.viewModel.setPointEnlevement(codeCourse: self.codeCourse, pointEnlevement: self.selectedType)
+                    self.viewModel.uploadPhotos(images: imagesDepart, codeCourse: self.codeCourse, type: "depart", vc: self)
                 RealmManager.sharedInstance.setPointEnlevementCourse(course, type: self.selectedType)
+                RealmManager.sharedInstance.addSignatureImageData(course, data: self.signatureViewController.fullSignatureImage!.pngData()!, type: "depart")
                 RealmManager.sharedInstance.deliveringCourse(course)
-                    
+//                RealmManager.sharedInstance.setSignatureDepart(course, imageURL: self.signatureImageURL)
+
                    
              
                 self.confirmationLabel_Pickup.removeFromSuperview()
@@ -1481,6 +1638,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.stackViewDelivering.heightAnchor.constraint(equalToConstant: 100).isActive = true
                 self.stackViewDelivering.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                 self.stackViewDelivering.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                //**************wazeIcon**************
+                self.bottomView.addSubview(self.wazeIconDelivering)
+                self.wazeIconDelivering.isUserInteractionEnabled = true
+                let wazeTapDelivering = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                wazeTapDelivering.latitude = self.latitudeArrivee
+                wazeTapDelivering.longitude = self.longitudeArrivee
+                self.wazeIconDelivering.addGestureRecognizer(wazeTapDelivering)
+                //Layout Setup
+                self.wazeIconDelivering.translatesAutoresizingMaskIntoConstraints = false
+                self.wazeIconDelivering.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.wazeIconDelivering.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconDelivering.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconDelivering.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                    }
                 }
             }else{
@@ -1510,7 +1680,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         //Layout Setup
                         self.stackViewType.translatesAutoresizingMaskIntoConstraints = false
                         self.stackViewType.heightAnchor.constraint(equalToConstant: 60)
-                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.stackViewType.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 35).isActive = true
                         self.stackViewType.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                         self.stackViewType.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
                         //************signatureViewController.view***********
@@ -1533,6 +1703,43 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         self.signatureClient.topAnchor.constraint(equalTo: self.signatureViewController.view.topAnchor, constant: 0).isActive = true
                         self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                         self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                        //**************cameraIcon**************
+                        self.view.addSubview(self.cameraIconPickup)
+                        self.cameraIconPickup.isUserInteractionEnabled = true
+                        let tap3 = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+                        tap3.param = "depart"
+                        self.cameraIconPickup.addGestureRecognizer(tap3)
+                        //Layout Setup
+                        self.cameraIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.cameraIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.cameraIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.cameraIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.cameraIconPickup.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                        //**************imagesIcon**************
+                        self.bottomView.addSubview(self.imagesIconPickup)
+                        self.imagesIconPickup.isUserInteractionEnabled = true
+                        let tap4 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+                        tap4.param = "depart"
+                        self.imagesIconPickup.addGestureRecognizer(tap4)
+                        //Layout Setup
+                        self.imagesIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.imagesIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.imagesIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.imagesIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.imagesIconPickup.leadingAnchor.constraint(equalTo: self.cameraIconPickup.trailingAnchor, constant: 20).isActive = true
+                        //**************wazeIcon**************
+                        self.bottomView.addSubview(self.wazeIconPickup)
+                        self.wazeIconPickup.isUserInteractionEnabled = true
+                        let wazeTapPickup = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                        wazeTapPickup.latitude = self.latitudeArrivee
+                        wazeTapPickup.longitude = self.longitudeArrivee
+                        self.wazeIconPickup.addGestureRecognizer(wazeTapPickup)
+                        //Layout Setup
+                        self.wazeIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                        self.wazeIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                        self.wazeIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.wazeIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                        self.wazeIconPickup.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                     }
             }
         case "CANCEL_FROM_ACCEPTED":
@@ -1569,6 +1776,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.stackViewAccepted.heightAnchor.constraint(equalToConstant: 100).isActive = true
                     self.stackViewAccepted.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                     self.stackViewAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                    //**************wazeIcon**************
+                    self.bottomView.addSubview(self.wazeIconAccepted)
+                    self.wazeIconAccepted.isUserInteractionEnabled = true
+                    let wazeTapAccepted = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                    wazeTapAccepted.latitude = self.latitudeArrivee
+                    wazeTapAccepted.longitude = self.longitudeArrivee
+                    self.wazeIconAccepted.addGestureRecognizer(wazeTapAccepted)
+                    //Layout Setup
+                    self.wazeIconAccepted.translatesAutoresizingMaskIntoConstraints = false
+                    self.wazeIconAccepted.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.wazeIconAccepted.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconAccepted.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
               }
             }
         case "CANCEL_FROM_PICKUP":
@@ -1615,7 +1835,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         //Layout Setup
                         stackViewType.translatesAutoresizingMaskIntoConstraints = false
                         stackViewType.heightAnchor.constraint(equalToConstant: 60)
-                        stackViewType.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+                        stackViewType.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 35).isActive = true
                         stackViewType.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
                         stackViewType.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
                         //************signatureViewController.view***********
@@ -1638,10 +1858,48 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                         signatureClient.topAnchor.constraint(equalTo: signatureViewController.view.topAnchor, constant: 0).isActive = true
                         signatureClient.centerXAnchor.constraint(equalTo: signatureViewController.view.centerXAnchor).isActive = true
                         signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                //**************cameraIcon**************
+                self.view.addSubview(self.cameraIconPickup)
+                self.cameraIconPickup.isUserInteractionEnabled = true
+                let tap3 = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+                tap3.param = "depart"
+                self.cameraIconPickup.addGestureRecognizer(tap3)
+                //Layout Setup
+                self.cameraIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                self.cameraIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.cameraIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIconPickup.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                //**************imagesIcon**************
+                self.bottomView.addSubview(self.imagesIconPickup)
+                self.imagesIconPickup.isUserInteractionEnabled = true
+                let tap4 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+                tap4.param = "depart"
+                self.imagesIconPickup.addGestureRecognizer(tap4)
+                //Layout Setup
+                self.imagesIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                self.imagesIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.imagesIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIconPickup.leadingAnchor.constraint(equalTo: self.cameraIconPickup.trailingAnchor, constant: 20).isActive = true
+                //**************wazeIcon**************
+                self.bottomView.addSubview(self.wazeIconPickup)
+                self.wazeIconPickup.isUserInteractionEnabled = true
+                let wazeTapPickup = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                wazeTapPickup.latitude = self.latitudeArrivee
+                wazeTapPickup.longitude = self.longitudeArrivee
+                self.wazeIconPickup.addGestureRecognizer(wazeTapPickup)
+                //Layout Setup
+                self.wazeIconPickup.translatesAutoresizingMaskIntoConstraints = false
+                self.wazeIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.wazeIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconPickup.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                 
             }
         case "DELIVERING":
             if (sender.yes){
+                wazeIconDelivering.removeFromSuperview()
                 DeposingCourse(){
                 self.signatureViewController.reset()
                 print("Course: \(self.codeCourse) is being deposed")
@@ -1683,30 +1941,45 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                 self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                 self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
                 //**************cameraIcon**************
-                self.bottomView.addSubview(self.cameraIcon)
-                self.cameraIcon.isUserInteractionEnabled = true
+                self.bottomView.addSubview(self.cameraIconDeposing)
+                self.cameraIconDeposing.isUserInteractionEnabled = true
                 let tap = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
                 tap.param = "arrivee"
-                self.cameraIcon.addGestureRecognizer(tap)
+                self.cameraIconDeposing.addGestureRecognizer(tap)
                 //Layout Setup
-                self.cameraIcon.translatesAutoresizingMaskIntoConstraints = false
-                self.cameraIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
-                self.cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                self.cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-                self.cameraIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                self.cameraIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                self.cameraIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.cameraIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.cameraIconDeposing.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
                 //**************imagesIcon**************
-                self.bottomView.addSubview(self.imagesIcon)
-                self.imagesIcon.isUserInteractionEnabled = true
+                self.bottomView.addSubview(self.imagesIconDeposing)
+                self.imagesIconDeposing.isUserInteractionEnabled = true
                 let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
                 tap.param = "arrivee"
-                self.imagesIcon.addGestureRecognizer(tap2)
+                self.imagesIconDeposing.addGestureRecognizer(tap2)
                 //Layout Setup
-                self.imagesIcon.translatesAutoresizingMaskIntoConstraints = false
-                self.imagesIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
-                self.imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                self.imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-                self.imagesIcon.leadingAnchor.constraint(equalTo: self.cameraIcon.trailingAnchor, constant: 20).isActive = true
-                    } }
+                self.imagesIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                self.imagesIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.imagesIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.imagesIconDeposing.leadingAnchor.constraint(equalTo: self.cameraIconDeposing.trailingAnchor, constant: 20).isActive = true
+                //**************wazeIcon**************
+                self.bottomView.addSubview(self.wazeIconDeposing)
+                self.wazeIconDeposing.isUserInteractionEnabled = true
+                let wazeTapDeposing = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                wazeTapDeposing.latitude = self.latitudeArrivee
+                wazeTapDeposing.longitude = self.longitudeArrivee
+                self.wazeIconDeposing.addGestureRecognizer(wazeTapDeposing)
+                //Layout Setup
+                self.wazeIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                self.wazeIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                self.wazeIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                self.wazeIconDeposing.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
+                    
+                }
+         }
             }else{
                 confirmationLabel_Delivering.removeFromSuperview()
                 UIView.animate(withDuration: 0.2, animations: { () -> Void in
@@ -1723,6 +1996,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.stackViewDelivering.heightAnchor.constraint(equalToConstant: 100).isActive = true
                     self.stackViewDelivering.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10).isActive = true
                     self.stackViewDelivering.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10).isActive = true
+                    //**************wazeIcon**************
+                    self.bottomView.addSubview(self.wazeIconDelivering)
+                    self.wazeIconDelivering.isUserInteractionEnabled = true
+                    let wazeTapDelivering = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                    wazeTapDelivering.latitude = self.latitudeArrivee
+                    wazeTapDelivering.longitude = self.longitudeArrivee
+                    self.wazeIconDelivering.addGestureRecognizer(wazeTapDelivering)
+                    //Layout Setup
+                    self.wazeIconDelivering.translatesAutoresizingMaskIntoConstraints = false
+                    self.wazeIconDelivering.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.wazeIconDelivering.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconDelivering.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconDelivering.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                 }
             }
         case "END":
@@ -1742,23 +2028,20 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
 //
                 
                             EndCourse(){
-                    self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "arrivee", vc: self)
 
                 let course = SessionManager.currentSession.allCourses.filter() { $0.code == self.codeCourse }[0]
+                let imagesArrivee = Array(course.colisImagesDataArrivee).map{
+                      UIImage(data: $0)!
+                  }
                 SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != self.codeCourse }
+                self.viewModel.uploadPhotos(images: imagesArrivee, codeCourse: self.codeCourse, type: "arrivee", vc: self)
+                self.viewModel.uploadSignatureImage(image: self.signatureViewController.fullSignatureImage!, codeCourse: self.codeCourse, type: "arrivee", vc: self)
+                RealmManager.sharedInstance.addSignatureImageData(course, data: self.signatureViewController.fullSignatureImage!.pngData()!, type: "arrivee")
                 RealmManager.sharedInstance.EndCourse(course)
 //                RealmManager.sharedInstance.EndCourse(primaryKey: self.codeCourse)
                 print("Course: \(self.codeCourse) has ended")
 
-                let alert = UIAlertController(title: "Bravo!", message: "La course: \(self.codeCourse) est terminée. ", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
-                    let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
-                    var destViewController : UIViewController
-                    destViewController = mainStoryboard.instantiateViewController(withIdentifier: "HomeViewController")
-                    destViewController.toggleSideMenuView()
-                    self.sideMenuController()?.setContentViewController(contentViewController: destViewController)                })
-                alert.addAction(action)
-                self.present(alert, animated:  true , completion: nil)
+               
 
                 }
             }else{
@@ -1799,29 +2082,42 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
                     self.signatureClient.centerXAnchor.constraint(equalTo: self.signatureViewController.view.centerXAnchor).isActive = true
                     self.signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
                     //**************cameraIcon**************
-                    self.view.addSubview(self.cameraIcon)
-                    self.cameraIcon.isUserInteractionEnabled = true
+                    self.view.addSubview(self.cameraIconDeposing)
+                    self.cameraIconDeposing.isUserInteractionEnabled = true
                     let tap = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
                     tap.param = "arrivee"
-                    self.cameraIcon.addGestureRecognizer(tap)
+                    self.cameraIconDeposing.addGestureRecognizer(tap)
                     //Layout Setup
-                    self.cameraIcon.translatesAutoresizingMaskIntoConstraints = false
-                    self.cameraIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
-                    self.cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                    self.cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-                    self.cameraIcon.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+                    self.cameraIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                    self.cameraIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.cameraIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.cameraIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.cameraIconDeposing.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
                     //**************imagesIcon**************
-                    self.bottomView.addSubview(self.imagesIcon)
-                    self.imagesIcon.isUserInteractionEnabled = true
+                    self.bottomView.addSubview(self.imagesIconDeposing)
+                    self.imagesIconDeposing.isUserInteractionEnabled = true
                     let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
                     tap.param = "arrivee"
-                    self.imagesIcon.addGestureRecognizer(tap2)
+                    self.imagesIconDeposing.addGestureRecognizer(tap2)
                     //Layout Setup
-                    self.imagesIcon.translatesAutoresizingMaskIntoConstraints = false
-                    self.imagesIcon.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
-                    self.imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                    self.imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-                    self.imagesIcon.leadingAnchor.constraint(equalTo: self.cameraIcon.trailingAnchor, constant: 20).isActive = true
+                    self.imagesIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                    self.imagesIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.imagesIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.imagesIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.imagesIconDeposing.leadingAnchor.constraint(equalTo: self.cameraIconDeposing.trailingAnchor, constant: 20).isActive = true
+                    //**************wazeIcon**************
+                    self.bottomView.addSubview(self.wazeIconDeposing)
+                    self.wazeIconDeposing.isUserInteractionEnabled = true
+                    let wazeTapDeposing = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+                    wazeTapDeposing.latitude = self.latitudeArrivee
+                    wazeTapDeposing.longitude = self.longitudeArrivee
+                    self.wazeIconDeposing.addGestureRecognizer(wazeTapDeposing)
+                    //Layout Setup
+                    self.wazeIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+                    self.wazeIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+                    self.wazeIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+                    self.wazeIconDeposing.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
                 }
             }
         default:
@@ -1920,6 +2216,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             stackViewAssigned.heightAnchor.constraint(equalToConstant: 100).isActive = true
             stackViewAssigned.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             stackViewAssigned.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+            //**************wazeIcon**************
+            self.bottomView.addSubview(self.wazeIconAssigned)
+            self.wazeIconAssigned.isUserInteractionEnabled = true
+            let wazeTapAssigned = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+            wazeTapAssigned.latitude = self.latitudeArrivee
+            wazeTapAssigned.longitude = self.longitudeArrivee
+            self.wazeIconAssigned.addGestureRecognizer(wazeTapAssigned)
+            //Layout Setup
+            self.wazeIconAssigned.translatesAutoresizingMaskIntoConstraints = false
+            self.wazeIconAssigned.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.wazeIconAssigned.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconAssigned.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconAssigned.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
             
         } else if statusCode == "ACCEPTEE" {
             bottomViewHeightConstraint.constant = lowHeight
@@ -1931,6 +2240,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             stackViewAccepted.heightAnchor.constraint(equalToConstant: 100).isActive = true
             stackViewAccepted.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             stackViewAccepted.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+            //**************wazeIcon**************
+            self.bottomView.addSubview(self.wazeIconAccepted)
+            self.wazeIconAccepted.isUserInteractionEnabled = true
+            let wazeTapAccepted = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+            wazeTapAccepted.latitude = self.latitudeArrivee
+            wazeTapAccepted.longitude = self.longitudeArrivee
+            self.wazeIconAccepted.addGestureRecognizer(wazeTapAccepted)
+            //Layout Setup
+            self.wazeIconAccepted.translatesAutoresizingMaskIntoConstraints = false
+            self.wazeIconAccepted.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.wazeIconAccepted.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconAccepted.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconAccepted.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
             
         } else if statusCode == "LIVRAISON" {
             bottomViewHeightConstraint.constant = lowHeight
@@ -1942,6 +2264,19 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             stackViewDelivering.heightAnchor.constraint(equalToConstant: 100).isActive = true
             stackViewDelivering.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             stackViewDelivering.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+            //**************wazeIcon**************
+            self.bottomView.addSubview(self.wazeIconDelivering)
+            self.wazeIconDelivering.isUserInteractionEnabled = true
+            let wazeTapDelivering = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+            wazeTapDelivering.latitude = self.latitudeArrivee
+            wazeTapDelivering.longitude = self.longitudeArrivee
+            self.wazeIconDelivering.addGestureRecognizer(wazeTapDelivering)
+            //Layout Setup
+            self.wazeIconDelivering.translatesAutoresizingMaskIntoConstraints = false
+            self.wazeIconDelivering.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.wazeIconDelivering.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconDelivering.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconDelivering.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
             print("LIVRAISON")
         } else if statusCode == "ENLEVEMENT" {
             bottomViewHeightConstraint.constant = highHeight
@@ -1958,7 +2293,7 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             //Layout Setup
             stackViewType.translatesAutoresizingMaskIntoConstraints = false
             stackViewType.heightAnchor.constraint(equalToConstant: 60)
-            stackViewType.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+            stackViewType.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 35).isActive = true
             stackViewType.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
             stackViewType.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
             //************signatureViewController.view***********
@@ -1981,7 +2316,43 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             signatureClient.topAnchor.constraint(equalTo: signatureViewController.view.topAnchor, constant: 0).isActive = true
             signatureClient.centerXAnchor.constraint(equalTo: signatureViewController.view.centerXAnchor).isActive = true
             signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            
+            //**************cameraIcon**************
+            self.view.addSubview(self.cameraIconPickup)
+            self.cameraIconPickup.isUserInteractionEnabled = true
+            let tap3 = MyTapGesture(target: self, action: #selector(self.showCamera(sender:)))
+            tap3.param = "depart"
+            self.cameraIconPickup.addGestureRecognizer(tap3)
+            //Layout Setup
+            self.cameraIconPickup.translatesAutoresizingMaskIntoConstraints = false
+            self.cameraIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.cameraIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.cameraIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.cameraIconPickup.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+            //**************imagesIcon**************
+            self.bottomView.addSubview(self.imagesIconPickup)
+            self.imagesIconPickup.isUserInteractionEnabled = true
+            let tap4 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
+            tap4.param = "depart"
+            self.imagesIconPickup.addGestureRecognizer(tap4)
+            //Layout Setup
+            self.imagesIconPickup.translatesAutoresizingMaskIntoConstraints = false
+            self.imagesIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.imagesIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.imagesIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.imagesIconPickup.leadingAnchor.constraint(equalTo: self.cameraIconPickup.trailingAnchor, constant: 20).isActive = true
+            //**************wazeIcon**************
+            self.bottomView.addSubview(self.wazeIconPickup)
+            self.wazeIconPickup.isUserInteractionEnabled = true
+            let wazeTapPickup = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+            wazeTapPickup.latitude = self.latitudeArrivee
+            wazeTapPickup.longitude = self.longitudeArrivee
+            self.wazeIconPickup.addGestureRecognizer(wazeTapPickup)
+            //Layout Setup
+            self.wazeIconPickup.translatesAutoresizingMaskIntoConstraints = false
+            self.wazeIconPickup.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.wazeIconPickup.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconPickup.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconPickup.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
            print("ENLEVEMENT")
         } else if statusCode == "DECHARGEMENT"  {
             bottomViewHeightConstraint.constant = highHeight
@@ -2014,29 +2385,42 @@ class CourseDetailsController: UIViewController, SignatureDrawingViewControllerD
             signatureClient.centerXAnchor.constraint(equalTo: signatureViewController.view.centerXAnchor).isActive = true
             signatureClient.heightAnchor.constraint(equalToConstant: 20).isActive = true
             //**************cameraIcon**************
-            bottomView.addSubview(cameraIcon)
-            cameraIcon.isUserInteractionEnabled = true
+            bottomView.addSubview(cameraIconDeposing)
+            cameraIconDeposing.isUserInteractionEnabled = true
             let tap = MyTapGesture(target: self, action: #selector(showCamera(sender:)))
             tap.param = "arrivee"
-            cameraIcon.addGestureRecognizer(tap)
+            cameraIconDeposing.addGestureRecognizer(tap)
             //Layout Setup
-            cameraIcon.translatesAutoresizingMaskIntoConstraints = false
-            cameraIcon.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
-            cameraIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-            cameraIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-            cameraIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+            cameraIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+            cameraIconDeposing.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+            cameraIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            cameraIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            cameraIconDeposing.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
             //**************imagesIcon**************
-            bottomView.addSubview(self.imagesIcon)
-            imagesIcon.isUserInteractionEnabled = true
+            bottomView.addSubview(self.imagesIconDeposing)
+            imagesIconDeposing.isUserInteractionEnabled = true
             let tap2 = MyTapGesture(target: self, action: #selector(self.showImages(sender:)))
             tap.param = "arrivee"
-            imagesIcon.addGestureRecognizer(tap2)
+            imagesIconDeposing.addGestureRecognizer(tap2)
             //Layout Setup
-            imagesIcon.translatesAutoresizingMaskIntoConstraints = false
-            imagesIcon.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
-            imagesIcon.heightAnchor.constraint(equalToConstant: 40).isActive = true
-            imagesIcon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-            imagesIcon.leadingAnchor.constraint(equalTo: cameraIcon.trailingAnchor, constant: 20).isActive = true
+            imagesIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+            imagesIconDeposing.centerYAnchor.constraint(equalTo: bottomView.topAnchor, constant: 10).isActive = true
+            imagesIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            imagesIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            imagesIconDeposing.leadingAnchor.constraint(equalTo: cameraIconDeposing.trailingAnchor, constant: 20).isActive = true
+            //**************wazeIcon**************
+            self.bottomView.addSubview(self.wazeIconDeposing)
+            self.wazeIconDeposing.isUserInteractionEnabled = true
+            let wazeTapDeposing = wazeTapGesture(target: self, action: #selector(self.openWaze(sender:)))
+            wazeTapDeposing.latitude = self.latitudeArrivee
+            wazeTapDeposing.longitude = self.longitudeArrivee
+            self.wazeIconDeposing.addGestureRecognizer(wazeTapDeposing)
+            //Layout Setup
+            self.wazeIconDeposing.translatesAutoresizingMaskIntoConstraints = false
+            self.wazeIconDeposing.centerYAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+            self.wazeIconDeposing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconDeposing.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            self.wazeIconDeposing.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
             print("DECHARGEMENT")
         } else{
             print("STATUSCODE UNKNOWN")

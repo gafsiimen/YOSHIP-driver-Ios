@@ -48,12 +48,15 @@ class Course: Object, Codable {
     dynamic var dateDemarrageMeta: DateDemarrageMeta?
     dynamic var dateAcceptation: String? = nil
     dynamic var vehicule: Vehicule?
+    dynamic var signatureDepartData: Data? = nil
+    dynamic var signatureArriveeData: Data? = nil
     var scannedDocs = RealmSwift.List<ScannedDoc>()
     var colisImages = RealmSwift.List<String>()
-    var colisImagesData = RealmSwift.List<Data>()
+    var colisImagesDataDepart = RealmSwift.List<Data>()
+    var colisImagesDataArrivee = RealmSwift.List<Data>()
     
     enum CodingKeys: String, CodingKey {
-        case createdAt, dateEnlevement, observationArrivee, pointEnlevement, montantHT, nombreColis, estimatedKM, id, articleFamilies, status, observation, chauffeur, manutention,adresseArrivee, dateAffirmationFin, manutentionDouble, courseSource, lettreDeVoiture, contactArrivee, code, articles, commande, factures, dateLivraison, signaturesImages, adresseDepart, dateDemarrage, isStatusChangedManually, contactDepart, codeCorner, moyenPaiement, vehiculeType, dateDemarrageMeta, dateAcceptation, vehicule, scannedDocs, colisImages, colisImagesData
+        case createdAt, dateEnlevement, observationArrivee, pointEnlevement, montantHT, nombreColis, estimatedKM, id, articleFamilies, status, observation, chauffeur, manutention,adresseArrivee, dateAffirmationFin, manutentionDouble, courseSource, lettreDeVoiture, contactArrivee, code, articles, commande, factures, dateLivraison, signaturesImages, adresseDepart, dateDemarrage, isStatusChangedManually, contactDepart, codeCorner, moyenPaiement, vehiculeType, dateDemarrageMeta, dateAcceptation, vehicule, scannedDocs, colisImages, colisImagesDataDepart, colisImagesDataArrivee, signatureDepartData, signatureArriveeData
         case yusoRequestID = "YusoRequestID"
         
     }
@@ -99,11 +102,14 @@ class Course: Object, Codable {
         signaturesImages = try container.decodeIfPresent(List<SignatureImage>.self,forKey: .signaturesImages) ?? List<SignatureImage>()
         scannedDocs = try container.decodeIfPresent(List<ScannedDoc>.self,forKey: .scannedDocs) ?? List<ScannedDoc>()
         colisImages = try container.decodeIfPresent(List<String>.self,forKey: .colisImages) ?? List<String>()
-        colisImagesData = try container.decodeIfPresent(List<Data>.self,forKey: .colisImagesData) ?? List<Data>()
+        colisImagesDataDepart = try container.decodeIfPresent(List<Data>.self,forKey: .colisImagesDataDepart) ?? List<Data>()
+        colisImagesDataArrivee = try container.decodeIfPresent(List<Data>.self,forKey: .colisImagesDataArrivee) ?? List<Data>()
         articles = try container.decodeIfPresent(List<Article>.self,forKey: .articles) ?? List<Article>()
+        signatureDepartData = try container.decodeIfPresent(Data.self,forKey: .signatureDepartData) ?? Data()
+        signatureArriveeData = try container.decodeIfPresent(Data.self,forKey: .signatureArriveeData) ?? Data()
         super.init()
     }
-   required init(createdAt: String?, dateEnlevement: String?, observationArrivee: String?, pointEnlevement: String?, montantHT: Double?, nombreColis: Int?, estimatedKM: Double?, id: Int?, articleFamilies: List<ArticleFamily>, status: Status?, observation: String?, chauffeur: Chauffeur?, manutention: Bool?, yusoRequestID: String?, adresseArrivee: Adresse?, dateAffirmationFin: String?, manutentionDouble: Bool?, courseSource: String?, lettreDeVoiture: LettreDeVoiture?, contactArrivee: Contact?, code: String?, articles: List<Article>, commande: Commande?, factures: String?, dateLivraison: String?, signaturesImages: List<SignatureImage>, adresseDepart: Adresse?, dateDemarrage: String?, isStatusChangedManually: Bool?, contactDepart: Contact?, codeCorner: String?, moyenPaiement: MoyenPaiement?, vehiculeType: String?, dateDemarrageMeta: DateDemarrageMeta?, dateAcceptation: String?, vehicule: Vehicule?, scannedDocs: List<ScannedDoc>, colisImages: List<String>,colisImagesData: List<Data>) {
+    required init(createdAt: String?, dateEnlevement: String?, observationArrivee: String?, pointEnlevement: String?, montantHT: Double?, nombreColis: Int?, estimatedKM: Double?, id: Int?, articleFamilies: List<ArticleFamily>, status: Status?, observation: String?, chauffeur: Chauffeur?, manutention: Bool?, yusoRequestID: String?, adresseArrivee: Adresse?, dateAffirmationFin: String?, manutentionDouble: Bool?, courseSource: String?, lettreDeVoiture: LettreDeVoiture?, contactArrivee: Contact?, code: String?, articles: List<Article>, commande: Commande?, factures: String?, dateLivraison: String?, signaturesImages: List<SignatureImage>, adresseDepart: Adresse?, dateDemarrage: String?, isStatusChangedManually: Bool?, contactDepart: Contact?, codeCorner: String?, moyenPaiement: MoyenPaiement?, vehiculeType: String?, dateDemarrageMeta: DateDemarrageMeta?, dateAcceptation: String?, vehicule: Vehicule?, scannedDocs: List<ScannedDoc>, colisImages: List<String>,colisImagesDataDepart: List<Data>, colisImagesDataArrivee: List<Data>, signatureDepartData: Data?, signatureArriveeData: Data?) {
         self.createdAt = createdAt
         self.dateEnlevement = dateEnlevement
         self.observationArrivee = observationArrivee
@@ -142,7 +148,11 @@ class Course: Object, Codable {
         self.vehicule = vehicule
         self.scannedDocs = scannedDocs
         self.colisImages = colisImages
-        self.colisImagesData = colisImagesData
+        self.colisImagesDataDepart = colisImagesDataDepart
+        self.colisImagesDataArrivee = colisImagesDataArrivee
+        self.signatureDepartData = signatureDepartData
+        self.signatureArriveeData = signatureArriveeData
+
         super.init()
     }
     required init() {
@@ -213,7 +223,7 @@ extension Course {
 //    }
     convenience init(data: Data) throws {
         let me = try newJSONDecoder().decode(Course.self, from: data)
-        self.init(createdAt: me.createdAt, dateEnlevement: me.dateEnlevement, observationArrivee: me.observationArrivee, pointEnlevement: me.pointEnlevement, montantHT: me.montantHT.value, nombreColis: me.nombreColis.value, estimatedKM: me.estimatedKM.value, id: me.id.value, articleFamilies: me.articleFamilies, status: me.status, observation: me.observation, chauffeur: me.chauffeur, manutention: me.manutention.value, yusoRequestID: me.yusoRequestID, adresseArrivee: me.adresseArrivee, dateAffirmationFin: me.dateAffirmationFin, manutentionDouble: me.manutentionDouble.value, courseSource: me.courseSource, lettreDeVoiture: me.lettreDeVoiture, contactArrivee: me.contactArrivee, code: me.code, articles: me.articles, commande: me.commande, factures: me.factures, dateLivraison: me.dateLivraison, signaturesImages: me.signaturesImages, adresseDepart: me.adresseDepart, dateDemarrage: me.dateDemarrage, isStatusChangedManually: me.isStatusChangedManually.value, contactDepart: me.contactDepart, codeCorner: me.codeCorner, moyenPaiement: me.moyenPaiement, vehiculeType: me.vehiculeType, dateDemarrageMeta: me.dateDemarrageMeta, dateAcceptation: me.dateAcceptation, vehicule: me.vehicule, scannedDocs: me.scannedDocs, colisImages: me.colisImages,colisImagesData: me.colisImagesData)
+        self.init(createdAt: me.createdAt, dateEnlevement: me.dateEnlevement, observationArrivee: me.observationArrivee, pointEnlevement: me.pointEnlevement, montantHT: me.montantHT.value, nombreColis: me.nombreColis.value, estimatedKM: me.estimatedKM.value, id: me.id.value, articleFamilies: me.articleFamilies, status: me.status, observation: me.observation, chauffeur: me.chauffeur, manutention: me.manutention.value, yusoRequestID: me.yusoRequestID, adresseArrivee: me.adresseArrivee, dateAffirmationFin: me.dateAffirmationFin, manutentionDouble: me.manutentionDouble.value, courseSource: me.courseSource, lettreDeVoiture: me.lettreDeVoiture, contactArrivee: me.contactArrivee, code: me.code, articles: me.articles, commande: me.commande, factures: me.factures, dateLivraison: me.dateLivraison, signaturesImages: me.signaturesImages, adresseDepart: me.adresseDepart, dateDemarrage: me.dateDemarrage, isStatusChangedManually: me.isStatusChangedManually.value, contactDepart: me.contactDepart, codeCorner: me.codeCorner, moyenPaiement: me.moyenPaiement, vehiculeType: me.vehiculeType, dateDemarrageMeta: me.dateDemarrageMeta, dateAcceptation: me.dateAcceptation, vehicule: me.vehicule, scannedDocs: me.scannedDocs, colisImages: me.colisImages,colisImagesDataDepart: me.colisImagesDataDepart, colisImagesDataArrivee: me.colisImagesDataArrivee, signatureDepartData: me.signatureDepartData, signatureArriveeData: me.signatureArriveeData)
     }
     
     convenience init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -266,7 +276,10 @@ extension Course {
         vehicule: Vehicule?? = nil,
         scannedDocs: List<ScannedDoc>? = nil,
         colisImages: List<String>? = nil,
-        colisImagesData: List<Data>? = nil
+        colisImagesDataDepart: List<Data>? = nil,
+        colisImagesDataArrivee: List<Data>? = nil,
+        signatureDepartData: Data? = nil,
+        signatureArriveeData: Data? = nil
         ) -> Course {
         return Course(
             createdAt: createdAt ?? self.createdAt,
@@ -307,7 +320,10 @@ extension Course {
             vehicule: vehicule ?? self.vehicule,
             scannedDocs: scannedDocs ?? self.scannedDocs,
             colisImages: colisImages ?? self.colisImages,
-            colisImagesData: colisImagesData ?? self.colisImagesData
+            colisImagesDataDepart: colisImagesDataDepart ?? self.colisImagesDataDepart,
+            colisImagesDataArrivee: colisImagesDataArrivee ?? self.colisImagesDataArrivee,
+            signatureDepartData: signatureDepartData ?? self.signatureDepartData,
+            signatureArriveeData: signatureArriveeData ?? self.signatureArriveeData
         )
     }
 

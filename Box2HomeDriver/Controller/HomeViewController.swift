@@ -692,7 +692,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         cell.adresseArrivee = courses[indexPath.row].adresseArrivee!.address!
         //------
         let status = "\(courses[indexPath.row].status!.label!)"
-        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta!.deliveryWindow.value!
+        let deliveryWindow = courses[indexPath.row].dateDemarrageMeta?.deliveryWindow.value ?? 60
         let dateDemarrage = dateFormatter.date(from: courses[indexPath.row].dateDemarrage!)!
         let deadlineDate = Calendar.current.date(byAdding: .minute, value: deliveryWindow, to: dateDemarrage, wrappingComponents: false)!
         let yyyyMMdd = "\(Calendar.current.component(.day, from: dateDemarrage ))-\(Calendar.current.component(.month, from: dateDemarrage ))-\(Calendar.current.component(.year, from: dateDemarrage ))"

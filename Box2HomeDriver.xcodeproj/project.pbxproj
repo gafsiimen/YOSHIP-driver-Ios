@@ -18,10 +18,16 @@
 		B70806632216A3BB00F2C562 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70806622216A3BB00F2C562 /* LoginViewController.swift */; };
 		B70806672216B6FC00F2C562 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */; };
 		B714CC5422844AAC00C96CAB /* avi.swift in Sources */ = {isa = PBXBuildFile; fileRef = B714CC5322844AAC00C96CAB /* avi.swift */; };
+		B71915D122A1224500448B9B /* MonHistoriqueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71915D022A1224500448B9B /* MonHistoriqueViewController.swift */; };
+		B71915D322A122D400448B9B /* MonHistoriqueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71915D222A122D400448B9B /* MonHistoriqueViewModel.swift */; };
+		B71915D522A122FB00448B9B /* MonHistoriqueRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71915D422A122FB00448B9B /* MonHistoriqueRepository.swift */; };
 		B719C0B2221D391C00B96512 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B719C0B0221D391C00B96512 /* ENSideMenu.swift */; };
 		B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */; };
+		B71B45B4229D392000F995F7 /* SocketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71B45B3229D392000F995F7 /* SocketRepository.swift */; };
+		B71B45B6229D3C8600F995F7 /* SocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71B45B5229D3C8600F995F7 /* SocketViewModel.swift */; };
 		B74F2BF7222FB8C40036DF52 /* SplashScreenRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */; };
 		B74F2BF9222FC3B80036DF52 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */; };
+		B76667F9229C056F00911E4E /* wazeTapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76667F8229C056F00911E4E /* wazeTapGesture.swift */; };
 		B76E384A2296A5CC004DEA99 /* MyButtonWithParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */; };
 		B76E384C2296B35A004DEA99 /* MyTapGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76E384B2296B35A004DEA99 /* MyTapGesture.swift */; };
 		B774098C223278F20033F94A /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B774098B223278F20033F94A /* SocketManager.swift */; };
@@ -120,10 +126,16 @@
 		B70806622216A3BB00F2C562 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B70806662216B6FC00F2C562 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		B714CC5322844AAC00C96CAB /* avi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = avi.swift; sourceTree = "<group>"; };
+		B71915D022A1224500448B9B /* MonHistoriqueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonHistoriqueViewController.swift; sourceTree = "<group>"; };
+		B71915D222A122D400448B9B /* MonHistoriqueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonHistoriqueViewModel.swift; sourceTree = "<group>"; };
+		B71915D422A122FB00448B9B /* MonHistoriqueRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonHistoriqueRepository.swift; sourceTree = "<group>"; };
 		B719C0B0221D391C00B96512 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenu.swift; sourceTree = "<group>"; };
 		B719C0B1221D391C00B96512 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenuNavigationController.swift; sourceTree = "<group>"; };
+		B71B45B3229D392000F995F7 /* SocketRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketRepository.swift; sourceTree = "<group>"; };
+		B71B45B5229D3C8600F995F7 /* SocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketViewModel.swift; sourceTree = "<group>"; };
 		B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenRepository.swift; sourceTree = "<group>"; };
 		B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
+		B76667F8229C056F00911E4E /* wazeTapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wazeTapGesture.swift; sourceTree = "<group>"; };
 		B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyButtonWithParam.swift; sourceTree = "<group>"; };
 		B76E384B2296B35A004DEA99 /* MyTapGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTapGesture.swift; sourceTree = "<group>"; };
 		B774098B223278F20033F94A /* SocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
@@ -332,6 +344,8 @@
 				B74F2BF8222FC3B80036DF52 /* SplashScreenViewModel.swift */,
 				B78957AD223A6DEE000649D7 /* HomeViewModel.swift */,
 				B7FF03072254CC700088F9A4 /* CourseDetailViewModel.swift */,
+				B71B45B5229D3C8600F995F7 /* SocketViewModel.swift */,
+				B71915D222A122D400448B9B /* MonHistoriqueViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -348,6 +362,7 @@
 				B7DEFCAF2223EA0F00E51A19 /* MapViewController.swift */,
 				B7FA50DD2253677700B2398E /* CourseDetailsController.swift */,
 				B7D89E9B2295567D000C8380 /* CollectionViewController.swift */,
+				B71915D022A1224500448B9B /* MonHistoriqueViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -378,6 +393,7 @@
 				B7D89E9D22956297000C8380 /* CollectionViewCell.swift */,
 				B76E38492296A5CC004DEA99 /* MyButtonWithParam.swift */,
 				B76E384B2296B35A004DEA99 /* MyTapGesture.swift */,
+				B76667F8229C056F00911E4E /* wazeTapGesture.swift */,
 			);
 			path = UtilityClasses;
 			sourceTree = "<group>";
@@ -408,6 +424,8 @@
 				B74F2BF6222FB8C40036DF52 /* SplashScreenRepository.swift */,
 				B78957AF223A8A38000649D7 /* HomeRepository.swift */,
 				B7FF03092254CC990088F9A4 /* CourseDetailRepository.swift */,
+				B71B45B3229D392000F995F7 /* SocketRepository.swift */,
+				B71915D422A122FB00448B9B /* MonHistoriqueRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -745,6 +763,7 @@
 				B74F2BF9222FC3B80036DF52 /* SplashScreenViewModel.swift in Sources */,
 				B7D03DBD2248DA5E00C9554F /* dateDemarrageMeta.swift in Sources */,
 				B7D50DFC223BAA1C00172ADF /* PagerViewModel.swift in Sources */,
+				B71915D322A122D400448B9B /* MonHistoriqueViewModel.swift in Sources */,
 				B7DE1B9422258C6B007192EE /* client.swift in Sources */,
 				B7DE1B7622258991007192EE /* moyenPaiement.swift in Sources */,
 				B7D89E9E22956297000C8380 /* CollectionViewCell.swift in Sources */,
@@ -768,9 +787,12 @@
 				B7AB4517226F64AF00E7C46E /* AuthToken.swift in Sources */,
 				B7CA7880221C03FD00281623 /* SideMenuViewController.swift in Sources */,
 				B7DE1B8A22258BF0007192EE /* canalVente.swift in Sources */,
+				B71B45B4229D392000F995F7 /* SocketRepository.swift in Sources */,
 				B7DE1B9222258C58007192EE /* societe.swift in Sources */,
+				B71B45B6229D3C8600F995F7 /* SocketViewModel.swift in Sources */,
 				B7D50DF8223BA25300172ADF /* Slide.swift in Sources */,
 				B7AB4515226F645B00E7C46E /* Response.swift in Sources */,
+				B76667F9229C056F00911E4E /* wazeTapGesture.swift in Sources */,
 				B70806302216A28E00F2C562 /* AppDelegate.swift in Sources */,
 				B7AB2C202229335800867745 /* coursesInPipeStats.swift in Sources */,
 				B70717132238045E00D687E4 /* dayOfWeek.swift in Sources */,
@@ -783,6 +805,7 @@
 				B7D89E9C2295567D000C8380 /* CollectionViewController.swift in Sources */,
 				B7DE1B9022258C44007192EE /* collaborateur.swift in Sources */,
 				B7DE1B7222254D2A007192EE /* Course.swift in Sources */,
+				B71915D122A1224500448B9B /* MonHistoriqueViewController.swift in Sources */,
 				B719C0B3221D391C00B96512 /* ENSideMenuNavigationController.swift in Sources */,
 				B77B940F222E7E1D007D9C72 /* SetupHomeView.swift in Sources */,
 				B7DE1B8422258AE2007192EE /* scannedDoc.swift in Sources */,
@@ -790,6 +813,7 @@
 				B78957AE223A6DEE000649D7 /* HomeViewModel.swift in Sources */,
 				B7DE1B7422258947007192EE /* adresse.swift in Sources */,
 				B70717112238039D00D687E4 /* operationalHours.swift in Sources */,
+				B71915D522A122FB00448B9B /* MonHistoriqueRepository.swift in Sources */,
 				B7FF03082254CC700088F9A4 /* CourseDetailViewModel.swift in Sources */,
 				B793300822314E7500924DF5 /* Reachability.swift in Sources */,
 				B7D50DF5223BA15200172ADF /* PagerViewController.swift in Sources */,

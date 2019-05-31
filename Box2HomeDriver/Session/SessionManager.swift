@@ -99,6 +99,8 @@ class SessionManager {
                         modifications.forEach({ (index) in
                             SessionManager.currentSession.allCourses = SessionManager.currentSession.allCourses.filter{$0.code! != results[index].code! }
                             SessionManager.currentSession.allCourses.append(results[index])
+                      
+                            
 //                            print(results[index].code!," IS UPDATED")
 
                         })
@@ -189,4 +191,9 @@ class SessionManager {
         //       self.currentVehicule = nil
     }
     
+}
+extension Array where Element: Equatable {
+    func all(where predicate: (Element) -> Bool) -> [Element]  {
+        return self.compactMap { predicate($0) ? $0 : nil }
+    }
 }

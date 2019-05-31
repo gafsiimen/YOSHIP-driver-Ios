@@ -24,6 +24,7 @@
 	<string>1.0</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+                <string>waze</string>
 		<string>googlechromes</string>
 		<string>comgooglemaps</string>
 	</array>
